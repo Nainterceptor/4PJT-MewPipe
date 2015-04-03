@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
+	configs.Parse()
 	restful.DefaultContainer.Router(restful.CurlyRouter{})
 	restful.Add(rest.UserRoute())
 	restful.Add(configs.StaticRouter())
-
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(*configs.HttpBinding, nil)
 }
