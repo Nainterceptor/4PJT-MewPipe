@@ -2,9 +2,9 @@ package rest
 import (
     "github.com/emicklei/go-restful"
     "supinfo/mewpipe/entities"
-    "gopkg.in/mgo.v2"
     "net/http"
-    "supinfo/mewpipe/configs"
+    "log"
+    "gopkg.in/mgo.v2/bson"
 )
 func UserRoute() *restful.WebService {
     service := new(restful.WebService)
@@ -18,14 +18,15 @@ func UserRoute() *restful.WebService {
 }
 
 func CreateUser(request *restful.Request, response *restful.Response) {
-    session, err := mgo.Dial(*configs.MongoCS)
-    if err != nil {
-        panic(err)
-    }
-    defer session.Close()
 
     usr := entities.User{}
     errRE := request.ReadEntity(&usr)
+    usr.Id = bson.NewObjectId()
+    err := entities.UserCollection.Insert(&usr)
+    if err != nil {
+        log.Fatal(err)
+    }
+
     // here you would create the user with some persistence system
     if errRE == nil {
         response.WriteEntity(usr)
