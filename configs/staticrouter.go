@@ -6,10 +6,10 @@ import (
 
     "github.com/emicklei/go-restful"
 )
-func Router() *restful.WebService {
+func StaticRouter() *restful.WebService {
     ws := new(restful.WebService)
 
-    ws.Route(ws.GET("/static/{subpath:*}").To(staticHandler))
+    ws.Route(ws.GET("/{subpath:*}").To(staticHandler))
 
     return ws
 }
