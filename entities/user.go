@@ -5,9 +5,16 @@ import(
     "gopkg.in/mgo.v2/bson"
 )
 
+type name struct {
+    Firstname   string  `json:"firstname"`
+    Lastname   string  `json:"lastname"`
+}
+
 type User struct {
-    Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
-    Name     string        `json:"name"`
+    Id          bson.ObjectId   `json:"id" bson:"_id,omitempty"`
+    Name        name            `json:"name"`
+    Email       string          `json:"email"`
+    Password    string          `json:"password"`
 }
 
 var UserCollection = configs.MongoDB.C("users")
