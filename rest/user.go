@@ -20,6 +20,10 @@ func UserRoute() *restful.WebService {
 		Doc("get all users")
 	service.Route(service.GET("/{user-id}").To(GetUser)).
 		Doc("get a user")
+	service.Route(service.PUT("/update/{user-id}").To(UpdateUser)).
+		Doc("update a single user")
+	service.Route(service.DELETE("/delete/{user-id}").To(DeleteUser)).
+		Doc("update a single user")
 
 	return service
 }
@@ -71,4 +75,54 @@ func GetUser(request *restful.Request, response *restful.Response) {
 	}
 
 	response.WriteEntity(usr)
+}
+
+func UpdateUser(request *restful.Request, response *restful.Response) {
+
+	id := request.PathParameter("user-id")
+
+	if !bson.IsObjectIdHex(id) {
+		response.WriteErrorString(404, "Problem with the id")
+		return
+	}
+
+	oid := bson.ObjectIdHex(id)
+	usr := entities.User{}
+	errRE := request.ReadEntity(&usr)
+
+	if err := entities.UserCollection.UpdateId(oid,&usr); err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+
+	if errRE == nil {
+		response.WriteEntity(usr)
+	} else {
+		response.WriteError(http.StatusInternalServerError, errRE)
+	}
+}
+
+func DeleteUser(request *restful.Request, response *restful.Response) {
+
+	id := request.PathParameter("user-id")
+
+	if !bson.IsObjectIdHex(id) {
+		response.WriteErrorString(404, "Problem with the id")
+		return
+	}
+
+	oid := bson.ObjectIdHex(id)
+	usr := entities.User{}
+	errRE := request.ReadEntity(&usr)
+
+	if err := entities.UserCollection.RemoveId(oid); err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+
+	if errRE == nil {
+		response.WriteEntity(usr)
+	} else {
+		response.WriteError(http.StatusInternalServerError, errRE)
+	}
 }
