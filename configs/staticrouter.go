@@ -3,7 +3,6 @@ import (
     "fmt"
     "net/http"
     "path"
-
     "github.com/emicklei/go-restful"
 )
 func StaticRouter() *restful.WebService {

@@ -14,7 +14,12 @@ type User struct {
     Id          bson.ObjectId   `json:"id" bson:"_id,omitempty"`
     Name        name            `json:"name"`
     Email       string          `json:"email"`
-    Password    string          `json:"password"`
+	HashedPassword    string    `json:"hashedpassword"`
+}
+
+type Registration struct {
+	*User
+	Password    string    `json:"password"`
 }
 
 var UserCollection = configs.MongoDB.C("users")

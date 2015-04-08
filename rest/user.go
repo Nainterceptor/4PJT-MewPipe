@@ -4,8 +4,8 @@ import (
 	"github.com/emicklei/go-restful"
 	"supinfo/mewpipe/entities"
 	"net/http"
-	"log"
 	"gopkg.in/mgo.v2/bson"
+	"supinfo/mewpipe/utils"
 )
 
 func UserRoute() *restful.WebService {
@@ -15,6 +15,7 @@ func UserRoute() *restful.WebService {
 	Consumes(restful.MIME_JSON).
 	Produces(restful.MIME_JSON)
 
+	service.Route(service.POST("/login").To(Connexion))
 	service.Route(service.POST("").To(CreateUser))
 	service.Route(service.GET("").To(GetAllUsers)).
 		Doc("get all users")
@@ -28,19 +29,27 @@ func UserRoute() *restful.WebService {
 	return service
 }
 
+func Connexion(request *restful.Request, response *restful.Response) {
+
+}
+
 func CreateUser(request *restful.Request, response *restful.Response) {
 
-	usr := entities.User{}
+	usr := entities.Registration{}
 	errRE := request.ReadEntity(&usr)
 	usr.Id = bson.NewObjectId()
-	err := entities.UserCollection.Insert(&usr)
-	if err != nil {
-		log.Fatal(err)
+	usr.HashedPassword = utils.Hash(usr.Password)
+
+	finalUsr := entities.User{ usr.Id, usr.Name, usr.Email, usr.HashedPassword }
+
+	if err := entities.UserCollection.Insert(&finalUsr); err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
 	}
 
 	// here you would create the user with some persistence system
 	if errRE == nil {
-		response.WriteEntity(usr)
+		response.WriteEntity(finalUsr)
 	} else {
 		response.WriteError(http.StatusInternalServerError, errRE)
 	}
