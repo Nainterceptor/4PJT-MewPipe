@@ -22,4 +22,9 @@ type Registration struct {
 	Password    string    `json:"password"`
 }
 
+type Connexion struct {
+    Email       string          `json:"email"`
+    Password    string    `json:"password"`
+}
+
 var UserCollection = configs.MongoDB.C("users")

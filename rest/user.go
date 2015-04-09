@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"gopkg.in/mgo.v2/bson"
 	"supinfo/mewpipe/utils"
-//	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 	"github.com/emicklei/go-restful/log"
 //	"encoding/json"
 )
@@ -36,22 +36,20 @@ func UserRoute() *restful.WebService {
 
 func Connexion(request *restful.Request, response *restful.Response) {
 
+	connexion := entities.Connexion{}
 	usr := entities.User{}
-	errRE := request.ReadEntity(&usr)
+	errRE := request.ReadEntity(&connexion)
 
-	password := request.Request.FormValue("password")
-	log.Print(password)
-
-	err := entities.UserCollection.Find(bson.M{"email": usr.Email}).One(&usr)
+	err := entities.UserCollection.Find(bson.M{"email": connexion.Email}).One(&usr)
 	if err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
 		return
 	}
 
-	//	err = bcrypt.CompareHashAndPassword([]byte(usr.HashedPassword), []byte(password))
-	//	if err != nil {
-	//		panic(err)
-	//	}
+	err = bcrypt.CompareHashAndPassword([]byte(usr.HashedPassword), []byte(connexion.Password))
+	if err != nil {
+		panic(err)
+	}
 
 	if errRE == nil {
 		response.WriteEntity(usr)
