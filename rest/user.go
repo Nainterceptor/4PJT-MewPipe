@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"gopkg.in/mgo.v2/bson"
 	"supinfo/mewpipe/utils"
+//	"golang.org/x/crypto/bcrypt"
+	"github.com/emicklei/go-restful/log"
+//	"encoding/json"
 )
 
 func UserRoute() *restful.WebService {
@@ -15,7 +18,9 @@ func UserRoute() *restful.WebService {
 	Consumes(restful.MIME_JSON).
 	Produces(restful.MIME_JSON)
 
-	service.Route(service.POST("/login").To(Connexion))
+	service.Route(service.POST("/login").To(Connexion)).
+		Doc("Login").
+		Param(service.BodyParameter("password", "the form password").DataType("string"))
 	service.Route(service.POST("").To(CreateUser))
 	service.Route(service.GET("").To(GetAllUsers)).
 		Doc("get all users")
@@ -31,6 +36,28 @@ func UserRoute() *restful.WebService {
 
 func Connexion(request *restful.Request, response *restful.Response) {
 
+	usr := entities.User{}
+	errRE := request.ReadEntity(&usr)
+
+	password := request.Request.FormValue("password")
+	log.Print(password)
+
+	err := entities.UserCollection.Find(bson.M{"email": usr.Email}).One(&usr)
+	if err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+
+	//	err = bcrypt.CompareHashAndPassword([]byte(usr.HashedPassword), []byte(password))
+	//	if err != nil {
+	//		panic(err)
+	//	}
+
+	if errRE == nil {
+		response.WriteEntity(usr)
+	} else {
+		response.WriteError(http.StatusInternalServerError, errRE)
+	}
 }
 
 func CreateUser(request *restful.Request, response *restful.Response) {
