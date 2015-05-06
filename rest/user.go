@@ -7,8 +7,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"supinfo/mewpipe/utils"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/emicklei/go-restful/log"
-//	"encoding/json"
+	"github.com/dgrijalva/jwt-go"
+	"time"
 )
 
 func UserRoute() *restful.WebService {
@@ -29,7 +29,7 @@ func UserRoute() *restful.WebService {
 	service.Route(service.PUT("/update/{user-id}").To(UpdateUser)).
 		Doc("update a single user")
 	service.Route(service.DELETE("/delete/{user-id}").To(DeleteUser)).
-		Doc("update a single user")
+		Doc("delete a single user")
 
 	return service
 }
@@ -52,6 +52,11 @@ func Connexion(request *restful.Request, response *restful.Response) {
 	}
 
 	if errRE == nil {
+		token := jwt.New(jwt.GetSigningMethod("HS256"))
+		token.Claims["userid"] = usr.Id
+
+		token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+
 		response.WriteEntity(usr)
 	} else {
 		response.WriteError(http.StatusInternalServerError, errRE)
