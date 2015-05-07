@@ -34,6 +34,23 @@ func UserRoute() *restful.WebService {
 	return service
 }
 
+func NewToken(usr entities.User, mySigningKey []byte) (error) {
+
+	token := jwt.New(jwt.GetSigningMethod("HS256"))
+	token.Claims["userid"] = usr.Id
+	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	tokenString, err := token.SignedString(mySigningKey)
+
+	usrToken := entities.UserToken{ tokenString }
+
+	usr = entities.User{ usr.Id, usr.Name, usr.Email, usr.HashedPassword, append(usr.UserTokens, usrToken) }
+	if err := entities.UserCollection.UpdateId(usr.Id, &usr); err != nil {
+		panic(err)
+	}
+
+	return err
+}
+
 func Connexion(request *restful.Request, response *restful.Response) {
 
 	connexion := entities.Connexion{}
@@ -52,10 +69,10 @@ func Connexion(request *restful.Request, response *restful.Response) {
 	}
 
 	if errRE == nil {
-		token := jwt.New(jwt.GetSigningMethod("HS256"))
-		token.Claims["userid"] = usr.Id
-
-		token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+		NewToken(usr, []byte("mypipe"))
+		if err != nil {
+			panic(err)
+		}
 
 		response.WriteEntity(usr)
 	} else {
@@ -70,7 +87,7 @@ func CreateUser(request *restful.Request, response *restful.Response) {
 	usr.Id = bson.NewObjectId()
 	usr.HashedPassword = utils.Hash(usr.Password)
 
-	finalUsr := entities.User{ usr.Id, usr.Name, usr.Email, usr.HashedPassword }
+	finalUsr := entities.User{ usr.Id, usr.Name, usr.Email, usr.HashedPassword, nil }
 
 	if err := entities.UserCollection.Insert(&finalUsr); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)

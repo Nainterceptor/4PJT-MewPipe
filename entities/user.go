@@ -6,8 +6,8 @@ import(
 )
 
 type name struct {
-    Firstname   string  `json:"firstname"`
-    Lastname   string  `json:"lastname"`
+    FirstName   string  `json:"firstname"`
+    LastName   string  `json:"lastname"`
 }
 
 type User struct {
@@ -15,6 +15,11 @@ type User struct {
     Name        name            `json:"name"`
     Email       string          `json:"email"`
 	HashedPassword    string    `json:"hashedpassword"`
+    UserTokens  []UserToken     `json:"usertokens"`
+}
+
+type UserToken struct {
+    Token   string `json:"token"`
 }
 
 type Registration struct {
@@ -23,7 +28,7 @@ type Registration struct {
 }
 
 type Connexion struct {
-    Email       string          `json:"email"`
+    Email       string    `json:"email"`
     Password    string    `json:"password"`
 }
 
