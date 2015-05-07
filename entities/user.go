@@ -12,24 +12,15 @@ type name struct {
 
 type User struct {
     Id          bson.ObjectId   `json:"id" bson:"_id,omitempty"`
-    Name        name            `json:"name"`
-    Email       string          `json:"email"`
-	HashedPassword    string    `json:"hashedpassword"`
-    UserTokens  []UserToken     `json:"usertokens"`
+    Name        name            `json:"name" bson:",omitempty"`
+    Email       string          `json:"email" bson:",omitempty"`
+    Password    string    `json:"password" bson:",omitempty"`
+    HashedPassword    string    `json:"hashedpassword" bson:",omitempty"`
+    UserTokens  []UserToken     `json:"usertokens" bson:",omitempty"`
 }
 
 type UserToken struct {
     Token   string `json:"token"`
-}
-
-type Registration struct {
-	*User
-	Password    string    `json:"password"`
-}
-
-type Connexion struct {
-    Email       string    `json:"email"`
-    Password    string    `json:"password"`
 }
 
 var UserCollection = configs.MongoDB.C("users")
