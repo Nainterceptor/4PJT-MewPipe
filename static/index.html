@@ -4,32 +4,46 @@
     <meta charset="UTF-8">
     <title>Mewpipe</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
-    <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/mewpipe.css"/>
 </head>
 <body ng-app="mewpipe" ng-controller="MainController">
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-inverse">
     <div class="container">
-        <div class="collapse navbar-collapse">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ng-link="home">Mewpipe</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a ng-link="home">Home</a></li>
                 <li><a ng-link="player">Player</a></li>
                 <li><a ng-link="dashboard">Dashboard</a></li>
-                <!--<li><a ng-link="settings">settings</a></li>-->
-                <!--<li><a ng-link="welcome">welcome</a></li>-->
             </ul>
-
-            <!--<ul class="nav navbar-nav navbar-right">-->
-            <!--<li class="loader" ng-if="router.isNavigating">-->
-            <!--<i class="fa fa-spinner fa-spin fa-2x"></i>-->
-            <!--</li>-->
-            <!--</ul>-->
-        </div>
-    </div>
-
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>
 <div ng-viewport></div>
 
-<!--<script src="//vjs.zencdn.net/4.12/video.js"></script>-->
 
 <script src="js/angular.min.js"></script>
 <script src="js/router.es5.min.js"></script>
@@ -41,6 +55,7 @@
 <script src="bower_components/videogular-overlay-play/vg-overlay-play.js"></script>
 <script src="bower_components/videogular-poster/vg-poster.js"></script>
 <script src="bower_components/videogular-buffering/vg-buffering.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 
 <script src="app/mewpipe.js"></script>
 <script src="components/home/home.js"></script>

@@ -4,7 +4,8 @@
         'ngNewRouter',
         'mewpipe.home',
         'mewpipe.player',
-        'mewpipe.dashboard'
+        'mewpipe.dashboard',
+        'ui.bootstrap'
     ])
         .controller('MainController',['$router', MainController]);
 
