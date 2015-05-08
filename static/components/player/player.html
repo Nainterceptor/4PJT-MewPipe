@@ -1,13 +1,22 @@
-<div class="container-fluid">
-    <h2>Player</h2>
-    <video id="example_video_1" class="video-js vjs-default-skin"
-           controls preload="auto"
-           poster="http://video-js.zencoder.com/oceans-clip.png"
-           data-setup='{"example_option":true}'>
-        <!--<source src="http://video-js.zencoder.com/oceans-clip.mp4" type='video/mp4' />-->
-        <source src="http://cdn.clipcanvas.com/sample/clipcanvas_14348_offline.mp4" type='video/mp4' />
-        <!--<source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />-->
-        <!--<source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />-->
-        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-    </video>
-</div>
+    <videogular vg-theme="player.config.theme">
+        <vg-media vg-src="player.config.sources"
+                  vg-tracks="player.config.tracks">
+        </vg-media>
+
+        <vg-controls>
+            <vg-play-pause-button></vg-play-pause-button>
+            <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+            <vg-scrub-bar>
+                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+            </vg-scrub-bar>
+            <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+            <vg-volume>
+                <vg-mute-button></vg-mute-button>
+                <vg-volume-bar></vg-volume-bar>
+            </vg-volume>
+            <vg-fullscreen-button></vg-fullscreen-button>
+        </vg-controls>
+
+        <vg-overlay-play></vg-overlay-play>
+        <vg-poster vg-url='player.config.plugins.poster'></vg-poster>
+    </videogular>
