@@ -1,3 +1,24 @@
 <div class="container-fluid">
-    <h1>Home</h1>
+    <h2>Most Viewed</h2>
+    <div ng-repeat="row in home.mostViewed" class="row">
+        <div ng-repeat="stat in row" class="col-md-2">
+            <div class="thumbnail">
+                <a href="/player"><img ng-src="{{stat.imgUrl}}" alt=""/></a>
+                <div class="caption">
+                    <h4>{{stat.title}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2>Most Shared</h2>
+    <div ng-repeat="row in home.mostShared" class="row">
+        <div ng-repeat="stat in row" class="col-md-2">
+            <div class="thumbnail">
+                <a href="/player"><img ng-src="{{stat.imgUrl}}" alt=""/></a>
+                <div class="caption">
+                    <h4>{{stat.title}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

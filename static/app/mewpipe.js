@@ -2,6 +2,7 @@
     "use strict";
     angular.module('mewpipe',[
         'ngNewRouter',
+        'mewpipeServices',
         'mewpipe.home',
         'mewpipe.player',
         'mewpipe.dashboard',
