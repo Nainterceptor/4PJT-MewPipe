@@ -4,13 +4,23 @@
         url: ""
     };
 
-    angular.module('mewpipeServices',[])
-        .factory('userFactory',['$http', UserFactory])
+    angular.module('mewpipeServices',['ngCookies'])
+        .factory('userFactory',['$http','$cookies', UserFactory])
         .factory('statsFactory',['$http', StatsFactory])
     ;
 
-    function UserFactory($http){
-
+    function UserFactory($http, $cookies){
+        var user = {};
+        user.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
+        user.logIn = function(){
+            $cookies.put('accessToken','toto');
+            user.accessToken = 'toto';
+        };
+        user.logOut = function(){
+            $cookies.remove('accessToken');
+            user.accessToken = undefined;
+        };
+        return user;
     }
 
     function StatsFactory($http){

@@ -7,7 +7,6 @@
 
     function HomeController(statsFactory){
         var me = this;
-        console.log(statsFactory);
         this.mostViewed = [];
         angular.forEach(statsFactory.mostViewed, function(stat, key){
             if(key % 6 === 0){

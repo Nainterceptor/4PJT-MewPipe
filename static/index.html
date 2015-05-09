@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="app/mewpipe.css"/>
 </head>
-<body ng-app="mewpipe" ng-controller="MainController">
+<body ng-app="mewpipe" ng-controller="MainController as main">
 <nav class="navbar navbar-inverse">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -24,13 +24,13 @@
             <ul class="nav navbar-nav">
                 <li><a ng-link="home">Home</a></li>
                 <li><a ng-link="player">Player</a></li>
-                <li><a ng-link="dashboard">Dashboard</a></li>
+                <li><a ng-show="main.user.accessToken" ng-link="dashboard">Dashboard</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" dropdown>
                     <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">Sign <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Sign In</a></li>
+                        <li><a href ng-hide="main.user.accessToken" ng-click="main.logIn()">Sign In</a><a href ng-show="main.user.accessToken" ng-click="main.logOut()">Log Out</a></li>
                         <li class="divider"></li>
                         <li><a href="#">Sign Up</a></li>
                     </ul>
@@ -41,17 +41,17 @@
 </nav>
 <div ng-viewport></div>
 
-
-<script src="js/angular.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
 <script src="js/router.es5.min.js"></script>
 
 <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-<script src="bower_components/videogular/videogular.js"></script>
-<script src="bower_components/videogular-controls/vg-controls.js"></script>
-<script src="bower_components/videogular-overlay-play/vg-overlay-play.js"></script>
-<script src="bower_components/videogular-poster/vg-poster.js"></script>
-<script src="bower_components/videogular-buffering/vg-buffering.js"></script>
-<script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="js/angular-cookies.min.js"></script>
+<script src="bower_components/videogular/videogular.min.js"></script>
+<script src="bower_components/videogular-controls/vg-controls.min.js"></script>
+<script src="bower_components/videogular-overlay-play/vg-overlay-play.min.js"></script>
+<script src="bower_components/videogular-poster/vg-poster.min.js"></script>
+<script src="bower_components/videogular-buffering/vg-buffering.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 
 <script src="app/mewpipe.js"></script>
 <script src="app/mewpipeServices.js"></script>
