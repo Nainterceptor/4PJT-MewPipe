@@ -6,25 +6,21 @@ import(
 )
 
 type name struct {
-    Firstname   string  `json:"firstname"`
-    Lastname   string  `json:"lastname"`
+    FirstName   string  `json:"firstname"`
+    LastName   string  `json:"lastname"`
 }
 
 type User struct {
     Id          bson.ObjectId   `json:"id" bson:"_id,omitempty"`
-    Name        name            `json:"name"`
-    Email       string          `json:"email"`
-	HashedPassword    string    `json:"hashedpassword"`
+    Name        name            `json:"name" bson:",omitempty"`
+    Email       string          `json:"email" bson:",omitempty"`
+    Password    string    `json:"password" bson:",omitempty"`
+    HashedPassword    string    `json:"hashedpassword" bson:",omitempty"`
+    UserTokens  []UserToken     `json:"usertokens" bson:",omitempty"`
 }
 
-type Registration struct {
-	*User
-	Password    string    `json:"password"`
-}
-
-type Connexion struct {
-    Email       string          `json:"email"`
-    Password    string    `json:"password"`
+type UserToken struct {
+    Token   string `json:"token"`
 }
 
 var UserCollection = configs.MongoDB.C("users")

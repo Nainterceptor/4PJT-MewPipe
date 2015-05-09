@@ -9,6 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
+	"fmt"
 )
 
 func UserRoute() *restful.WebService {
@@ -34,9 +35,50 @@ func UserRoute() *restful.WebService {
 	return service
 }
 
+func NewToken(usr entities.User, mySigningKey []byte) (error) {
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	token.Claims["userid"] = usr.Id
+	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	tokenString, err := token.SignedString(mySigningKey)
+
+	usrToken := entities.UserToken{ tokenString }
+
+	usr.UserTokens = append(usr.UserTokens, usrToken)
+
+	if err := entities.UserCollection.UpdateId(usr.Id, &usr); err != nil {
+		panic(err)
+	}
+
+	return err
+}
+
+func CheckToken(myToken string) (error) {
+
+	token, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
+		return token.Header["mypipe"], nil
+	})
+
+	if token.Valid {
+		fmt.Println("You look nice today")
+	} else if ve, ok := err.(*jwt.ValidationError); ok {
+		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+			fmt.Println("That's not even a token")
+		} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
+			fmt.Println("Timing is everything", err)
+		} else {
+			fmt.Println("Couldn't handle this token:", err)
+		}
+	} else {
+		fmt.Println("Couldn't handle this token:", err)
+	}
+
+	return err
+}
+
 func Connexion(request *restful.Request, response *restful.Response) {
 
-	connexion := entities.Connexion{}
+	connexion := entities.User{}
 	usr := entities.User{}
 	errRE := request.ReadEntity(&connexion)
 
@@ -52,10 +94,10 @@ func Connexion(request *restful.Request, response *restful.Response) {
 	}
 
 	if errRE == nil {
-		token := jwt.New(jwt.GetSigningMethod("HS256"))
-		token.Claims["userid"] = usr.Id
-
-		token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+		NewToken(usr, []byte("mypipe"))
+		if err != nil {
+			panic(err)
+		}
 
 		response.WriteEntity(usr)
 	} else {
@@ -65,21 +107,19 @@ func Connexion(request *restful.Request, response *restful.Response) {
 
 func CreateUser(request *restful.Request, response *restful.Response) {
 
-	usr := entities.Registration{}
+	usr := entities.User{}
 	errRE := request.ReadEntity(&usr)
 	usr.Id = bson.NewObjectId()
 	usr.HashedPassword = utils.Hash(usr.Password)
+	usr.Password = ""
 
-	finalUsr := entities.User{ usr.Id, usr.Name, usr.Email, usr.HashedPassword }
-
-	if err := entities.UserCollection.Insert(&finalUsr); err != nil {
+	if err := entities.UserCollection.Insert(&usr); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
 		return
 	}
 
-	// here you would create the user with some persistence system
 	if errRE == nil {
-		response.WriteEntity(finalUsr)
+		response.WriteEntity(usr)
 	} else {
 		response.WriteError(http.StatusInternalServerError, errRE)
 	}
@@ -98,7 +138,13 @@ func GetAllUsers(request *restful.Request, response *restful.Response) {
 
 func GetUser(request *restful.Request, response *restful.Response) {
 
+	myToken := request.QueryParameter("token")
 	id := request.PathParameter("user-id")
+
+	err := CheckToken(myToken)
+	if err != nil {
+		panic(err)
+	}
 
 	if !bson.IsObjectIdHex(id) {
 		response.WriteErrorString(404, "Problem with the id")
@@ -129,7 +175,10 @@ func UpdateUser(request *restful.Request, response *restful.Response) {
 	usr := entities.User{}
 	errRE := request.ReadEntity(&usr)
 
-	if err := entities.UserCollection.UpdateId(oid,&usr); err != nil {
+	usr.HashedPassword = utils.Hash(usr.Password)
+	usr.Password = ""
+
+	if _, err := entities.UserCollection.UpsertId(oid, &usr); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
 		return
 	}
