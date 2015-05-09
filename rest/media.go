@@ -8,6 +8,7 @@ import (
     "gopkg.in/mgo.v2/bson"
     "strconv"
     "regexp"
+    "os"
 )
 
 func MediaRoute() *restful.WebService {
@@ -127,12 +128,12 @@ func mediaRead(request *restful.Request, response *restful.Response) {
                 end = intSize - 1
             }
             headerWriter.Add("Content-Range", "bytes " + strconv.Itoa(start) + "-" + strconv.Itoa(end) + "/" + strconv.Itoa(intSize))
-            _, err := mongoFile.Seek(int64(start), 0)
+            _, err := mongoFile.Seek(int64(start), os.SEEK_SET)
             if err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
                 return;
             }
-            buffer := make([]byte, end - start)
+            buffer := make([]byte, intSize - start)
             _, err = mongoFile.Read(buffer)
             if err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
