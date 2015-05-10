@@ -19,6 +19,7 @@ func MediaRoute() *restful.WebService {
     Produces(restful.MIME_JSON)
 
     service.Route(service.POST("").To(mediaCreate))
+    service.Route(service.PUT("/{media-id}").To(mediaPut))
     service.Route(service.POST("/{media-id}/upload").Consumes("multipart/form-data").To(mediaUpload))
     service.Route(service.GET("/{media-id}/read").To(mediaRead))
 
@@ -148,4 +149,30 @@ func mediaRead(request *restful.Request, response *restful.Response) {
     }
     response.AddHeader("Content-Length", strconv.FormatInt(mongoFile.Size(), 10))
     _, err = io.Copy(response, mongoFile)
+}
+
+func mediaPut(request *restful.Request, response *restful.Response) {
+    id := request.PathParameter("media-id")
+    if !bson.IsObjectIdHex(id) {
+        response.WriteErrorString(400, "Bad ID")
+        return
+    }
+    oid := bson.ObjectIdHex(id)
+    media := entities.Media{}
+    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
+
+    if err := request.ReadEntity(&media); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
+
+    if _, err := entities.MediaCollection.UpsertId(oid, &media); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
+
+    response.WriteEntity(media)
 }
