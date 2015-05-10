@@ -14,6 +14,7 @@
             return userFactory.accessToken;
         };
         var me = this;
+        this.user = userFactory;
 
         if(!$routeParams.dashboardChoice){
             this.activeTab = 'profile';
@@ -28,8 +29,11 @@
         return {
             restrict: 'E',
             templateUrl: 'components/dashboard/profile.html',
+            scope: true,
+            bindToController: true,
+            controllerAs: 'profile',
             controller: function($scope, $element, $attrs){
-                console.log('profile');
+                this.user = userFactory;
             }
         }
     }
@@ -39,7 +43,7 @@
             restrict: 'E',
             templateUrl: 'components/dashboard/manage-video.html',
             controller: function($scope, $element, $attrs){
-                console.log('video');
+                console.log($scope.user);
             }
         }
     }
