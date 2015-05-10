@@ -72,6 +72,9 @@ func mediaUpload(request *restful.Request, response *restful.Response) {
     }
     io.Copy(mongoFile, postedFile)
     mongoFile.SetContentType(handler.Header.Get("Content-Type"))
+    if media.File != "" {
+        entities.MediaGridFS.RemoveId(media.File)
+    }
     media.File = mongoFile.Id().(bson.ObjectId)
     if err := entities.MediaCollection.UpdateId(oid,&media); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
@@ -164,7 +167,7 @@ func mediaPut(request *restful.Request, response *restful.Response) {
         response.WriteError(http.StatusInternalServerError, err)
         return
     }
-
+    fileId := media.File
     if err := request.ReadEntity(&media); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
@@ -173,6 +176,10 @@ func mediaPut(request *restful.Request, response *restful.Response) {
     if _, err := entities.MediaCollection.UpsertId(oid, &media); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
+    }
+
+    if fileId != media.File {
+        entities.MediaGridFS.RemoveId(fileId)
     }
 
     response.WriteEntity(media)
@@ -185,6 +192,17 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
         return
     }
     oid := bson.ObjectIdHex(id)
+    media := entities.Media{}
+
+    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
+
+    if media.File != "" {
+        entities.MediaGridFS.RemoveId(media.File)
+    }
+
     if err := entities.MediaCollection.RemoveId(oid); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
