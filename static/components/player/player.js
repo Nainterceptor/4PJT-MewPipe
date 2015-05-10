@@ -7,7 +7,8 @@
         "com.2fdevs.videogular.plugins.overlayplay",
         "com.2fdevs.videogular.plugins.poster"
     ])
-        .controller('PlayerController',["$sce",PlayerController]);
+        .controller('PlayerController',["$sce",PlayerController])
+    ;
 
     function PlayerController($sce){
         this.config = {
