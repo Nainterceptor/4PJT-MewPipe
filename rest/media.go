@@ -87,7 +87,6 @@ func mediaRead(request *restful.Request, response *restful.Response) {
     }
     oid := bson.ObjectIdHex(id)
     media := entities.Media{}
-
     if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
@@ -97,17 +96,15 @@ func mediaRead(request *restful.Request, response *restful.Response) {
     defer mongoFile.Close()
     if err != nil {
         response.WriteError(http.StatusInternalServerError, err)
-        return;
+        return
     }
-    headerWriter := response.ResponseWriter.Header()
-    headerWriter.Add("Accept-Ranges", "bytes")
-    headerWriter.Add("Content-Disposition", "attachment; filename=video.mp4")
-    headerWriter.Add("Content-Length", strconv.FormatInt(mongoFile.Size(), 10))
-    headerWriter.Add("Content-type", mongoFile.ContentType())
+    response.AddHeader("Accept-Ranges", "bytes")
+    response.AddHeader("Content-Disposition", "attachment; filename=video.mp4")
+    response.AddHeader("Content-type", mongoFile.ContentType())
     if rangeReq := request.Request.Header.Get("range"); rangeReq != "" {
         regex, _ := regexp.Compile(`bytes=([0-9]*)-([0-9]*)`)
         ranges := regex.FindStringSubmatch(rangeReq)
-        start := 0;
+        start := 0
         intSize := int(mongoFile.Size())
         end := intSize - 1
         if len(ranges) > 2 {
@@ -127,25 +124,28 @@ func mediaRead(request *restful.Request, response *restful.Response) {
                 start = intSize - testedEnd
                 end = intSize - 1
             }
-            headerWriter.Add("Content-Range", "bytes " + strconv.Itoa(start) + "-" + strconv.Itoa(end) + "/" + strconv.Itoa(intSize))
             _, err := mongoFile.Seek(int64(start), os.SEEK_SET)
             if err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
-                return;
+                return
             }
-            buffer := make([]byte, intSize - start)
+            currentSize := end + 1 - start
+            buffer := make([]byte, currentSize)
             _, err = mongoFile.Read(buffer)
             if err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
-                return;
+                return
             }
+            response.AddHeader("Content-Range", "bytes " + strconv.Itoa(start) + "-" + strconv.Itoa(end) + "/" + strconv.Itoa(intSize))
+            response.AddHeader("Content-Length", strconv.FormatInt(int64(currentSize), 10))
             response.WriteHeader(http.StatusPartialContent)
-            if _, err := response.Write(buffer); err != nil {
+            if _, err := response.ResponseWriter.Write(buffer); err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
-                return;
+                return
             }
             return
         }
     }
+    response.AddHeader("Content-Length", strconv.FormatInt(mongoFile.Size(), 10))
     _, err = io.Copy(response, mongoFile)
 }
