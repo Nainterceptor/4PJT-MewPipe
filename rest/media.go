@@ -20,6 +20,7 @@ func MediaRoute() *restful.WebService {
 
     service.Route(service.POST("").To(mediaCreate))
     service.Route(service.PUT("/{media-id}").To(mediaPut))
+    service.Route(service.GET("/{media-id}").To(mediaGet))
     service.Route(service.DELETE("/{media-id}").To(mediaDelete))
     service.Route(service.POST("/{media-id}/upload").Consumes("multipart/form-data").To(mediaUpload))
     service.Route(service.GET("/{media-id}/read").To(mediaRead))
@@ -208,4 +209,21 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
         return
     }
     response.WriteHeader(http.StatusNoContent)
+}
+
+func mediaGet(request *restful.Request, response *restful.Response) {
+    id := request.PathParameter("media-id")
+    if !bson.IsObjectIdHex(id) {
+        response.WriteErrorString(400, "Bad ID")
+        return
+    }
+    oid := bson.ObjectIdHex(id)
+    media := entities.Media{}
+
+    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
+
+    response.WriteEntity(media)
 }
