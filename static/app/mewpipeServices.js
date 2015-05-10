@@ -13,6 +13,8 @@
     function UserFactory($http, $cookies){
         var user = {};
         user.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
+        user.name = "Toto";
+        user.email = "toto@tata.com";
         user.logIn = function(){
             $cookies.put('accessToken','toto');
             user.accessToken = 'toto';
