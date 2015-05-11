@@ -95,3 +95,10 @@ func (u *User) Update() error {
     }
     return nil
 }
+
+func (u *User) Delete() error {
+    if err := userCollection.RemoveId(u.Id); err != nil {
+        return err
+    }
+    return nil
+}

@@ -16,6 +16,7 @@ func UserRoute() *restful.WebService {
 
 	service.Route(service.POST("").To(userCreate))
 	service.Route(service.PUT("/{user-id}").To(userUpdate))
+	service.Route(service.DELETE("/{user-id}").To(userDelete))
 
 	return service
 }
@@ -52,9 +53,11 @@ func userUpdate(request *restful.Request, response *restful.Response) {
     usr, err := entities.UserFromId(bson.ObjectIdHex(id))
     if (err != nil) {
         response.WriteError(http.StatusNotFound, err)
+        return
     }
     if err := request.ReadEntity(&usr); err != nil {
         response.WriteError(http.StatusBadRequest, err)
+        return
     }
 
     if err := usr.Validate(); err != nil {
@@ -68,4 +71,23 @@ func userUpdate(request *restful.Request, response *restful.Response) {
     }
 
     response.WriteEntity(usr)
+}
+
+func userDelete(request *restful.Request, response *restful.Response) {
+
+    id := request.PathParameter("user-id")
+    if !bson.IsObjectIdHex(id) {
+        response.WriteErrorString(http.StatusBadRequest, "Path must contain an Object ID")
+        return
+    }
+
+    //userNew because find query is useless
+    usr := entities.UserNewFromId(bson.ObjectIdHex(id))
+
+    if err := usr.Delete(); err != nil {
+        response.WriteError(http.StatusNotFound, err)
+        return
+    }
+
+    response.WriteHeader(http.StatusNoContent)
 }
