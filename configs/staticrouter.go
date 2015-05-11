@@ -5,13 +5,12 @@ import (
     "path"
     "github.com/emicklei/go-restful"
 )
-func StaticRouter() *restful.WebService {
+func StaticRouter(container *restful.Container) {
     ws := new(restful.WebService)
 
     ws.Route(ws.GET("/").To(homeHandler))
     ws.Route(ws.GET("/{subpath:*}").To(staticHandler))
-
-    return ws
+    container.Add(ws)
 }
 
 func staticHandler(req *restful.Request, resp *restful.Response) {

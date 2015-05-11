@@ -13,11 +13,10 @@ func main() {
     wsContainer := restful.NewContainer()
     rest.UserRoute(wsContainer)
     rest.MediaRoute(wsContainer)
-    restful.Add(configs.StaticRouter())
+    configs.StaticRouter(wsContainer)
 
     configs.ConfigureSwagger(wsContainer)
 
-    restful.DefaultContainer.Router(restful.CurlyRouter{})
 
     server := &http.Server{Addr: *configs.HttpBinding, Handler: wsContainer}
     server.ListenAndServe()
