@@ -49,8 +49,10 @@ func userUpdate(request *restful.Request, response *restful.Response) {
         return
     }
 
-    usr := entities.UserFromId(bson.ObjectIdHex(id))
-
+    usr, err := entities.UserFromId(bson.ObjectIdHex(id))
+    if (err != nil) {
+        response.WriteError(http.StatusNotFound, err)
+    }
     if err := request.ReadEntity(&usr); err != nil {
         response.WriteError(http.StatusBadRequest, err)
     }

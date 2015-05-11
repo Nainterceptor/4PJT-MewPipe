@@ -39,12 +39,14 @@ func UserNewFromId(oid bson.ObjectId) *User {
     return user
 }
 
-func UserFromId(oid bson.ObjectId) *User {
+func UserFromId(oid bson.ObjectId) (*User, error) {
     user := new(User)
-    if err := userCollection.FindId(oid).One(user); err != nil {
+    err := userCollection.FindId(oid).One(user);
+    if err != nil {
         user = UserNewFromId(oid)
     }
-    return user
+
+    return user, err
 }
 
 func (u *User) Validate() error {
