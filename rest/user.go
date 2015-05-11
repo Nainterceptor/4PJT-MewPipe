@@ -17,6 +17,7 @@ func UserRoute() *restful.WebService {
 	service.Route(service.POST("").To(userCreate))
 	service.Route(service.PUT("/{user-id}").To(userUpdate))
 	service.Route(service.DELETE("/{user-id}").To(userDelete))
+	service.Route(service.GET("/{user-id}").To(userGet))
 
 	return service
 }
@@ -90,4 +91,21 @@ func userDelete(request *restful.Request, response *restful.Response) {
     }
 
     response.WriteHeader(http.StatusNoContent)
+}
+
+func userGet(request *restful.Request, response *restful.Response) {
+
+    id := request.PathParameter("user-id")
+    if !bson.IsObjectIdHex(id) {
+        response.WriteErrorString(http.StatusBadRequest, "Path must contain an Object ID")
+        return
+    }
+
+    usr, err := entities.UserFromId(bson.ObjectIdHex(id))
+    if (err != nil) {
+        response.WriteError(http.StatusNotFound, err)
+        return
+    }
+
+    response.WriteEntity(usr)
 }
