@@ -9,9 +9,16 @@ import (
 
 func main() {
     configs.Parse()
-    restful.DefaultContainer.Router(restful.CurlyRouter{})
-    restful.Add(rest.UserRoute())
-    restful.Add(rest.MediaRoute())
+
+    wsContainer := restful.NewContainer()
+    rest.UserRoute(wsContainer)
+    rest.MediaRoute(wsContainer)
     restful.Add(configs.StaticRouter())
-    http.ListenAndServe(*configs.HttpBinding, nil)
+
+    configs.ConfigureSwagger(wsContainer)
+
+    restful.DefaultContainer.Router(restful.CurlyRouter{})
+
+    server := &http.Server{Addr: *configs.HttpBinding, Handler: wsContainer}
+    server.ListenAndServe()
 }

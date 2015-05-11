@@ -11,7 +11,7 @@ import (
     "os"
 )
 
-func MediaRoute() *restful.WebService {
+func MediaRoute(container *restful.Container) {
     service := new(restful.WebService)
     service.
     Path("/rest/media").
@@ -24,8 +24,7 @@ func MediaRoute() *restful.WebService {
     service.Route(service.DELETE("/{media-id}").To(mediaDelete))
     service.Route(service.POST("/{media-id}/upload").Consumes("multipart/form-data").To(mediaUpload))
     service.Route(service.GET("/{media-id}/read").To(mediaRead))
-
-    return service
+    container.Add(service)
 }
 
 func mediaCreate(request *restful.Request, response *restful.Response) {

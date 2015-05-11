@@ -10,12 +10,12 @@ import (
     "supinfo/mewpipe/filters"
 )
 
-func UserRoute() *restful.WebService {
+func UserRoute(container *restful.Container) {
 	service := new(restful.WebService)
 	service.
-	Path("/rest/users").
-	Consumes(restful.MIME_JSON).
-	Produces(restful.MIME_JSON)
+        Path("/rest/users").
+        Consumes(restful.MIME_JSON).
+        Produces(restful.MIME_JSON)
 
 	service.Route(
         service.
@@ -26,7 +26,11 @@ func UserRoute() *restful.WebService {
             PUT("/{user-id}").
             Filter(filters.MustBeLogged).
             Filter(filters.UserIDMustBeMyself).
-            To(userUpdate))
+            To(userUpdate).
+            Doc("update a user").
+            Operation("updateUser").
+            Param(service.PathParameter("user-id", "identifier of the user").DataType("string")).
+            Reads(entities.User{})) // from the request
 	service.Route(
         service.
             DELETE("/{user-id}").
@@ -44,7 +48,7 @@ func UserRoute() *restful.WebService {
             POST("/login").
             To(userLogin))
 
-	return service
+    container.Add(service)
 }
 
 func userCreate(request *restful.Request, response *restful.Response) {
