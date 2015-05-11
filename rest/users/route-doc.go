@@ -19,7 +19,6 @@ func UserRoute(container *restful.Container) {
 
         Doc("Create a new user").
         Operation("userCreate").
-        Param(service.PathParameter("user-id", "identifier of the user").DataType("string")).
         Returns(http.StatusOK, "User has been created", nil).
         Returns(http.StatusBadRequest, "Can't read entity", nil).
         Returns(http.StatusNotAcceptable, "Validation has failed", nil).
