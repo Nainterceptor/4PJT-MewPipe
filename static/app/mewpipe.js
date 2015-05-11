@@ -11,38 +11,22 @@
         .config(function($locationProvider){
             //$locationProvider.html5Mode(true);
         })
-        .controller('MainController',['$router','$scope','userFactory','notificationFactory', MainController])
+        .controller('MainController',['$router','$scope','userFactory','notificationFactory','themesFactory', MainController])
     ;
 
-    function MainController($router, $scope, userFactory,notificationFactory){
+    function MainController($router, $scope, userFactory,notificationFactory, themesFactory){
         var me = this;
-        var themes = {
-            default: {
-                name: "default",
-                url: "bootstrap/css/bootstrap.min.css"
-            },
-            slate: {
-                name: "slate",
-                url: "https://bootswatch.com/slate/bootstrap.min.css"
-            },
-            cosmo: {
-                name: "cosmo",
-                url: "https://bootswatch.com/cosmo/bootstrap.min.css"
-            }
-        };
+        this.themes = themesFactory.themes;
         $router.config([
             { path: '/', component: 'home'},
             { path: '/player', component: 'player'},
             { path: '/dashboard', component: 'dashboard'}
         ]);
         this.chooseTheme = function(theme){
-            me.theme = themes[theme];
-            console.log(theme);
+            me.theme = themesFactory.themes[theme];
+            themesFactory.saveTheme(theme);
         };
-        me.theme = {
-            name: "default",
-            url: "bootstrap/css/bootstrap.min.css"
-        };
+        me.theme = themesFactory.getTheme()? themesFactory.themes[themesFactory.getTheme()] : themesFactory.themes['default'];
         this.alerts = notificationFactory.alerts;
         $scope.$on('alert:updated', function() {
             $scope.$apply();

@@ -8,6 +8,7 @@
         .factory('userFactory',['$http','$cookies', UserFactory])
         .factory('statsFactory',['$http', StatsFactory])
         .factory('notificationFactory',['$rootScope',NotificationFactory])
+        .factory('themesFactory',['$cookies', ThemesFactory])
     ;
 
     function UserFactory($http, $cookies){
@@ -72,6 +73,37 @@
         };
 
         return factInstance;
+    }
+
+    function ThemesFactory($cookies){
+        var factory = {};
+        factory.themes = {
+            Default: {
+                name: "Default",
+                url: "bootstrap/css/bootstrap.min.css"
+            },
+            Slate: {
+                name: "Slate",
+                url: "https://bootswatch.com/slate/bootstrap.min.css"
+            },
+            Cosmo: {
+                name: "Cosmo",
+                url: "https://bootswatch.com/cosmo/bootstrap.min.css"
+            },
+            Darkly: {
+                name: "Darkly",
+                url: "https://bootswatch.com/darkly/bootstrap.min.css"
+            }
+        };
+        factory.saveTheme = function(theme){
+            var date = new Date();
+            date.setYear(date.getYear() + 5);
+            $cookies.put('theme', theme, {expires: date});
+        };
+        factory.getTheme = function(){
+            return $cookies.get('theme');
+        };
+        return factory;
     }
 
 }());
