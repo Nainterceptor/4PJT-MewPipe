@@ -7,6 +7,8 @@ import(
     "errors"
 )
 
+var userCollection = configs.MongoDB.C("users")
+
 type name struct {
     FirstName   string  `json:"firstname"`
     LastName    string  `json:"lastname"`
@@ -59,6 +61,19 @@ func (u *User) Validate() error {
     return nil
 }
 
+func (u *User) clean() {
+    u.Password = ""
+}
+
+func (u *User) hashPassword() error {
+    defer u.clean()
+
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
+    u.HashedPassword = string(hashedPassword[:])
+
+    return err
+}
+
 func (u *User) Insert() error {
     if u.Password == "" {
         return errors.New("`password` is empty")
@@ -80,18 +95,3 @@ func (u *User) Update() error {
     }
     return nil
 }
-
-func (u *User) clean() {
-    u.Password = ""
-}
-
-func (u *User) hashPassword() error {
-    defer u.clean()
-
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
-    u.HashedPassword = string(hashedPassword[:])
-
-    return err
-}
-
-var userCollection = configs.MongoDB.C("users")
