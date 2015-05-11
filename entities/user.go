@@ -5,7 +5,11 @@ import(
     "gopkg.in/mgo.v2/bson"
     "golang.org/x/crypto/bcrypt"
     "errors"
+    "time"
+    "encoding/base64"
 )
+
+const tokenExpiration  = 3600
 
 var userCollection = configs.MongoDB.C("users")
 
@@ -16,7 +20,8 @@ type name struct {
 }
 
 type UserToken struct {
-    Token   string `json:"token"`
+    Token       bson.ObjectId   `json:"token"`
+    ExpireAt    time.Time       `json:"expireAt"`
 }
 
 type User struct {
@@ -35,6 +40,15 @@ func UserNew() *User {
     return user
 }
 
+func userTokenNew() *UserToken {
+    uToken := new(UserToken)
+    currentTime := time.Now();
+    uToken.Token = bson.NewObjectIdWithTime(currentTime)
+    uToken.ExpireAt = currentTime.Add(time.Second * tokenExpiration)
+
+    return uToken
+}
+
 func UserNewFromId(oid bson.ObjectId) *User {
     user := new(User)
     user.Id = bson.NewObjectId()
@@ -51,6 +65,36 @@ func UserFromId(oid bson.ObjectId) (*User, error) {
     return user, err
 }
 
+func UserFromCredentials(email string, password string) (*User, error) {
+    user := new(User)
+
+    if err := userCollection.Find(bson.M{"email": email}).One(&user); err != nil {
+        return new(User), err
+    }
+    err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password));
+    if err != nil {
+        return new(User), err
+    }
+    return user, nil
+}
+
+func UserFromToken(token string) (*User, error) {
+    user := new(User)
+    tokenDecoded, err := base64.StdEncoding.DecodeString(token)
+    if err != nil {
+        return new(User), err
+    }
+    if err := userCollection.Find(bson.M{"usertokens.token": bson.ObjectId(tokenDecoded)}).One(&user); err != nil {
+        return new(User), err
+    }
+    user.Clean();
+    if !user.hasToken(string(tokenDecoded)) {
+        return new(User), errors.New("Token expired")
+    }
+
+    return user, nil
+}
+
 func (u *User) Validate() error {
     if u.Email == "" {
         return errors.New("`email` is empty")
@@ -61,13 +105,31 @@ func (u *User) Validate() error {
     return nil
 }
 
-func (u *User) clean() {
+func (u *User) hasToken(token string) bool {
+    found := false
+    for _, token := range u.UserTokens {
+        if token.Token == token.Token {
+            found = true
+        }
+    }
+    return found
+}
+
+func (u *User) Clean() {
     u.Password = ""
+    change := false
+    for i, token := range u.UserTokens {
+        if token.ExpireAt.Before(time.Now()) {
+            u.UserTokens = append(u.UserTokens[:i], u.UserTokens[i+1:]...)
+            change = true
+        }
+    }
+    if change {
+        u.Update()
+    }
 }
 
 func (u *User) hashPassword() error {
-    defer u.clean()
-
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
     u.HashedPassword = string(hashedPassword[:])
 
@@ -75,6 +137,8 @@ func (u *User) hashPassword() error {
 }
 
 func (u *User) Insert() error {
+    defer u.Clean()
+
     if u.Password == "" {
         return errors.New("`password` is empty")
     }
@@ -86,6 +150,8 @@ func (u *User) Insert() error {
 }
 
 func (u *User) Update() error {
+    defer u.Clean()
+
     if u.Password != "" {
         u.hashPassword()
     }
@@ -101,4 +167,13 @@ func (u *User) Delete() error {
         return err
     }
     return nil
+}
+
+func (u *User) TokenNew() (*UserToken, error) {
+    newToken := userTokenNew()
+    u.UserTokens = append(u.UserTokens, *newToken)
+    if err := u.Update(); err != nil {
+        return new(UserToken), err
+    }
+    return newToken, nil
 }

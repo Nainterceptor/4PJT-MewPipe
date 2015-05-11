@@ -5,6 +5,9 @@ import (
 	"supinfo/mewpipe/entities"
 	"net/http"
     "gopkg.in/mgo.v2/bson"
+    "time"
+    "encoding/base64"
+    "supinfo/mewpipe/filters"
 )
 
 func UserRoute() *restful.WebService {
@@ -14,10 +17,32 @@ func UserRoute() *restful.WebService {
 	Consumes(restful.MIME_JSON).
 	Produces(restful.MIME_JSON)
 
-	service.Route(service.POST("").To(userCreate))
-	service.Route(service.PUT("/{user-id}").To(userUpdate))
-	service.Route(service.DELETE("/{user-id}").To(userDelete))
-	service.Route(service.GET("/{user-id}").To(userGet))
+	service.Route(
+        service.
+            POST("").
+            To(userCreate))
+	service.Route(
+        service.
+            PUT("/{user-id}").
+            Filter(filters.MustBeLogged).
+            Filter(filters.UserIDMustBeMyself).
+            To(userUpdate))
+	service.Route(
+        service.
+            DELETE("/{user-id}").
+            Filter(filters.MustBeLogged).
+            Filter(filters.UserIDMustBeMyself).
+            To(userDelete))
+	service.Route(
+        service.
+            GET("/{user-id}").
+            Filter(filters.MustBeLogged).
+            Filter(filters.UserIDMustBeMyself).
+            To(userGet))
+	service.Route(
+        service.
+            POST("/login").
+            To(userLogin))
 
 	return service
 }
@@ -52,7 +77,7 @@ func userUpdate(request *restful.Request, response *restful.Response) {
     }
 
     usr, err := entities.UserFromId(bson.ObjectIdHex(id))
-    if (err != nil) {
+    if err != nil {
         response.WriteError(http.StatusNotFound, err)
         return
     }
@@ -102,10 +127,41 @@ func userGet(request *restful.Request, response *restful.Response) {
     }
 
     usr, err := entities.UserFromId(bson.ObjectIdHex(id))
-    if (err != nil) {
+    if err != nil {
         response.WriteError(http.StatusNotFound, err)
         return
     }
 
     response.WriteEntity(usr)
+}
+
+func userLogin(request *restful.Request, response *restful.Response) {
+
+    form := entities.UserNew()
+
+    if err := request.ReadEntity(&form); err != nil {
+        response.WriteError(http.StatusBadRequest, err)
+        return
+    }
+    usr, err := entities.UserFromCredentials(form.Email, form.Password)
+    if err != nil {
+
+    }
+    token, err := usr.TokenNew()
+    if err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+    }
+
+    type lambdaReturn struct {
+        User entities.User
+        Token string
+        ExpireAt time.Time
+    }
+
+    toReturn := new(lambdaReturn)
+    toReturn.User = *usr
+    toReturn.ExpireAt = token.ExpireAt
+    toReturn.Token = base64.StdEncoding.EncodeToString([]byte(token.Token))
+
+    response.WriteEntity(toReturn)
 }
