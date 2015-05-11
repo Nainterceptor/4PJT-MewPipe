@@ -66,8 +66,7 @@ func UserRoute(container *restful.Container) {
         Param(service.PathParameter("user-id", "identifier of the user").DataType("string")).
         Returns(http.StatusOK, "User must be returned in the body", nil).
         Returns(http.StatusBadRequest, "Bad Object ID", nil).
-        Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil).
-        Reads(entities.User{}))
+        Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil))
 
     service.Route(service.
         POST("/login").
