@@ -4,15 +4,16 @@ import (
 	"net/http"
 	"supinfo/mewpipe/configs"
 	"github.com/emicklei/go-restful"
-	"supinfo/mewpipe/rest"
+	"supinfo/mewpipe/rest/users"
+	"supinfo/mewpipe/rest/media"
 )
 
 func main() {
     configs.Parse()
 
     wsContainer := restful.NewContainer()
-    rest.UserRoute(wsContainer)
-    rest.MediaRoute(wsContainer)
+    users.UserRoute(wsContainer)
+    media.MediaRoute(wsContainer)
     configs.StaticRouter(wsContainer)
 
     configs.ConfigureSwagger(wsContainer)
