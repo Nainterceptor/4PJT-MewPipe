@@ -33,6 +33,20 @@ func UserNew() *User {
     return user
 }
 
+func UserNewFromId(oid bson.ObjectId) *User {
+    user := new(User)
+    user.Id = bson.NewObjectId()
+    return user
+}
+
+func UserFromId(oid bson.ObjectId) *User {
+    user := new(User)
+    if err := userCollection.FindId(oid).One(user); err != nil {
+        user = UserNewFromId(oid)
+    }
+    return user
+}
+
 func (u *User) Validate() error {
     if u.Email == "" {
         return errors.New("`email` is empty")
@@ -49,6 +63,17 @@ func (u *User) Insert() error {
     }
     u.hashPassword()
     if err := userCollection.Insert(&u); err != nil {
+        return err
+    }
+    return nil
+}
+
+func (u *User) Update() error {
+    if u.Password != "" {
+        u.hashPassword()
+    }
+
+    if err := userCollection.UpdateId(u.Id, &u); err != nil {
         return err
     }
     return nil
