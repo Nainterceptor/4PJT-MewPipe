@@ -37,7 +37,7 @@ func UserRoute() *restful.WebService {
 
 func NewToken(usr entities.User, mySigningKey []byte) (error) {
 
-	token := jwt.New(jwt.SigningMethodHS256)
+	token := jwt.New(jwt.GetSigningMethod("HS256"))
 	token.Claims["userid"] = usr.Id
 	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 	tokenString, err := token.SignedString(mySigningKey)
@@ -56,21 +56,21 @@ func NewToken(usr entities.User, mySigningKey []byte) (error) {
 func CheckToken(myToken string) (error) {
 
 	token, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
-		return token.Header["mypipe"], nil
+		return []byte("mypipe"), nil
 	})
 
 	if token.Valid {
-		fmt.Println("You look nice today")
+		fmt.Println("Token ok")
 	} else if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-			fmt.Println("That's not even a token")
+			fmt.Println("Invalid token")
 		} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
-			fmt.Println("Timing is everything", err)
+			fmt.Println("Token expired", err)
 		} else {
-			fmt.Println("Couldn't handle this token:", err)
+			fmt.Println("Couldn't handle this token: ", err)
 		}
 	} else {
-		fmt.Println("Couldn't handle this token:", err)
+		fmt.Println("Couldn't handle this token: ", err)
 	}
 
 	return err
@@ -138,8 +138,8 @@ func GetAllUsers(request *restful.Request, response *restful.Response) {
 
 func GetUser(request *restful.Request, response *restful.Response) {
 
-	myToken := request.QueryParameter("token")
 	id := request.PathParameter("user-id")
+	myToken := request.QueryParameter("token")
 
 	err := CheckToken(myToken)
 	if err != nil {
@@ -165,6 +165,12 @@ func GetUser(request *restful.Request, response *restful.Response) {
 func UpdateUser(request *restful.Request, response *restful.Response) {
 
 	id := request.PathParameter("user-id")
+	myToken := request.QueryParameter("token")
+
+	err := CheckToken(myToken)
+	if err != nil {
+		panic(err)
+	}
 
 	if !bson.IsObjectIdHex(id) {
 		response.WriteErrorString(404, "Problem with the id")
@@ -193,6 +199,12 @@ func UpdateUser(request *restful.Request, response *restful.Response) {
 func DeleteUser(request *restful.Request, response *restful.Response) {
 
 	id := request.PathParameter("user-id")
+	myToken := request.QueryParameter("token")
+
+	err := CheckToken(myToken)
+	if err != nil {
+		panic(err)
+	}
 
 	if !bson.IsObjectIdHex(id) {
 		response.WriteErrorString(404, "Problem with the id")

@@ -19,7 +19,6 @@ var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")
 
 var MongoDB = getMongoDBVar()
 
-
 func getMongoDBVar() *mgo.Database {
     session, err := mgo.Dial(*mongoCS)
     if err != nil {
