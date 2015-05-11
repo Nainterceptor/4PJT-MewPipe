@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="mewpipe" ng-controller="MainController as main">
 <head lang="en">
     <meta charset="UTF-8">
     <title>Mewpipe</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+    <!--<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>-->
     <link rel="stylesheet" href="app/mewpipe.css"/>
+    <link rel="stylesheet" ng-href="{{main.theme.url}}"/>
     <base href="/">
 </head>
-<body ng-app="mewpipe" ng-controller="MainController as main">
-<nav class="navbar navbar-inverse">
+<body>
+<nav class="navbar navbar-default">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -30,11 +31,21 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-expanded="false">Themes <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="pointer" ng-click="main.chooseTheme('default')">Default</a></li>
+                        <li class="divider"></li>
+                        <li><a class="pointer" ng-click="main.chooseTheme('slate')">Slate</a></li>
+                        <li class="divider"></li>
+                        <li><a class="pointer" ng-click="main.chooseTheme('cosmo')">Cosmo</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-expanded="false">Sign <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href ng-hide="main.user.accessToken" ng-click="main.logIn()">Sign In</a><a href ng-show="main.user.accessToken" ng-click="main.logOut()">Sign Out</a></li>
+                        <li><a class="pointer" ng-hide="main.user.accessToken" ng-click="main.logIn()">Sign In</a><a class="pointer" ng-show="main.user.accessToken" ng-click="main.logOut()">Sign Out</a></li>
                         <li class="divider"></li>
-                        <li><a href>Sign Up</a></li>
+                        <li><a class="pointer">Sign Up</a></li>
                     </ul>
                 </li>
             </ul>
