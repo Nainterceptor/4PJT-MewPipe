@@ -23,8 +23,6 @@ func UserRoute() *restful.WebService {
 		Doc("Login").
 		Param(service.BodyParameter("password", "the form password").DataType("string"))
 	service.Route(service.POST("").To(CreateUser))
-	service.Route(service.GET("").To(GetAllUsers)).
-		Doc("get all users")
 	service.Route(service.GET("/{user-id}").To(GetUser)).
 		Doc("get a user")
 	service.Route(service.PUT("/update/{user-id}").To(UpdateUser)).
@@ -123,17 +121,6 @@ func CreateUser(request *restful.Request, response *restful.Response) {
 	} else {
 		response.WriteError(http.StatusInternalServerError, errRE)
 	}
-}
-
-func GetAllUsers(request *restful.Request, response *restful.Response) {
-
-	usr := []entities.User{}
-	if err := entities.UserCollection.Find(nil).All(&usr); err != nil {
-		response.WriteError(http.StatusInternalServerError, err)
-		return
-	}
-
-	response.WriteEntity(usr)
 }
 
 func GetUser(request *restful.Request, response *restful.Response) {
