@@ -51,13 +51,13 @@ func userTokenNew() *UserToken {
 
 func UserNewFromId(oid bson.ObjectId) *User {
     user := new(User)
-    user.Id = bson.NewObjectId()
+    user.Id = oid
     return user
 }
 
 func UserFromId(oid bson.ObjectId) (*User, error) {
     user := new(User)
-    err := userCollection.FindId(oid).One(user);
+    err := userCollection.FindId(oid).One(&user);
     if err != nil {
         user = UserNewFromId(oid)
     }
