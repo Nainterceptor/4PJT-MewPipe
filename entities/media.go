@@ -22,7 +22,7 @@ type Media struct {
     Summary     string          `json:"summary" bson:",omitempty"`
     Publisher   user            `json:"user,omitempty" bson:",omitempty"`
     File        bson.ObjectId   `json:"file,omitempty" bson:",omitempty"`
-    file        *mgo.GridFile
+    mgofile     *mgo.GridFile   `json:"-" bson:"-"`
 }
 
 func MediaNew() *Media {
@@ -71,7 +71,7 @@ func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHead
 
 func (m *Media) OpenFile() error {
     file, err := mediaGridFS.OpenId(m.File)
-    m.file = file
+    m.mgofile = file
 
 
     if err != nil {
@@ -82,29 +82,29 @@ func (m *Media) OpenFile() error {
 }
 
 func (m *Media) ContentType() string {
-    return m.file.ContentType()
+    return m.mgofile.ContentType()
 }
 
 func (m *Media) Size() int64 {
-    return m.file.Size()
+    return m.mgofile.Size()
 }
 
 func (m *Media) CloseFile() error {
-    return m.file.Close()
+    return m.mgofile.Close()
 }
 
 func (m *Media) SeekSet(offset int64) error {
-    _, err := m.file.Seek(offset, os.SEEK_SET)
+    _, err := m.mgofile.Seek(offset, os.SEEK_SET)
     return err
 }
 
 func (m *Media) Read(buffer []byte) error {
-    _, err := m.file.Read(buffer)
+    _, err := m.mgofile.Read(buffer)
     return err
 }
 
 func (m *Media) CopyTo(target io.Writer) error {
-    _, err := io.Copy(target, m.file)
+    _, err := io.Copy(target, m.mgofile)
     return err
 }
 
