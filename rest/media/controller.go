@@ -4,23 +4,20 @@ import (
     "github.com/emicklei/go-restful"
     "supinfo/mewpipe/entities"
     "net/http"
-    "io"
-    "gopkg.in/mgo.v2/bson"
     "strconv"
     "regexp"
-    "os"
 )
 
 func mediaCreate(request *restful.Request, response *restful.Response) {
 
-    media := entities.Media{}
+    media := entities.MediaNew()
+
     if err := request.ReadEntity(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
+        response.WriteError(http.StatusBadRequest, err)
         return
     }
-    media.Id = bson.NewObjectId()
 
-    if err := entities.MediaCollection.Insert(&media); err != nil {
+    if err := media.Insert(); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
     }
@@ -28,18 +25,7 @@ func mediaCreate(request *restful.Request, response *restful.Response) {
 }
 
 func mediaUpload(request *restful.Request, response *restful.Response) {
-    id := request.PathParameter("media-id")
-    if !bson.IsObjectIdHex(id) {
-        response.WriteErrorString(404, "Bad ID")
-        return
-    }
-    oid := bson.ObjectIdHex(id)
-    media := entities.Media{}
-
-    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
-    }
+    media := request.Attribute("media").(*entities.Media)
 
     request.Request.ParseMultipartForm(500 * 1000 * 1000)
     postedFile, handler, err := request.Request.FormFile("file")
@@ -48,53 +34,27 @@ func mediaUpload(request *restful.Request, response *restful.Response) {
         return
     }
     defer postedFile.Close()
-    mongoFile, err := entities.MediaGridFS.Create(handler.Filename)
-    defer mongoFile.Close()
-    if err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
-    }
-    io.Copy(mongoFile, postedFile)
-    mongoFile.SetContentType(handler.Header.Get("Content-Type"))
-    if media.File != "" {
-        entities.MediaGridFS.RemoveId(media.File)
-    }
-    media.File = mongoFile.Id().(bson.ObjectId)
-    if err := entities.MediaCollection.UpdateId(oid,&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        mongoFile.Abort()
-        return
-    }
+
+    media.Upload(postedFile, handler)
+
     response.WriteEntity(media)
 }
 
 func mediaRead(request *restful.Request, response *restful.Response) {
-    id := request.PathParameter("media-id")
-    if !bson.IsObjectIdHex(id) {
-        response.WriteErrorString(404, "Bad ID")
-        return
-    }
-    oid := bson.ObjectIdHex(id)
-    media := entities.Media{}
-    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
-    }
+    media := request.Attribute("media").(*entities.Media)
+    if err := media.OpenFile(); err != nil {
 
-    mongoFile, err := entities.MediaGridFS.OpenId(media.File)
-    defer mongoFile.Close()
-    if err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
     }
+    defer media.CloseFile()
+
     response.AddHeader("Accept-Ranges", "bytes")
     response.AddHeader("Content-Disposition", "attachment; filename=video.mp4")
-    response.AddHeader("Content-type", mongoFile.ContentType())
+    response.AddHeader("Content-type", media.ContentType())
     if rangeReq := request.Request.Header.Get("range"); rangeReq != "" {
         regex, _ := regexp.Compile(`bytes=([0-9]*)-([0-9]*)`)
         ranges := regex.FindStringSubmatch(rangeReq)
         start := 0
-        intSize := int(mongoFile.Size())
+        intSize := int(media.Size())
         end := intSize - 1
         if len(ranges) > 2 {
             testedStart, errStart := strconv.Atoi(ranges[1])
@@ -113,15 +73,15 @@ func mediaRead(request *restful.Request, response *restful.Response) {
                 start = intSize - testedEnd
                 end = intSize - 1
             }
-            _, err := mongoFile.Seek(int64(start), os.SEEK_SET)
+            err := media.SeekSet(int64(start))
             if err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
                 return
             }
             currentSize := end + 1 - start
             buffer := make([]byte, currentSize)
-            _, err = mongoFile.Read(buffer)
-            if err != nil {
+
+            if err := media.Read(buffer); err != nil {
                 response.WriteError(http.StatusInternalServerError, err)
                 return
             }
@@ -135,59 +95,33 @@ func mediaRead(request *restful.Request, response *restful.Response) {
             return
         }
     }
-    response.AddHeader("Content-Length", strconv.FormatInt(mongoFile.Size(), 10))
-    _, err = io.Copy(response, mongoFile)
+    response.AddHeader("Content-Length", strconv.FormatInt(media.Size(), 10))
+    if err := media.CopyTo(response); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
 }
 
 func mediaPut(request *restful.Request, response *restful.Response) {
-    id := request.PathParameter("media-id")
-    if !bson.IsObjectIdHex(id) {
-        response.WriteErrorString(400, "Bad ID")
-        return
-    }
-    oid := bson.ObjectIdHex(id)
-    media := entities.Media{}
-    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
-    }
-    fileId := media.File
+    media := request.Attribute("media").(*entities.Media)
+
     if err := request.ReadEntity(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
+        response.WriteError(http.StatusBadRequest, err)
         return
     }
 
-    if _, err := entities.MediaCollection.UpsertId(oid, &media); err != nil {
+    if err := media.Update(); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
-    }
-
-    if fileId != media.File {
-        entities.MediaGridFS.RemoveId(fileId)
     }
 
     response.WriteEntity(media)
 }
 
 func mediaDelete(request *restful.Request, response *restful.Response) {
-    id := request.PathParameter("media-id")
-    if !bson.IsObjectIdHex(id) {
-        response.WriteErrorString(400, "Bad ID")
-        return
-    }
-    oid := bson.ObjectIdHex(id)
-    media := entities.Media{}
+    media := request.Attribute("media").(*entities.Media)
 
-    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
-    }
-
-    if media.File != "" {
-        entities.MediaGridFS.RemoveId(media.File)
-    }
-
-    if err := entities.MediaCollection.RemoveId(oid); err != nil {
+    if err := media.Delete(); err != nil {
         response.WriteError(http.StatusInternalServerError, err)
         return
     }
@@ -195,18 +129,7 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
 }
 
 func mediaGet(request *restful.Request, response *restful.Response) {
-    id := request.PathParameter("media-id")
-    if !bson.IsObjectIdHex(id) {
-        response.WriteErrorString(400, "Bad ID")
-        return
-    }
-    oid := bson.ObjectIdHex(id)
-    media := entities.Media{}
-
-    if err := entities.MediaCollection.FindId(oid).One(&media); err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
-        return
-    }
+    media := request.Attribute("media").(*entities.Media)
 
     response.WriteEntity(media)
 }

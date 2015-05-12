@@ -4,6 +4,7 @@ import (
     "github.com/emicklei/go-restful"
     "supinfo/mewpipe/entities"
     "net/http"
+    "supinfo/mewpipe/filters"
 )
 
 func MediaRoute(container *restful.Container) {
@@ -26,6 +27,7 @@ func MediaRoute(container *restful.Container) {
 
     service.Route(service.
         PUT("/{media-id}").
+        Filter(filters.InjectMediaMeta).
         To(mediaPut).
 
         Doc("Update a vidéo (metadocument)").
@@ -38,19 +40,23 @@ func MediaRoute(container *restful.Container) {
 
     service.Route(service.
         GET("/{media-id}").
+        Filter(filters.InjectMediaMeta).
         To(mediaGet))
 
     service.Route(service.
         DELETE("/{media-id}").
+        Filter(filters.InjectMediaMeta).
         To(mediaDelete))
 
     service.Route(service.
         POST("/{media-id}/upload").
+        Filter(filters.InjectMediaMeta).
         Consumes("multipart/form-data").
         To(mediaUpload))
 
     service.Route(service.
         GET("/{media-id}/read").
+        Filter(filters.InjectMediaMeta).
         To(mediaRead))
 
     container.Add(service)

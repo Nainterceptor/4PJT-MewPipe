@@ -3,7 +3,14 @@ package entities
 import(
     "supinfo/mewpipe/configs"
     "gopkg.in/mgo.v2/bson"
+    "mime/multipart"
+    "io"
+    "gopkg.in/mgo.v2"
+    "os"
 )
+
+var mediaCollection = configs.MongoDB.C("media")
+var mediaGridFS = configs.MongoDB.GridFS("media")
 
 type user struct {
     *User
@@ -15,7 +22,112 @@ type Media struct {
     Summary     string          `json:"summary" bson:",omitempty"`
     Publisher   user            `json:"user,omitempty" bson:",omitempty"`
     File        bson.ObjectId   `json:"file,omitempty" bson:",omitempty"`
+    file        *mgo.GridFile
 }
 
-var MediaCollection = configs.MongoDB.C("media")
-var MediaGridFS = configs.MongoDB.GridFS("media")
+func MediaNew() *Media {
+    media := new(Media)
+    media.Id = bson.NewObjectId()
+    return media
+}
+
+func MediaNewFromId(oid bson.ObjectId) *Media {
+    media := new(Media)
+    media.Id = oid
+    return media
+}
+func MediaFromId(oid bson.ObjectId) (*Media, error) {
+    media := new(Media)
+    err := mediaCollection.FindId(oid).One(&media);
+    if err != nil {
+        media = MediaNewFromId(oid)
+    }
+    return media, err
+}
+
+func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHeader) error {
+    mongoFile, err := mediaGridFS.Create(fileHeader.Filename)
+    defer mongoFile.Close()
+    if err != nil {
+        return err
+    }
+    mongoFile.SetContentType(fileHeader.Header.Get("Content-Type"))
+    _, err = io.Copy(mongoFile, postedFile)
+    if err != nil {
+        return err
+    }
+
+    if m.File != "" {
+        mediaGridFS.RemoveId(m.File)
+    }
+    m.File = mongoFile.Id().(bson.ObjectId)
+
+    if err := m.Update(); err != nil {
+        mongoFile.Abort()
+        return err
+    }
+    return nil
+}
+
+func (m *Media) OpenFile() error {
+    file, err := mediaGridFS.OpenId(m.File)
+    m.file = file
+
+
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func (m *Media) ContentType() string {
+    return m.file.ContentType()
+}
+
+func (m *Media) Size() int64 {
+    return m.file.Size()
+}
+
+func (m *Media) CloseFile() error {
+    return m.file.Close()
+}
+
+func (m *Media) SeekSet(offset int64) error {
+    _, err := m.file.Seek(offset, os.SEEK_SET)
+    return err
+}
+
+func (m *Media) Read(buffer []byte) error {
+    _, err := m.file.Read(buffer)
+    return err
+}
+
+func (m *Media) CopyTo(target io.Writer) error {
+    _, err := io.Copy(target, m.file)
+    return err
+}
+
+func (m *Media) Insert() error {
+    if err := mediaCollection.Insert(&m); err != nil {
+        return err
+    }
+    return nil
+}
+
+func (m *Media) Update() error {
+    if err := mediaCollection.UpdateId(m.Id, &m); err != nil {
+        return err
+    }
+    return nil
+}
+
+func (m *Media) Delete() error {
+    if m.File != "" {
+        mediaGridFS.RemoveId(m.File)
+    }
+    if err := mediaCollection.RemoveId(m.Id); err != nil {
+        return err
+    }
+    return nil
+}
