@@ -30,12 +30,15 @@ func mediaUpload(request *restful.Request, response *restful.Response) {
     request.Request.ParseMultipartForm(500 * 1000 * 1000)
     postedFile, handler, err := request.Request.FormFile("file")
     if err != nil {
-        response.WriteError(http.StatusInternalServerError, err)
+        response.WriteError(http.StatusBadRequest, err)
         return
     }
     defer postedFile.Close()
 
-    media.Upload(postedFile, handler)
+    if err := media.Upload(postedFile, handler); err != nil {
+        response.WriteError(http.StatusInternalServerError, err)
+        return
+    }
 
     response.WriteEntity(media)
 }

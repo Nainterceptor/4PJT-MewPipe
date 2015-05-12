@@ -15,7 +15,7 @@ func InjectMediaMeta(req *restful.Request, resp *restful.Response, chain *restfu
     oid := bson.ObjectIdHex(id)
     media, err := entities.MediaFromId(oid)
     if err != nil {
-        resp.WriteErrorString(http.StatusForbidden, "Media not found")
+        resp.WriteErrorString(http.StatusNotFound, "Media not found")
         return
     }
     req.SetAttribute("media", media)
