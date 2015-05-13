@@ -93,6 +93,10 @@
             Darkly: {
                 name: "Darkly",
                 url: "https://bootswatch.com/darkly/bootstrap.min.css"
+            },
+            United: {
+                name: "United",
+                url: "https://bootswatch.com/united/bootstrap.min.css"
             }
         };
         factory.saveTheme = function(theme){

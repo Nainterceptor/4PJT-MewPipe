@@ -29,9 +29,9 @@
         this.user = userFactory;
     }
 
-    function AuthenticatitionController(userFactory){
+    function AuthenticatitionController(userFactory, notificationFactory){
         this.logIn = function(){
-            angular.element('#myModal').appendTo('body').modal('show');
+            angular.element('#signInModal').appendTo('body').modal('show');
         };
         this.logOut = function(){
             userFactory.logOut();
@@ -43,9 +43,12 @@
         return {
             restrict: 'E',
             templateUrl: 'app/templates/sign-in-modal.html',
+            controllerAs: 'signIn',
             controller: function(){
                 this.logIn = function(){
+                    userFactory.logIn();
                     notificationFactory.addAlert('Connected !','success');
+                    angular.element('#signInModal').appendTo('body').modal('hide');
                 };
             }
         }
