@@ -3,7 +3,7 @@
     angular.module('mewpipe')
         .controller('MainController',['$router','$scope','userFactory','notificationFactory','themesFactory', MainController])
         .controller('AuthenticationController',['userFactory','notificationFactory', AuthenticatitionController])
-        .directive('modalAuth',[ModalAuthDirective])
+        .directive('modalSignIn',['userFactory','notificationFactory',ModalSignInDirective])
     ;
 
     function MainController($router, $scope, userFactory,notificationFactory, themesFactory){
@@ -29,11 +29,9 @@
         this.user = userFactory;
     }
 
-    function AuthenticatitionController(userFactory, notificationFactory){
-        this.test="toto";
+    function AuthenticatitionController(userFactory){
         this.logIn = function(){
-            userFactory.logIn();
-            notificationFactory.addAlert('Connected !','success');
+            angular.element('#myModal').appendTo('body').modal('show');
         };
         this.logOut = function(){
             userFactory.logOut();
@@ -41,12 +39,14 @@
         }
     }
 
-    function ModalAuthDirective(){
+    function ModalSignInDirective(userFactory, notificationFactory){
         return {
             restrict: 'E',
-            templateUrl: 'app/templates/auth-modal.html',
-            controller: function($scope){
-                console.log($scope);
+            templateUrl: 'app/templates/sign-in-modal.html',
+            controller: function(){
+                this.logIn = function(){
+                    notificationFactory.addAlert('Connected !','success');
+                };
             }
         }
     }
