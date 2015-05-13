@@ -12,7 +12,8 @@
         $router.config([
             { path: '/', component: 'home'},
             { path: '/player', component: 'player'},
-            { path: '/dashboard', component: 'dashboard'}
+            { path: '/dashboard', component: 'dashboard'},
+            { path: '/admin-panel', component: 'adminPanel'}
         ]);
         this.chooseTheme = function(theme){
             me.theme = themesFactory.themes[theme];
