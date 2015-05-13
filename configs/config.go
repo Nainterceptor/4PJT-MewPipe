@@ -8,9 +8,6 @@ import (
     "github.com/emicklei/go-restful"
 )
 
-func Parse() {
-    iniflags.Parse()
-}
 
 var staticPath = flag.String("static_path", "static", "Localisation for static files")
 
@@ -21,7 +18,9 @@ var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")
 
 var MongoDB = getMongoDBVar()
 
+
 func getMongoDBVar() *mgo.Database {
+    iniflags.Parse()
     session, err := mgo.Dial(*mongoCS)
     if err != nil {
         panic(err)

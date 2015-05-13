@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-    configs.Parse()
 
     wsContainer := restful.NewContainer()
     users.UserRoute(wsContainer)
