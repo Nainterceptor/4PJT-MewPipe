@@ -36,13 +36,14 @@
                         <li ng-repeat="theme in main.themes"><a class="pointer" ng-click="main.chooseTheme(theme.name)">{{theme.name}}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
+                <li ng-controller="AuthenticationController as auth" class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-expanded="false">Sign <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a class="pointer" ng-hide="main.user.accessToken" ng-click="main.logIn()">Sign In</a><a class="pointer" ng-show="main.user.accessToken" ng-click="main.logOut()">Sign Out</a></li>
                         <li class="divider"></li>
                         <li><a class="pointer">Sign Up</a></li>
                     </ul>
+                    <modal-auth></modal-auth>
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -68,10 +69,9 @@
 <script src="bower_components/videogular-overlay-play/vg-overlay-play.min.js"></script>
 <script src="bower_components/videogular-poster/vg-poster.min.js"></script>
 <script src="bower_components/videogular-buffering/vg-buffering.min.js"></script>
-<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-<!--<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>-->
 
 <script src="app/mewpipe.js"></script>
+<script src="app/mewPipeController.js"></script>
 <script src="app/mewpipeServices.js"></script>
 <script src="components/home/home.js"></script>
 <script src="components/player/player.js"></script>
