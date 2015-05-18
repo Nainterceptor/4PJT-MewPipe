@@ -113,11 +113,17 @@ func mediaRead(request *restful.Request, response *restful.Response) {
 
 func mediaPut(request *restful.Request, response *restful.Response) {
 	media := request.Attribute("media").(*entities.Media)
+	oldMedia := *media
 
 	if err := request.ReadEntity(&media); err != nil {
 		response.WriteError(http.StatusBadRequest, err)
 		return
 	}
+
+	//Prevent some editions
+	media.Publisher = oldMedia.Publisher
+	media.Id = oldMedia.Id
+	media.File = oldMedia.File
 
 	if err := media.Update(); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
