@@ -10,6 +10,7 @@ import (
 )
 
 func mediaCreate(request *restful.Request, response *restful.Response) {
+	user := request.Attribute("user").(*entities.User)
 
 	media := entities.MediaNew()
 
@@ -17,6 +18,10 @@ func mediaCreate(request *restful.Request, response *restful.Response) {
 		response.WriteError(http.StatusBadRequest, err)
 		return
 	}
+
+	media.Publisher.Name = user.Name
+	media.Publisher.Id = user.Id
+	media.Publisher.Email = user.Email
 
 	if err := media.Insert(); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
