@@ -56,8 +56,6 @@ func UserRoute(container *restful.Container) {
 
 	service.Route(service.
 		GET("/{user-id}").
-		Filter(filters.MustBeLogged).
-		Filter(filters.UserIDMustBeMyself).
 		To(userGet).
 		Doc("Get a user").
 		Operation("userGet").

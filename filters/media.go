@@ -23,3 +23,14 @@ func InjectMediaMeta(req *restful.Request, resp *restful.Response, chain *restfu
 	req.SetAttribute("media", media)
 	chain.ProcessFilter(req, resp)
 }
+
+func MustBeOwnerOrAdmin(request *restful.Request, response *restful.Response, chain *restful.FilterChain) {
+	usr := request.Attribute("user").(*entities.User)
+	media := request.Attribute("media").(*entities.Media)
+
+	if media.Publisher.Id != usr.Id && !usr.HasRole("Admin") {
+		response.WriteErrorString(http.StatusForbidden, "You must be owner or admin")
+		return
+	}
+	chain.ProcessFilter(request, response)
+}

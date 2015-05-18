@@ -137,6 +137,16 @@ func (u *User) hashPassword() error {
 	return err
 }
 
+func (u *User) HasRole(search string) bool {
+	set := make(map[string]struct{}, len(u.Roles))
+	for _, s := range u.Roles {
+		set[s] = struct{}{}
+	}
+
+	_, ok := set[search]
+	return ok
+}
+
 func (u *User) Insert() error {
 	defer u.Clean()
 

@@ -17,6 +17,7 @@ func MediaRoute(container *restful.Container) {
 
 	service.Route(service.
 		POST("").
+		Filter(filters.MustBeLogged).
 		To(mediaCreate).
 		Doc("New vidéo (metadocument)").
 		Operation("mediaCreate").
@@ -28,6 +29,8 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		PUT("/{media-id}").
 		Filter(filters.InjectMediaMeta).
+		Filter(filters.MustBeLogged).
+		Filter(filters.MustBeOwnerOrAdmin).
 		To(mediaPut).
 		Doc("Update a vidéo (metadocument)").
 		Operation("mediaPut").
@@ -51,6 +54,8 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		DELETE("/{media-id}").
 		Filter(filters.InjectMediaMeta).
+		Filter(filters.MustBeLogged).
+		Filter(filters.MustBeOwnerOrAdmin).
 		To(mediaDelete).
 		Doc("Delete a vidéo (metadocument & bin)").
 		Operation("mediaDelete").
@@ -63,6 +68,8 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		POST("/{media-id}/upload").
 		Filter(filters.InjectMediaMeta).
+		Filter(filters.MustBeLogged).
+		Filter(filters.MustBeOwnerOrAdmin).
 		Consumes("multipart/form-data").
 		To(mediaUpload).
 		Doc("Upload a vidéo (bin)").
