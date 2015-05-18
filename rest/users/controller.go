@@ -19,6 +19,7 @@ func userCreate(request *restful.Request, response *restful.Response) {
 		return
 	}
 
+	usr.Roles = usr.Roles[:0]
 	if err := usr.Validate(); err != nil {
 		response.WriteError(http.StatusNotAcceptable, err)
 		return
