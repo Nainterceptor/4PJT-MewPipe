@@ -28,7 +28,9 @@
             <button ng-disabled="adminPanel.scope.currentPage == 0" ng-click="adminPanel.scope.currentPage=adminPanel.scope.currentPage-1">
                 Previous
             </button>
+
             {{adminPanel.scope.currentPage+1}}/{{adminPanel.scope.numberOfPages()}}
+
             <button ng-disabled="adminPanel.scope.currentPage >= adminPanel.admin.users.length/adminPanel.scope.numPerPage - 1"
                     ng-click="adminPanel.scope.currentPage=adminPanel.scope.currentPage+1">
                 Next

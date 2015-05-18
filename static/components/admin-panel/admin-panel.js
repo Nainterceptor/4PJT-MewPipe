@@ -38,7 +38,7 @@
                     username: "Robert12",
                     email: "test@",
                     createdAt: "10-11-2015"
-                },
+                }
             ]
         };
 
