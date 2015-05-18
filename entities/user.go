@@ -170,6 +170,17 @@ func (u *User) Update() error {
 	if err := userCollection.UpdateId(u.Id, &u); err != nil {
 		return err
 	}
+	mediaCol, err := u.GetMedia()
+	if err != nil {
+		return err
+	}
+	for _, media := range mediaCol {
+		media.Publisher.Id = u.Id
+		media.Publisher.Email = u.Email
+		media.Publisher.Name = u.Name
+		media.Update()
+	}
+
 	return nil
 }
 
@@ -177,7 +188,20 @@ func (u *User) Delete() error {
 	if err := userCollection.RemoveId(u.Id); err != nil {
 		return err
 	}
+	mediaCol, err := u.GetMedia()
+	if err != nil {
+		return err
+	}
+	for _, media := range mediaCol {
+		media.Delete()
+	}
 	return nil
+}
+
+func (u *User) GetMedia() ([]Media, error) {
+	var media []Media
+	err := mediaCollection.Find(bson.M{"publisher._id": u.Id}).All(&media)
+	return media, err
 }
 
 func (u *User) TokenNew() (*UserToken, error) {
