@@ -18,8 +18,17 @@ var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")
 
 var MongoDB = getMongoDBVar()
 
+var isParsed = false
+
+func Parse() {
+	if !isParsed {
+		iniflags.Parse()
+		isParsed = true
+	}
+}
+
 func getMongoDBVar() *mgo.Database {
-	iniflags.Parse()
+	Parse()
 	session, err := mgo.Dial(*mongoCS)
 	if err != nil {
 		panic(err)
