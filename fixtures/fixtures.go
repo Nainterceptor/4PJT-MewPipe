@@ -13,13 +13,20 @@ func main() {
 	if len(args) == 0 {
 		fmt.Println("Full import")
 		fmt.Println("===========")
-		Users()
+		users()
+		media()
 		return
 	}
 	if contains(args, "users") {
 		fmt.Println("User import")
 		fmt.Println("===========")
-		Users()
+		users()
+		return
+	}
+	if contains(args, "media") {
+		fmt.Println("Media import")
+		fmt.Println("===========")
+		media()
 		return
 	}
 	fmt.Println("Undefined import")
@@ -35,7 +42,12 @@ func contains(slice []string, item string) bool {
 	return ok
 }
 
-func Users() {
+func users() {
 	entities.ClearUsers()
 	entities.InsertSomeUser()
+}
+
+func media() {
+	entities.ClearMedia()
+	entities.InsertSomeMedia()
 }

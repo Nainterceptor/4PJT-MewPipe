@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"supinfo/mewpipe/configs"
 	"supinfo/mewpipe/entities"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 func ClearUsers() {
@@ -15,7 +17,7 @@ func ClearUsers() {
 }
 
 func getFooUser() *entities.User {
-	usr := entities.UserNew()
+	usr := entities.UserNewFromId(bson.ObjectIdHex("555a076a2fd06c1891000001"))
 	usr.Email = "foo@bar.com"
 	usr.Password = "foobar"
 	usr.Name.FirstName = "Foo"
@@ -25,7 +27,7 @@ func getFooUser() *entities.User {
 }
 
 func getAdminUser() *entities.User {
-	usr := entities.UserNew()
+	usr := entities.UserNewFromId(bson.ObjectIdHex("555a076a2fd06c1891000002"))
 	usr.Email = "admin@admin.com"
 	usr.Password = "admin"
 	usr.Name.FirstName = "Admin"
