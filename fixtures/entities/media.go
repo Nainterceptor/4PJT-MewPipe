@@ -31,21 +31,6 @@ func getAmazingMedia() *entities.Media {
 	media.Publisher.Email = user.Email
 	media.Publisher.Id = user.Id
 
-	path, err := download("https://raw.githubusercontent.com/youtube/api-samples/master/java/src/main/resources/sample-video.mp4")
-	if err == nil {
-		in, err := os.Open(path)
-		if err != nil {
-			panic(err)
-		}
-		header := textproto.MIMEHeader{
-			"Content-Type": {"video/mp4; charset=UTF-8"},
-		}
-		fileHeader := new(multipart.FileHeader)
-		fileHeader.Filename = "sample.mp4"
-		fileHeader.Header = header
-		media.Upload(in, fileHeader)
-	}
-
 	return media
 }
 
@@ -57,21 +42,6 @@ func getBadMedia() *entities.Media {
 	media.Publisher.Name = user.Name
 	media.Publisher.Email = user.Email
 	media.Publisher.Id = user.Id
-
-	path, err := download("https://webglsamples.googlecode.com/hg-history/c4129c21f4d99e4d2138512c5a74554bdabb2257/color-adjust/sample-video.mp4")
-	if err == nil {
-		in, err := os.Open(path)
-		if err != nil {
-			panic(err)
-		}
-		header := textproto.MIMEHeader{
-			"Content-Type": {"video/mp4; charset=UTF-8"},
-		}
-		fileHeader := new(multipart.FileHeader)
-		fileHeader.Filename = "sample.mp4"
-		fileHeader.Header = header
-		media.Upload(in, fileHeader)
-	}
 
 	return media
 }
@@ -86,6 +56,30 @@ func InsertSomeMedia() {
 			return
 		}
 	}
-
+	addVideo(mediaArray[0], "https://raw.githubusercontent.com/youtube/api-samples/master/java/src/main/resources/sample-video.mp4")
+	addVideo(mediaArray[1], "https://webglsamples.googlecode.com/hg-history/c4129c21f4d99e4d2138512c5a74554bdabb2257/color-adjust/sample-video.mp4")
 	fmt.Println("Media added")
+}
+
+func addVideo(media *entities.Media, link string) {
+	path, err := download(link)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	in, err := os.Open(path)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	header := textproto.MIMEHeader{
+		"Content-Type": {"video/mp4; charset=UTF-8"},
+	}
+	fileHeader := new(multipart.FileHeader)
+	fileHeader.Filename = "sample.mp4"
+	fileHeader.Header = header
+	if err = media.Upload(in, fileHeader); err != nil {
+		fmt.Println(err)
+		return
+	}
 }

@@ -5,7 +5,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"path/filepath"
 )
 
 func download(link string) (string, error) {
@@ -45,12 +44,5 @@ func download(link string) (string, error) {
 
 	}
 
-	thePath, err := filepath.Abs(filepath.Dir(file.Name()))
-
-	if err != nil {
-		fmt.Println(err)
-		return "", err
-
-	}
-	return thePath, nil
+	return file.Name(), nil
 }
