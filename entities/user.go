@@ -29,7 +29,7 @@ type User struct {
 	Id             bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name           name          `json:"name" bson:",omitempty"`
 	Email          string        `json:"email" bson:",omitempty"`
-	Roles          []string      `json:"-" bson",omitempty"`
+	Roles          []string      `json:"roles,omitempty" bson",omitempty"`
 	Password       string        `json:"password,omitempty" bson:"-"`
 	HashedPassword string        `json:"-" bson:",omitempty"`
 	UserTokens     []UserToken   `json:"-" bson:",omitempty"`
