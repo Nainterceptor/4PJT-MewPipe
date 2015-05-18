@@ -1,133 +1,133 @@
 package entities
 
-import(
-    "supinfo/mewpipe/configs"
-    "gopkg.in/mgo.v2/bson"
-    "mime/multipart"
-    "io"
-    "gopkg.in/mgo.v2"
-    "os"
+import (
+	"io"
+	"mime/multipart"
+	"os"
+	"supinfo/mewpipe/configs"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var mediaCollection = configs.MongoDB.C("media")
 var mediaGridFS = configs.MongoDB.GridFS("media")
 
 type user struct {
-    *User
+	*User
 }
 
 type Media struct {
-    Id          bson.ObjectId   `json:"id" bson:"_id,omitempty"`
-    Title       string          `json:"title" bson:",omitempty"`
-    Summary     string          `json:"summary" bson:",omitempty"`
-    Publisher   user            `json:"user,omitempty" bson:",omitempty"`
-    File        bson.ObjectId   `json:"file,omitempty" bson:",omitempty"`
-    mgofile     *mgo.GridFile   `json:"-" bson:"-"`
+	Id        bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Title     string        `json:"title" bson:",omitempty"`
+	Summary   string        `json:"summary" bson:",omitempty"`
+	Publisher user          `json:"user,omitempty" bson:",omitempty"`
+	File      bson.ObjectId `json:"file,omitempty" bson:",omitempty"`
+	mgofile   *mgo.GridFile `json:"-" bson:"-"`
 }
 
 func MediaNew() *Media {
-    media := new(Media)
-    media.Id = bson.NewObjectId()
-    return media
+	media := new(Media)
+	media.Id = bson.NewObjectId()
+	return media
 }
 
 func MediaNewFromId(oid bson.ObjectId) *Media {
-    media := new(Media)
-    media.Id = oid
-    return media
+	media := new(Media)
+	media.Id = oid
+	return media
 }
 func MediaFromId(oid bson.ObjectId) (*Media, error) {
-    media := new(Media)
-    err := mediaCollection.FindId(oid).One(&media);
-    if err != nil {
-        media = MediaNewFromId(oid)
-    }
-    return media, err
+	media := new(Media)
+	err := mediaCollection.FindId(oid).One(&media)
+	if err != nil {
+		media = MediaNewFromId(oid)
+	}
+	return media, err
 }
 
 func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHeader) error {
-    mongoFile, err := mediaGridFS.Create(fileHeader.Filename)
-    defer mongoFile.Close()
-    if err != nil {
-        return err
-    }
-    mongoFile.SetContentType(fileHeader.Header.Get("Content-Type"))
-    _, err = io.Copy(mongoFile, postedFile)
-    if err != nil {
-        return err
-    }
+	mongoFile, err := mediaGridFS.Create(fileHeader.Filename)
+	defer mongoFile.Close()
+	if err != nil {
+		return err
+	}
+	mongoFile.SetContentType(fileHeader.Header.Get("Content-Type"))
+	_, err = io.Copy(mongoFile, postedFile)
+	if err != nil {
+		return err
+	}
 
-    if m.File != "" {
-        mediaGridFS.RemoveId(m.File)
-    }
-    m.File = mongoFile.Id().(bson.ObjectId)
+	if m.File != "" {
+		mediaGridFS.RemoveId(m.File)
+	}
+	m.File = mongoFile.Id().(bson.ObjectId)
 
-    if err := m.Update(); err != nil {
-        mongoFile.Abort()
-        return err
-    }
-    return nil
+	if err := m.Update(); err != nil {
+		mongoFile.Abort()
+		return err
+	}
+	return nil
 }
 
 func (m *Media) OpenFile() error {
-    file, err := mediaGridFS.OpenId(m.File)
-    m.mgofile = file
+	file, err := mediaGridFS.OpenId(m.File)
+	m.mgofile = file
 
+	if err != nil {
+		return err
+	}
 
-    if err != nil {
-        return err
-    }
-
-    return nil
+	return nil
 }
 
 func (m *Media) ContentType() string {
-    return m.mgofile.ContentType()
+	return m.mgofile.ContentType()
 }
 
 func (m *Media) Size() int64 {
-    return m.mgofile.Size()
+	return m.mgofile.Size()
 }
 
 func (m *Media) CloseFile() error {
-    return m.mgofile.Close()
+	return m.mgofile.Close()
 }
 
 func (m *Media) SeekSet(offset int64) error {
-    _, err := m.mgofile.Seek(offset, os.SEEK_SET)
-    return err
+	_, err := m.mgofile.Seek(offset, os.SEEK_SET)
+	return err
 }
 
 func (m *Media) Read(buffer []byte) error {
-    _, err := m.mgofile.Read(buffer)
-    return err
+	_, err := m.mgofile.Read(buffer)
+	return err
 }
 
 func (m *Media) CopyTo(target io.Writer) error {
-    _, err := io.Copy(target, m.mgofile)
-    return err
+	_, err := io.Copy(target, m.mgofile)
+	return err
 }
 
 func (m *Media) Insert() error {
-    if err := mediaCollection.Insert(&m); err != nil {
-        return err
-    }
-    return nil
+	if err := mediaCollection.Insert(&m); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (m *Media) Update() error {
-    if err := mediaCollection.UpdateId(m.Id, &m); err != nil {
-        return err
-    }
-    return nil
+	if err := mediaCollection.UpdateId(m.Id, &m); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (m *Media) Delete() error {
-    if m.File != "" {
-        mediaGridFS.RemoveId(m.File)
-    }
-    if err := mediaCollection.RemoveId(m.Id); err != nil {
-        return err
-    }
-    return nil
+	if m.File != "" {
+		mediaGridFS.RemoveId(m.File)
+	}
+	if err := mediaCollection.RemoveId(m.Id); err != nil {
+		return err
+	}
+	return nil
 }
