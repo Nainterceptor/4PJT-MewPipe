@@ -1,13 +1,13 @@
 package configs
 
 import (
-    "github.com/vharitonsky/iniflags"
-    "flag"
-    "gopkg.in/mgo.v2"
-    "github.com/emicklei/go-restful/swagger"
-    "github.com/emicklei/go-restful"
-)
+	"flag"
 
+	"github.com/emicklei/go-restful"
+	"github.com/emicklei/go-restful/swagger"
+	"github.com/vharitonsky/iniflags"
+	"gopkg.in/mgo.v2"
+)
 
 var staticPath = flag.String("static_path", "static", "Localisation for static files")
 
@@ -18,24 +18,23 @@ var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")
 
 var MongoDB = getMongoDBVar()
 
-
 func getMongoDBVar() *mgo.Database {
-    iniflags.Parse()
-    session, err := mgo.Dial(*mongoCS)
-    if err != nil {
-        panic(err)
-    }
-    session.SetMode(mgo.Monotonic, true)
-    return session.DB(*mongoName)
+	iniflags.Parse()
+	session, err := mgo.Dial(*mongoCS)
+	if err != nil {
+		panic(err)
+	}
+	session.SetMode(mgo.Monotonic, true)
+	return session.DB(*mongoName)
 }
 
 func ConfigureSwagger(wsContainer *restful.Container) {
-    swaggerConfig := swagger.Config{
-        WebServices:        wsContainer.RegisteredWebServices(), // you control what services are visible
-        WebServicesUrl:     "http://" + *HttpBinding,
-        ApiPath:            "/apidocs.json",
-        SwaggerPath:        "/apidocs/",
-        SwaggerFilePath:    "./static/swagger",
-    }
-    swagger.RegisterSwaggerService(swaggerConfig, wsContainer)
+	swaggerConfig := swagger.Config{
+		WebServices:     wsContainer.RegisteredWebServices(), // you control what services are visible
+		WebServicesUrl:  "http://" + *HttpBinding,
+		ApiPath:         "/apidocs.json",
+		SwaggerPath:     "/apidocs/",
+		SwaggerFilePath: "./static/swagger",
+	}
+	swagger.RegisterSwaggerService(swaggerConfig, wsContainer)
 }

@@ -1,16 +1,16 @@
 package main
 
 import (
-    "supinfo/mewpipe/fixtures/entities"
-    "fmt"
+	"fmt"
+	"supinfo/mewpipe/fixtures/entities"
 )
 
 func main() {
-    Users()
+	Users()
 }
 
 func Users() {
-    fmt.Println("Users Fixtures")
-    entities.ClearUsers()
-    entities.InsertSomeUser()
+	fmt.Println("Users Fixtures")
+	entities.ClearUsers()
+	entities.InsertSomeUser()
 }
