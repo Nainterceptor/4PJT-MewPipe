@@ -131,3 +131,25 @@ func userLogin(request *restful.Request, response *restful.Response) {
 
 	response.WriteEntity(toReturn)
 }
+
+func userRefreshToken(request *restful.Request, response *restful.Response) {
+
+	usr := request.Attribute("user").(*entities.User)
+	//Not useful to remove current token, because we've an automatic clean for older tokens.
+	token, err := usr.TokenNew()
+	if err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+
+	type tokenBack struct {
+		Token    string
+		ExpireAt time.Time
+	}
+
+	theToken := new(tokenBack)
+	theToken.ExpireAt = token.ExpireAt
+	theToken.Token = base64.StdEncoding.EncodeToString([]byte(token.Token))
+
+	response.WriteEntity(theToken)
+}

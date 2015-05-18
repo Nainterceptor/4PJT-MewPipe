@@ -78,5 +78,15 @@ func UserRoute(container *restful.Container) {
 		Returns(http.StatusInternalServerError, "Something failed while token generation", nil).
 		Reads(entities.User{}))
 
+	service.Route(service.
+		POST("/refresh-token").
+		Filter(filters.MustBeLogged).
+		To(userRefreshToken).
+		Doc("Refresh a token").
+		Notes("Get a new token from another token").
+		Operation("userRefreshToken").
+		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil).
+		Returns(http.StatusInternalServerError, "Something failed while token generation", nil))
+
 	container.Add(service)
 }
