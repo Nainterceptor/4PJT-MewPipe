@@ -14,7 +14,9 @@ var mediaCollection = configs.MongoDB.C("media")
 var mediaGridFS = configs.MongoDB.GridFS("media")
 
 type user struct {
-	*User
+	Id    bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Name  name          `json:"name" bson:",omitempty"`
+	Email string        `json:"email" bson:",omitempty"`
 }
 
 type Media struct {

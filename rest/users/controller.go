@@ -19,6 +19,7 @@ func userCreate(request *restful.Request, response *restful.Response) {
 		return
 	}
 
+	usr.Roles = usr.Roles[:0]
 	if err := usr.Validate(); err != nil {
 		response.WriteError(http.StatusNotAcceptable, err)
 		return
@@ -45,10 +46,15 @@ func userUpdate(request *restful.Request, response *restful.Response) {
 		response.WriteError(http.StatusNotFound, err)
 		return
 	}
+	oldUsr := *usr
 	if err := request.ReadEntity(&usr); err != nil {
 		response.WriteError(http.StatusBadRequest, err)
 		return
 	}
+
+	//Persist some informations
+	usr.Id = oldUsr.Id
+	usr.Roles = oldUsr.Roles
 
 	if err := usr.Validate(); err != nil {
 		response.WriteError(http.StatusNotAcceptable, err)
