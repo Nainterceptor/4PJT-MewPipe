@@ -1,30 +1,58 @@
 (function(){
     "use strict";
-    var config = {
-        url: ""
-    };
+    var baseUrl = "/rest";
 
     angular.module('mewpipeServices',['ngCookies'])
-        .factory('userFactory',['$http','$cookies', UserFactory])
+        .run(['$http','$cookies',function($http,$cookies) {
+            if($cookies.get('accessToken')){
+                $http.defaults.headers.common['Authorization'] = $cookies.get('accessToken');
+            }
+        }])
+        .factory('userFactory',['$http','$cookies','notificationFactory', UserFactory])
         .factory('statsFactory',['$http', StatsFactory])
         .factory('notificationFactory',['$rootScope',NotificationFactory])
         .factory('themesFactory',['$cookies', ThemesFactory])
     ;
 
-    function UserFactory($http, $cookies){
-        var user = {};
-        user.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
-        user.name = "Toto";
-        user.email = "toto@tata.com";
-        user.logIn = function(){
-            $cookies.put('accessToken','toto');
-            user.accessToken = 'toto';
+    function UserFactory($http, $cookies, notificationFactory){
+        var userInstance = {};
+        userInstance.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
+        userInstance.logIn = function(email, password){
+            $http.post(baseUrl+'/users/login',{
+                email: email,
+                password: password
+            })
+                .success(function(response) {
+                    notificationFactory.addAlert('Connected !','success');
+                    userInstance.user = response.User;
+                    $cookies.put('accessToken', response.Token, {expires: new Date(response.ExpireAt)});
+                    userInstance.accessToken = response.Token;
+                })
+                .error(function(){
+                    console.log('failed');
+                    console.log(response);
+                });
         };
-        user.logOut = function(){
+        userInstance.signUp = function(email, nickname, password){
+            $http.post(baseUrl+'/users',{
+                email: email,
+                name:{nickname: nickname},
+                password: password
+            })
+                .success(function(response) {
+                    notificationFactory.addAlert('Registered !','success');
+                    userInstance.logIn(email, password);
+                })
+                .error(function(){
+                    console.log('failed');
+                    console.log(response);
+                });
+        };
+        userInstance.logOut = function(){
             $cookies.remove('accessToken');
-            user.accessToken = undefined;
+            userInstance.accessToken = undefined;
         };
-        return user;
+        return userInstance;
     }
 
     function StatsFactory($http){
@@ -101,7 +129,7 @@
         };
         factory.saveTheme = function(theme){
             var date = new Date();
-            date.setYear(date.getYear() + 5);
+            date.setFullYear(date.getFullYear() + 5);
             $cookies.put('theme', theme, {expires: date});
         };
         factory.getTheme = function(){

@@ -5,6 +5,16 @@
         .filter('startFrom', AdminPanelFilter)
     ;
 
+    function AdminPanelFilter() {
+        return function (input, start) {
+            if (!input || !input.length) {
+                return;
+            }
+            start = +start; //parse to int
+            return input.slice(start);
+        }
+    }
+
     function AdminPanelController() {
         var me = this;
         this.admin = {
@@ -42,6 +52,11 @@
             ]
         };
 
+/*
+        Alex évite le mot "scope". C'est un mot ultra utilisé dans angular, bon la on s'en fou mais c'est pas terrible
+        pour la lisibilité. Dans angular il y a "$scope" et meme "scope" tout court dans certaines directives.
+*/
+
         this.scope = {
             currentPage: 0,
             numPerPage: 5,
@@ -51,15 +66,5 @@
         me.scope.numberOfPages = function () {
             return Math.ceil(me.admin.users.length / me.scope.numPerPage);
         };
-    }
-
-    function AdminPanelFilter() {
-        return function (input, start) {
-            if (!input || !input.length) {
-                return;
-            }
-            start = +start; //parse to int
-            return input.slice(start);
-        }
     }
 }());
