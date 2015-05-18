@@ -4,6 +4,7 @@
         .controller('MainController',['$router','$scope','userFactory','notificationFactory','themesFactory', MainController])
         .controller('AuthenticationController',['userFactory','notificationFactory', AuthenticatitionController])
         .directive('modalSignIn',['userFactory','notificationFactory',ModalSignInDirective])
+        .directive('modalSignUp',['userFactory','notificationFactory',ModalSignUpDirective])
     ;
 
     function MainController($router, $scope, userFactory,notificationFactory, themesFactory){
@@ -37,19 +38,34 @@
         this.logOut = function(){
             userFactory.logOut();
             notificationFactory.addAlert('Disconnected !','success');
-        }
+        };
+        this.signUp = function(){
+            angular.element('#signUpModal').appendTo('body').modal('show');
+        };
     }
 
-    function ModalSignInDirective(userFactory, notificationFactory){
+    function ModalSignInDirective(userFactory){
         return {
             restrict: 'E',
             templateUrl: 'app/templates/sign-in-modal.html',
             controllerAs: 'signIn',
             controller: function(){
                 this.logIn = function(){
-                    userFactory.logIn();
-                    notificationFactory.addAlert('Connected !','success');
+                    userFactory.logIn(this.email, this.password);
                     angular.element('#signInModal').appendTo('body').modal('hide');
+                };
+            }
+        }
+    }
+    function ModalSignUpDirective(userFactory, notificationFactory){
+        return {
+            restrict: 'E',
+            templateUrl: 'app/templates/sign-up-modal.html',
+            controllerAs: 'signUp',
+            controller: function(){
+                this.signUp = function(){
+                    userFactory.signUp(this.email,this.nickname,this.password);
+                    angular.element('#signUpModal').appendTo('body').modal('hide');
                 };
             }
         }
