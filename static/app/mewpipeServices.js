@@ -12,6 +12,7 @@
         .factory('statsFactory',['$http', StatsFactory])
         .factory('notificationFactory',['$rootScope',NotificationFactory])
         .factory('themesFactory',['$cookies', ThemesFactory])
+        .factory('paginationFactory',[PaginationFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory){
@@ -136,6 +137,27 @@
             return $cookies.get('theme');
         };
         return factory;
+    }
+
+    function PaginationFactory(){
+        var page = {};
+        page.setPagination = function (items, currentPage, numPerPage) {
+            page = {
+                totalItems: items.length,
+                currentPage: currentPage,
+                numPerPage: numPerPage
+            };
+        };
+        page.getParams = function() {
+            return {
+                currentPage: page.currentPage,
+                numPerPage: page.numPerPage
+            };
+        };
+        page.numberOfPages = function () {
+            return Math.ceil(page.totalItems / page.numPerPage);
+        };
+        return page;
     }
 
 }());
