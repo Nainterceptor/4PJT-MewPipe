@@ -43,6 +43,9 @@
         this.signUp = function () {
             angular.element('#signUpModal').appendTo('body').modal('show');
         };
+        this.getUser = function () {
+            userFactory.getUser();
+        }
     }
 
     function ModalSignInDirective(userFactory) {

@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     angular.module('mewpipe.adminPanel', [])
-        .controller('AdminPanelController', ['paginationFactory', AdminPanelController])
+        .controller('AdminPanelController', ['userFactory','paginationFactory', AdminPanelController])
         .filter('startFrom', AdminPanelFilter)
     ;
 
@@ -15,7 +15,7 @@
         }
     }
 
-    function AdminPanelController(paginationFactory) {
+    function AdminPanelController(userFactory, paginationFactory) {
         var me = this;
         this.admin = {
             users: [
