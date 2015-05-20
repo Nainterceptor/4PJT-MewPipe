@@ -18,6 +18,25 @@
     function UserFactory($http, $cookies, notificationFactory) {
         var userInstance = {};
         userInstance.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
+        //todo: faire le /me
+        // plus spécialement besoin j'ai stocker le userId dans un cookie, on le récupère donc le user si on recharge la page, a toi de voir
+        userInstance.getUser = function () {
+            $http.get(baseUrl + '/users/' +  userInstance.user.id, {
+                token: userInstance.accessToken
+            })
+                .success(function (response) {
+                    userInstance.user = response;
+                })
+                .error(function (response) {
+                    console.log(response);
+                })
+        };
+        if($cookies.get('userId')){
+            userInstance.user = {
+                id: $cookies.get('userId')
+            };
+            userInstance.getUser();
+        }
         userInstance.logIn = function (email, password) {
             $http.post(baseUrl + '/users/login', {
                 email: email,
@@ -27,6 +46,7 @@
                     notificationFactory.addAlert('Connected !', 'success');
                     userInstance.user = response.User;
                     $cookies.put('accessToken', response.Token, {expires: new Date(response.ExpireAt)});
+                    $cookies.put('userId', response.User.id, {expires: new Date(response.ExpireAt)});
                     userInstance.accessToken = response.Token;
                 })
                 .error(function () {
@@ -51,19 +71,8 @@
         };
         userInstance.logOut = function () {
             $cookies.remove('accessToken');
+            $cookies.remove('userId');
             userInstance.accessToken = undefined;
-        };
-        //todo: faire le /me
-        userInstance.getUser = function () {
-            $http.get(baseUrl + '/users/me', {
-                token: userInstance.accessToken
-            })
-                .success(function (response) {
-                    console.log(response);
-                })
-                .error(function (response) {
-                    console.log(response);
-                })
         };
 
         return userInstance;
