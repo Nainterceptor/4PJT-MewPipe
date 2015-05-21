@@ -1,15 +1,23 @@
 <div class="container profile">
     <div class="row">
-       <div class="col-md-4">
-           <div class="panel panel-default">
-               <div class="panel-heading">
-                   <h3 class="panel-title">Informations</h3>
-               </div>
-               <div class="panel-body">
-                   <strong class="col-md-6">Name : </strong><span class="col-md-6">{{profile.user.name}}</span>
-                   <strong class="col-md-6">Email : </strong><span class="col-md-6">{{profile.user.email}}</span>
-               </div>
-           </div>
-       </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Informations</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>Nickname : </dt>
+                        <dd>{{profile.user.name.nickname}}</dd>
+                        <dt>Firstname : </dt>
+                        <dd>{{profile.user.name.firstname}}</dd>
+                        <dt>Lastname : </dt>
+                        <dd>{{profile.user.name.lastname}}</dd>
+                        <dt>Email : </dt>
+                        <dd>{{profile.user.email}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

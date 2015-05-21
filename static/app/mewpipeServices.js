@@ -2,7 +2,7 @@
     "use strict";
     var baseUrl = "/rest";
 
-    angular.module('mewpipeServices', ['ngCookies'])
+    angular.module('mewpipeServices', ['ngCookies','ngFileUpload'])
         .run(['$http', '$cookies', function ($http, $cookies) {
             if ($cookies.get('accessToken')) {
                 $http.defaults.headers.common['Authorization'] = $cookies.get('accessToken');
@@ -13,6 +13,7 @@
         .factory('notificationFactory', ['$rootScope', NotificationFactory])
         .factory('themesFactory', ['$cookies', ThemesFactory])
         .factory('paginationFactory', [PaginationFactory])
+        .factory('mediaFactory', ['$http','Upload',MediaFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory) {
@@ -46,10 +47,11 @@
                     notificationFactory.addAlert('Connected !', 'success');
                     userInstance.user = response.User;
                     $cookies.put('accessToken', response.Token, {expires: new Date(response.ExpireAt)});
+                    $http.defaults.headers.common['Authorization'] = response.Token;
                     $cookies.put('userId', response.User.id, {expires: new Date(response.ExpireAt)});
                     userInstance.accessToken = response.Token;
                 })
-                .error(function () {
+                .error(function (response) {
                     console.log('failed');
                     console.log(response);
                 });
@@ -64,7 +66,7 @@
                     notificationFactory.addAlert('Registered !', 'success');
                     userInstance.logIn(email, password);
                 })
-                .error(function () {
+                .error(function(response) {
                     console.log('failed');
                     console.log(response);
                 });
@@ -102,14 +104,12 @@
         };
 
         factInstance.addAlert = function (msg, type, timer) {
-            console.log('alert');
             if (msg && type) {
                 factInstance.alerts.push({
                     type: 'alert-' + type,
                     msg: msg
                 });
                 delayDel(timer);
-
             }
         };
 
@@ -180,6 +180,26 @@
             return Math.ceil(page.totalItems / page.numPerPage);
         };
         return page;
+    }
+
+    function MediaFactory($http, Upload){
+        var mediaInstance = {};
+        mediaInstance.createMedia = function (user, title, summary) {
+            return ($http.post(baseUrl + '/media', {
+                title: title,
+                user: user,
+                summary: summary?summary:""
+            }))
+        };
+        mediaInstance.upload = function(file, mediaId){
+            return (
+                Upload.upload({
+                    url: baseUrl + "/media/"+mediaId+"/upload",
+                    file: file
+                })
+            )
+        };
+        return mediaInstance;
     }
 
 }());

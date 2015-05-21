@@ -15,6 +15,8 @@
             {path: '/', component: 'home'},
             {path: '/player', component: 'player'},
             {path: '/dashboard', component: 'dashboard'},
+            {path: '/dashboard/manage-video', component: 'dashboard'},
+            {path: '/dashboard/profile', component: 'dashboard'},
             {path: '/admin-panel', component: 'adminPanel'}
         ]);
         this.chooseTheme = function (theme) {
