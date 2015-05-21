@@ -101,7 +101,7 @@
                                 })
                                 .success(function(response){
                                     console.log(response);
-                                    me.videoUrl = "/player/" + response.file;
+                                    me.videoUrl = response.id;
                                 })
                                 .error(function(response){
                                     console.log('fail',response);

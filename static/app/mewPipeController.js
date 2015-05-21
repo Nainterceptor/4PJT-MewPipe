@@ -13,7 +13,7 @@
         this.themes = themesFactory.themes;
         $router.config([
             {path: '/', component: 'home'},
-            {path: '/player', component: 'player'},
+            {path: '/player/:id', component: 'player'},
             {path: '/dashboard', component: 'dashboard'},
             {path: '/dashboard/manage-video', component: 'dashboard'},
             {path: '/dashboard/profile', component: 'dashboard'},
