@@ -33,6 +33,18 @@ func userCreate(request *restful.Request, response *restful.Response) {
 	response.WriteEntity(usr)
 }
 
+func usersGet(request *restful.Request, response *restful.Response) {
+
+	users, err := entities.UserList(bson.M{}, 0, 10)
+
+	if err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+
+	response.WriteEntity(users)
+}
+
 func userUpdate(request *restful.Request, response *restful.Response) {
 
 	id := request.PathParameter("user-id")

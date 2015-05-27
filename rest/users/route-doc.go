@@ -27,9 +27,18 @@ func UserRoute(container *restful.Container) {
 		Reads(entities.User{}))
 
 	service.Route(service.
+		GET("").
+		Filter(filters.MustBeLogged).
+		To(usersGet).
+		Doc("Get a user list").
+		Operation("usersGet").
+		Returns(http.StatusOK, "Users has been returned", nil).
+		Returns(http.StatusInternalServerError, "Return of MongoDB find", nil))
+
+	service.Route(service.
 		PUT("/{user-id}").
 		Filter(filters.MustBeLogged).
-		Filter(filters.UserIDMustBeMyself).
+		Filter(filters.MustBeMyselfOrAdmin).
 		To(userUpdate).
 		Doc("Update a user").
 		Operation("userUpdate").
@@ -44,7 +53,7 @@ func UserRoute(container *restful.Container) {
 	service.Route(service.
 		DELETE("/{user-id}").
 		Filter(filters.MustBeLogged).
-		Filter(filters.UserIDMustBeMyself).
+		Filter(filters.MustBeMyselfOrAdmin).
 		To(userDelete).
 		Doc("Delete a user").
 		Operation("userDelete").

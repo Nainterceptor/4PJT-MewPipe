@@ -20,7 +20,7 @@ func MustBeLogged(req *restful.Request, resp *restful.Response, chain *restful.F
 	chain.ProcessFilter(req, resp)
 }
 
-func UserIDMustBeMyself(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
+func MustBeMyselfOrAdmin(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
 
 	id := req.PathParameter("user-id")
 	if !bson.IsObjectIdHex(id) {
@@ -28,8 +28,8 @@ func UserIDMustBeMyself(req *restful.Request, resp *restful.Response, chain *res
 		return
 	}
 	usr := req.Attribute("user").(*entities.User)
-	if bson.ObjectIdHex(id) != usr.Id {
-		resp.WriteErrorString(http.StatusForbidden, "Can't edit")
+	if bson.ObjectIdHex(id) != usr.Id && !usr.HasRole("Admin") {
+		resp.WriteErrorString(http.StatusForbidden, "You must be owner or admin")
 		return
 	}
 	chain.ProcessFilter(req, resp)

@@ -66,6 +66,14 @@ func UserFromId(oid bson.ObjectId) (*User, error) {
 	return user, err
 }
 
+func UserList(bson bson.M, start int, number int) ([]User, error) {
+	users := make([]User, number)
+
+	err := userCollection.Find(bson).Skip(start).Limit(number).All(&users)
+
+	return users, err
+}
+
 func UserFromCredentials(email string, password string) (*User, error) {
 	user := new(User)
 
