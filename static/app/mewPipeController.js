@@ -2,9 +2,10 @@
     "use strict";
     angular.module('mewpipe')
         .controller('MainController', ['$router', '$scope', 'userFactory', 'notificationFactory', 'themesFactory', MainController])
-        .controller('AuthenticationController', ['userFactory', 'notificationFactory', AuthenticatitionController])
+        .controller('AuthenticationController', ['userFactory', 'notificationFactory', AuthenticationController])
         .directive('modalSignIn', ['userFactory', 'notificationFactory', ModalSignInDirective])
         .directive('modalSignUp', ['userFactory', 'notificationFactory', ModalSignUpDirective])
+        .directive('modalUpdateUser', ['userFactory', ModalUpdateUserDirective])
         .directive('pagination', ['paginationFactory', PaginationDirective])
     ;
 
@@ -34,20 +35,28 @@
         this.user = userFactory;
     }
 
-    function AuthenticatitionController(userFactory, notificationFactory) {
+    function AuthenticationController(userFactory, notificationFactory) {
         this.logIn = function () {
             angular.element('#signInModal').appendTo('body').modal('show');
         };
         this.logOut = function () {
             userFactory.logOut();
-            notificationFactory.addAlert('Disconnected !', 'success');
         };
         this.signUp = function () {
             angular.element('#signUpModal').appendTo('body').modal('show');
         };
+        this.getUsers = function () {
+            userFactory.getUsers();
+        };
         this.getUser = function () {
             userFactory.getUser();
-        }
+        };
+        this.updateUser = function () {
+            angular.element('#updateUserModal').appendTo('body').modal('show');
+        };
+        this.deleteUser = function() {
+            userFactory.deleteUser(this.id);
+        };
     }
 
     function ModalSignInDirective(userFactory) {
@@ -73,6 +82,20 @@
                 this.signUp = function () {
                     userFactory.signUp(this.email, this.nickname, this.password);
                     angular.element('#signUpModal').appendTo('body').modal('hide');
+                };
+            }
+        }
+    }
+
+    function ModalUpdateUserDirective(userFactory) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/templates/update-user.html',
+            controllerAs: 'updateUser',
+            controller: function () {
+                this.update = function () {
+                    userFactory.updateUser(this.id, this.email, this.firstname, this.lastname, this.nickname, this.password);
+                    angular.element('#updateUserModal').appendTo('body').modal('hide');
                 };
             }
         }

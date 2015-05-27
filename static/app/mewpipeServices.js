@@ -2,7 +2,7 @@
     "use strict";
     var baseUrl = "/rest";
 
-    angular.module('mewpipeServices', ['ngCookies','ngFileUpload'])
+    angular.module('mewpipeServices', ['ngCookies', 'ngFileUpload'])
         .run(['$http', '$cookies', function ($http, $cookies) {
             if ($cookies.get('accessToken')) {
                 $http.defaults.headers.common['Authorization'] = $cookies.get('accessToken');
@@ -13,17 +13,26 @@
         .factory('notificationFactory', ['$rootScope', NotificationFactory])
         .factory('themesFactory', ['$cookies', ThemesFactory])
         .factory('paginationFactory', [PaginationFactory])
-        .factory('mediaFactory', ['$http','Upload',MediaFactory])
+        .factory('mediaFactory', ['$http', 'Upload', MediaFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory) {
         var userInstance = {};
         userInstance.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
-        //todo: faire le /me
-        // plus spécialement besoin j'ai stocker le userId dans un cookie, on le récupère donc le user si on recharge la page, a toi de voir
+        userInstance.getUsers = function () {
+            $http.get(baseUrl + '/users', {
+                Authorization: userInstance.accessToken
+            })
+                .success(function (response) {
+                    userInstance.users = response;
+                })
+                .error(function (response) {
+                    console.log(response);
+                })
+        };
         userInstance.getUser = function () {
-            $http.get(baseUrl + '/users/' +  userInstance.user.id, {
-                token: userInstance.accessToken
+            $http.get(baseUrl + '/users/' + userInstance.user.id, {
+                Authorization: userInstance.accessToken
             })
                 .success(function (response) {
                     userInstance.user = response;
@@ -32,11 +41,12 @@
                     console.log(response);
                 })
         };
-        if($cookies.get('userId')){
+        if ($cookies.get('userId')) {
             userInstance.user = {
                 id: $cookies.get('userId')
             };
             userInstance.getUser();
+            userInstance.getUsers();
         }
         userInstance.logIn = function (email, password) {
             $http.post(baseUrl + '/users/login', {
@@ -52,6 +62,7 @@
                     userInstance.accessToken = response.Token;
                 })
                 .error(function (response) {
+                    notificationFactory.addAlert('Invalid Email or Password', 'danger');
                     console.log('failed');
                     console.log(response);
                 });
@@ -66,7 +77,8 @@
                     notificationFactory.addAlert('Registered !', 'success');
                     userInstance.logIn(email, password);
                 })
-                .error(function(response) {
+                .error(function (response) {
+                    notificationFactory.addAlert('Disconnected !', 'success');
                     console.log('failed');
                     console.log(response);
                 });
@@ -75,6 +87,37 @@
             $cookies.remove('accessToken');
             $cookies.remove('userId');
             userInstance.accessToken = undefined;
+        };
+        userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
+            $http.put(baseUrl + '/users/' + userId, {
+                Authorization: userInstance.accessToken,
+                email: email,
+                name: {
+                    firstname: firstname,
+                    lastname: lastname,
+                    nickname: nickname
+                },
+                password: password
+            })
+                .success(function (response) {
+                    notificationFactory.addAlert('User updated !', 'success');
+                })
+                .error(function (response) {
+                    notificationFactory.addAlert('Fail to update user', 'danger');
+                    console.log(response);
+                })
+        };
+        userInstance.deleteUser = function (userId) {
+            $http.delete(baseUrl + '/users/' + userId, {
+                Authorization: userInstance.accessToken
+            })
+                .success(function (response) {
+                    notificationFactory.addAlert('User deleted !', 'danger');
+                })
+                .error(function (response) {
+                    notificationFactory.addAlert('Fail to delete user', 'danger');
+                    console.log(response);
+                })
         };
 
         return userInstance;
@@ -172,6 +215,7 @@
         };
         page.getParams = function () {
             return {
+                totalItems: page.totalItems,
                 currentPage: page.currentPage,
                 numPerPage: page.numPerPage
             };
@@ -182,19 +226,19 @@
         return page;
     }
 
-    function MediaFactory($http, Upload){
+    function MediaFactory($http, Upload) {
         var mediaInstance = {};
         mediaInstance.createMedia = function (user, title, summary) {
             return ($http.post(baseUrl + '/media', {
                 title: title,
                 user: user,
-                summary: summary?summary:""
+                summary: summary ? summary : ""
             }))
         };
-        mediaInstance.upload = function(file, mediaId){
+        mediaInstance.upload = function (file, mediaId) {
             return (
                 Upload.upload({
-                    url: baseUrl + "/media/"+mediaId+"/upload",
+                    url: baseUrl + "/media/" + mediaId + "/upload",
                     file: file
                 })
             )

@@ -1,0 +1,64 @@
+<div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update User</h4>
+            </div>
+            <form ng-submit="updateUser.update()" name="form1" class="form-horizontal" novalidate>
+                <input type="hidden" ng-model="update.id" value="{{user.id}}">
+                <div class="modal-body">
+                    <div class="form-group" ng-class="{'has-error' : form1.email.$touched && form1.email.$invalid, 'has-success' : form1.email.$touched && form1.email.$valid}">
+                        <label for="inputEmail1" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" name="email" class="form-control" id="inputEmail1" placeholder="Email" ng-model="update.email" required>
+                            <div ng-show="form1.email.$touched">
+                                <span ng-show="form1.email.$error.email" class="help-block">Enter a valid email</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error' : form1.firstname.$touched && form1.firstname.$invalid, 'has-success' : form1.firstname.$touched && form1.firstname.$valid}">
+                        <label for="inputfirstname1" class="col-sm-2 control-label">FirstName</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="firstname" class="form-control" id="inputfirstname1" ng-model="update.firstname" placeholder="firstname" required>
+                            <div ng-show="form1.firstname.$touched">
+                                <span ng-show="form1.firstname.$error.required" class="help-block">FirstName required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error' : form1.lastname.$touched && form1.lastname.$invalid, 'has-success' : form1.lastname.$touched && form1.lastname.$valid}">
+                        <label for="inputlastname1" class="col-sm-2 control-label">LastName</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="lastname" class="form-control" id="inputlastname1" ng-model="update.lastname" placeholder="lastname" required>
+                            <div ng-show="form1.lastname.$touched">
+                                <span ng-show="form1.lastname.$error.required" class="help-block">LastName required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error' : form1.nickname.$touched && form1.nickname.$invalid, 'has-success' : form1.nickname.$touched && form1.nickname.$valid}">
+                        <label for="inputnickname1" class="col-sm-2 control-label">Nickname</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="nickname" class="form-control" id="inputnickname1" ng-model="update.nickname" placeholder="nickname" required>
+                            <div ng-show="form1.nickname.$touched">
+                                <span ng-show="form1.nickname.$error.required" class="help-block">Nickname required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error' : form1.password.$touched && form1.password.$invalid, 'has-success' : form1.password.$touched && form1.password.$valid}">
+                        <label for="inputPassword1" class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input name="password" type="password" class="form-control" id="inputPassword1" ng-model="update.password" placeholder="Password" required>
+                            <div ng-show="form1.password.$touched">
+                                <span ng-show="form1.password.$error.required" class="help-block">Password required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" ng-disabled="form1.$invalid">Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -129,11 +129,6 @@ func userGet(request *restful.Request, response *restful.Response) {
 	response.WriteEntity(usr)
 }
 
-func userMe(request *restful.Request, response *restful.Response) {
-
-	//todo: wip conférence
-}
-
 func userLogin(request *restful.Request, response *restful.Response) {
 
 	form := entities.UserNew()
