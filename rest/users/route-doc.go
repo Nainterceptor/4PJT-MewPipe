@@ -51,6 +51,20 @@ func UserRoute(container *restful.Container) {
 		Reads(entities.User{})) // from the request
 
 	service.Route(service.
+		PUT("/me").
+		Filter(filters.MustBeLogged).
+		Filter(filters.MustBeMyselfOrAdmin).
+		To(userMeUpdate).
+		Doc("Update my user").
+		Operation("userMeUpdate").
+		Returns(http.StatusOK, "User has been updated", nil).
+		Returns(http.StatusBadRequest, "Bad Object ID or Can't read entity", nil).
+		Returns(http.StatusNotFound, "User not found", nil).
+		Returns(http.StatusNotAcceptable, "Validation has failed", nil).
+		Returns(http.StatusInternalServerError, "Return of MongoDB Update", nil).
+		Reads(entities.User{})) // from the request
+
+	service.Route(service.
 		DELETE("/{user-id}").
 		Filter(filters.MustBeLogged).
 		Filter(filters.MustBeMyselfOrAdmin).
@@ -64,11 +78,34 @@ func UserRoute(container *restful.Container) {
 		Reads(entities.User{}))
 
 	service.Route(service.
+		DELETE("/me").
+		Filter(filters.MustBeLogged).
+		Filter(filters.MustBeMyselfOrAdmin).
+		To(userMeDelete).
+		Doc("Delete my user").
+		Operation("userMeDelete").
+		Returns(http.StatusNoContent, "User has been deleted", nil).
+		Returns(http.StatusBadRequest, "Bad Object ID", nil).
+		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil).
+		Reads(entities.User{}))
+
+	service.Route(service.
 		GET("/{user-id}").
 		To(userGet).
 		Doc("Get a user").
 		Operation("userGet").
 		Param(service.PathParameter("user-id", "identifier of the user").DataType("string")).
+		Returns(http.StatusOK, "User must be returned in the body", nil).
+		Returns(http.StatusBadRequest, "Bad Object ID", nil).
+		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil))
+
+	service.Route(service.
+		GET("/me").
+		Filter(filters.MustBeLogged).
+		Filter(filters.MustBeMyselfOrAdmin).
+		To(userMeGet).
+		Doc("Get my user").
+		Operation("userMeGet").
 		Returns(http.StatusOK, "User must be returned in the body", nil).
 		Returns(http.StatusBadRequest, "Bad Object ID", nil).
 		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil))
@@ -94,18 +131,6 @@ func UserRoute(container *restful.Container) {
 		Operation("userRefreshToken").
 		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil).
 		Returns(http.StatusInternalServerError, "Something failed while token generation", nil))
-
-	service.Route(service.
-	GET("/me").
-	Filter(filters.MustBeLogged).
-	Filter(filters.UserIDMustBeMyself).
-	To(userMe).
-	Doc("Get information about current user").
-	Operation("UserMe").
-	Returns(http.StatusOK, "User Informations", nil).
-	Returns(http.StatusBadRequest, "Can't read entity", nil).
-	Returns(http.StatusNotFound, "User not found", nil).
-	Returns(http.StatusNotAcceptable, "Validation has failed", nil))
 
 	container.Add(service)
 }
