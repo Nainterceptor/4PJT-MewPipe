@@ -95,5 +95,17 @@ func UserRoute(container *restful.Container) {
 		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail", nil).
 		Returns(http.StatusInternalServerError, "Something failed while token generation", nil))
 
+	service.Route(service.
+	GET("/me").
+	Filter(filters.MustBeLogged).
+	Filter(filters.UserIDMustBeMyself).
+	To(userMe).
+	Doc("Get information about current user").
+	Operation("UserMe").
+	Returns(http.StatusOK, "User Informations", nil).
+	Returns(http.StatusBadRequest, "Can't read entity", nil).
+	Returns(http.StatusNotFound, "User not found", nil).
+	Returns(http.StatusNotAcceptable, "Validation has failed", nil))
+
 	container.Add(service)
 }

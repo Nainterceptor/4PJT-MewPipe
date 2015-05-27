@@ -4,6 +4,7 @@
     <div class="row">
         <div class="col-md-6">
             <h3>Users</h3>
+            <button ng-controller="AuthenticationController as auth" class="btn btn-default" ng-click="auth.getUser()">CLICK NIGGA</button>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -14,7 +15,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="user in adminPanel.admin.users | startFrom:adminPanel.scope.currentPage*adminPanel.scope.numPerPage | limitTo:adminPanel.scope.numPerPage">
+                <tr ng-repeat="user in adminPanel.admin.users | startFrom:pagination.page.currentPage*pagination.page.numPerPage | limitTo:pagination.page.numPerPage">
                     <td>{{user.username}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.createdAt}}</td>
@@ -25,16 +26,7 @@
                 </tr>
                 </tbody>
             </table>
-            <button ng-disabled="adminPanel.scope.currentPage == 0" ng-click="adminPanel.scope.currentPage=adminPanel.scope.currentPage-1">
-                Previous
-            </button>
-
-            {{adminPanel.scope.currentPage+1}}/{{adminPanel.scope.numberOfPages()}}
-
-            <button ng-disabled="adminPanel.scope.currentPage >= adminPanel.admin.users.length/adminPanel.scope.numPerPage - 1"
-                    ng-click="adminPanel.scope.currentPage=adminPanel.scope.currentPage+1">
-                Next
-            </button>
+            <pagination></pagination>
         </div>
         <div class="col-md-6">
             <h3>Medias</h3>

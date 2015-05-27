@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     angular.module('mewpipe.adminPanel', [])
-        .controller('AdminPanelController', [AdminPanelController])
+        .controller('AdminPanelController', ['userFactory','paginationFactory', AdminPanelController])
         .filter('startFrom', AdminPanelFilter)
     ;
 
@@ -15,7 +15,7 @@
         }
     }
 
-    function AdminPanelController() {
+    function AdminPanelController(userFactory, paginationFactory) {
         var me = this;
         this.admin = {
             users: [
@@ -52,19 +52,6 @@
             ]
         };
 
-/*
-        Alex évite le mot "scope". C'est un mot ultra utilisé dans angular, bon la on s'en fou mais c'est pas terrible
-        pour la lisibilité. Dans angular il y a "$scope" et meme "scope" tout court dans certaines directives.
-*/
-
-        this.scope = {
-            currentPage: 0,
-            numPerPage: 5,
-            totalItems: me.admin.users.length
-        };
-
-        me.scope.numberOfPages = function () {
-            return Math.ceil(me.admin.users.length / me.scope.numPerPage);
-        };
+        paginationFactory.setPagination(me.admin.users, 0, 5);
     }
 }());
