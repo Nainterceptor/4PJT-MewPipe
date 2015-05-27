@@ -6,6 +6,8 @@ import (
 	"supinfo/mewpipe/entities"
 	"time"
 
+	"strconv"
+
 	"github.com/emicklei/go-restful"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -34,8 +36,18 @@ func userCreate(request *restful.Request, response *restful.Response) {
 }
 
 func usersGet(request *restful.Request, response *restful.Response) {
-
-	users, err := entities.UserList(bson.M{}, 0, 10)
+	start, err := strconv.Atoi(request.QueryParameter("start"))
+	if err != nil {
+		start = 0
+	}
+	limit, err := strconv.Atoi(request.QueryParameter("limit"))
+	if err != nil {
+		limit = 25
+	}
+	if limit < 1 || limit > 100 {
+		limit = 25
+	}
+	users, err := entities.UserList(bson.M{}, start, limit)
 
 	if err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
