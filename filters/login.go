@@ -20,6 +20,19 @@ func MustBeLogged(req *restful.Request, resp *restful.Response, chain *restful.F
 	chain.ProcessFilter(req, resp)
 }
 
+func InjectUser(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
+
+	token := req.Request.Header.Get("Authorization")
+	if token != "" {
+		usr, err := entities.UserFromToken(token)
+		if err == nil {
+			req.SetAttribute("user", usr)
+		}
+	}
+
+	chain.ProcessFilter(req, resp)
+}
+
 func MustBeMyselfOrAdmin(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
 
 	id := req.PathParameter("user-id")

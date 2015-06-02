@@ -145,6 +145,13 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
 
 func mediaGet(request *restful.Request, response *restful.Response) {
 	media := request.Attribute("media").(*entities.Media)
+	userAttribute := request.Attribute("user")
+	if userAttribute == nil {
+		entities.ViewNewAnonymous(media.Id)
+	} else {
+		user := userAttribute.(*entities.User)
+		entities.ViewNew(user.Id, media.Id)
+	}
 
 	response.WriteEntity(media)
 }

@@ -43,6 +43,7 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		GET("/{media-id}").
 		Filter(filters.InjectMediaMeta).
+		Filter(filters.InjectUser).
 		To(mediaGet).
 		Doc("Get a vidéo (metadocument)").
 		Operation("mediaGet").
