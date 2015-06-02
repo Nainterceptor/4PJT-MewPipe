@@ -13,6 +13,14 @@ import (
 var mediaCollection = configs.MongoDB.C("media")
 var mediaGridFS = configs.MongoDB.GridFS("media")
 
+type scope string
+
+const (
+	Public  scope = "public"  //Available to anybody
+	Private scope = "private" //Available to authenticated users
+	Link    scope = "link"    //Available to anybody with the link
+)
+
 type user struct {
 	Id    bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name  name          `json:"name" bson:",omitempty"`
@@ -25,6 +33,7 @@ type Media struct {
 	Summary   string        `json:"summary" bson:",omitempty"`
 	Publisher user          `json:"user,omitempty" bson:",omitempty"`
 	File      bson.ObjectId `json:"file,omitempty" bson:",omitempty"`
+	Scope     scope         `json:"scope,omitempty" bson:"scope,omitempty"`
 	mgofile   *mgo.GridFile `json:"-" bson:"-"`
 }
 
@@ -46,6 +55,12 @@ func MediaFromId(oid bson.ObjectId) (*Media, error) {
 		media = MediaNewFromId(oid)
 	}
 	return media, err
+}
+
+func (m *Media) Normalize() {
+	if m.Scope != "link" && m.Scope != "private" {
+		m.Scope = "public"
+	}
 }
 
 func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHeader) error {
@@ -111,6 +126,7 @@ func (m *Media) CopyTo(target io.Writer) error {
 }
 
 func (m *Media) Insert() error {
+	m.Normalize()
 	if err := mediaCollection.Insert(&m); err != nil {
 		return err
 	}
@@ -118,6 +134,7 @@ func (m *Media) Insert() error {
 }
 
 func (m *Media) Update() error {
+	m.Normalize()
 	if err := mediaCollection.UpdateId(m.Id, &m); err != nil {
 		return err
 	}
