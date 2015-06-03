@@ -32,6 +32,8 @@ func UserRoute(container *restful.Container) {
 		To(usersGet).
 		Doc("Get a user list").
 		Operation("usersGet").
+		Param(service.QueryParameter("limit", "Limit number of results (default 25)").DataType("string")).
+		Param(service.QueryParameter("start", "Start from item number n (default 0)").DataType("string")).
 		Returns(http.StatusOK, "Users has been returned", nil).
 		Returns(http.StatusInternalServerError, "Return of MongoDB find", nil))
 
