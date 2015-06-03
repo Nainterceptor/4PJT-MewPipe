@@ -47,6 +47,7 @@ func MediaRoute(container *restful.Container) {
 		Doc("Get a media list").
 		Operation("mediasGet").
 		Param(service.QueryParameter("user", "Filter user media").DataType("string")).
+		Param(service.QueryParameter("order", "Order by ... ?").DataType("string")).
 		Param(service.QueryParameter("limit", "Limit number of results (default 25)").DataType("string")).
 		Param(service.QueryParameter("start", "Start from item number n (default 0)").DataType("string")).
 		Returns(http.StatusOK, "Medias has been returned", nil).

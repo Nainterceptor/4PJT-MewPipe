@@ -158,16 +158,23 @@ func mediasGet(request *restful.Request, response *restful.Response) {
 	}
 	search := bson.M{}
 
-	userId := request.QueryParameter("user")
-	if userId != "" {
-		if !bson.IsObjectIdHex(userId) {
+	userParam := request.QueryParameter("user")
+	if userParam != "" {
+		if !bson.IsObjectIdHex(userParam) {
 			response.WriteErrorString(http.StatusBadRequest, "Bad user Object ID")
 			return
 		}
-		search["publisher._id"] = bson.ObjectIdHex(userId)
+		search["publisher._id"] = bson.ObjectIdHex(userParam)
 	}
 
-	medias, err := entities.MediaList(search, start, limit)
+	orderParam := request.QueryParameter("order")
+	order := "_id"
+
+	regexOrder, _ := regexp.Compile("-?(_id|createdAt)")
+	if regexOrder.MatchString(orderParam) {
+		order = orderParam
+	}
+	medias, err := entities.MediaList(search, start, limit, order)
 
 	if err != nil {
 		response.WriteError(http.StatusInternalServerError, err)

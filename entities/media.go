@@ -6,6 +6,8 @@ import (
 	"os"
 	"supinfo/mewpipe/configs"
 
+	"time"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -29,6 +31,7 @@ type user struct {
 
 type Media struct {
 	Id        bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
 	Title     string        `json:"title" bson:",omitempty"`
 	Summary   string        `json:"summary" bson:",omitempty"`
 	Publisher user          `json:"user,omitempty" bson:",omitempty"`
@@ -40,6 +43,7 @@ type Media struct {
 func MediaNew() *Media {
 	media := new(Media)
 	media.Id = bson.NewObjectId()
+	media.CreatedAt = time.Now()
 	return media
 }
 
@@ -57,10 +61,10 @@ func MediaFromId(oid bson.ObjectId) (*Media, error) {
 	return media, err
 }
 
-func MediaList(bson bson.M, start int, number int) ([]Media, error) {
+func MediaList(bson bson.M, start int, number int, sort ...string) ([]Media, error) {
 	medias := make([]Media, number)
 
-	err := mediaCollection.Find(bson).Skip(start).Limit(number).All(&medias)
+	err := mediaCollection.Find(bson).Sort(sort...).Skip(start).Limit(number).All(&medias)
 
 	return medias, err
 }
