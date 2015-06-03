@@ -156,7 +156,18 @@ func mediasGet(request *restful.Request, response *restful.Response) {
 	if limit < 1 || limit > 100 {
 		limit = 25
 	}
-	medias, err := entities.MediaList(bson.M{}, start, limit)
+	search := bson.M{}
+
+	userId := request.QueryParameter("user")
+	if userId != "" {
+		if !bson.IsObjectIdHex(userId) {
+			response.WriteErrorString(http.StatusBadRequest, "Bad user Object ID")
+			return
+		}
+		search["publisher._id"] = bson.ObjectIdHex(userId)
+	}
+
+	medias, err := entities.MediaList(search, start, limit)
 
 	if err != nil {
 		response.WriteError(http.StatusInternalServerError, err)

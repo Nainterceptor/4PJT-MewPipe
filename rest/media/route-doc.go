@@ -42,10 +42,13 @@ func MediaRoute(container *restful.Container) {
 
 	service.Route(service.
 		GET("").
-		Filter(filters.MustBeLogged).
+		Filter(filters.InjectUser).
 		To(mediasGet).
 		Doc("Get a media list").
 		Operation("mediasGet").
+		Param(service.QueryParameter("user", "Filter user media").DataType("string")).
+		Param(service.QueryParameter("limit", "Limit number of results (default 25)").DataType("string")).
+		Param(service.QueryParameter("start", "Start from item number n (default 0)").DataType("string")).
 		Returns(http.StatusOK, "Medias has been returned", nil).
 		Returns(http.StatusInternalServerError, "Return of MongoDB find", nil))
 
