@@ -13,7 +13,7 @@
         .factory('notificationFactory', ['$rootScope', NotificationFactory])
         .factory('themesFactory', ['$cookies', ThemesFactory])
         .factory('paginationFactory', [PaginationFactory])
-        .factory('mediaFactory', ['$http', 'Upload', MediaFactory])
+        .factory('mediaFactory', ['$http', '$cookies', 'Upload', MediaFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory) {
@@ -226,7 +226,7 @@
         return page;
     }
 
-    function MediaFactory($http, Upload) {
+    function MediaFactory($http, $cookies, Upload) {
         var mediaInstance = {};
         mediaInstance.createMedia = function (user, title, summary) {
             return ($http.post(baseUrl + '/media', {
@@ -235,6 +235,20 @@
                 summary: summary ? summary : ""
             }))
         };
+        mediaInstance.getMedias = function () {
+            $http.get(baseUrl + '/media', {
+                Authorization: $cookies.get('Authorization')
+            })
+                .success(function (response) {
+                    mediaInstance.medias = response;
+                })
+                .error(function (response) {
+                    console.log(response);
+                })
+        };
+        if ($cookies.get('userId')) {
+            mediaInstance.getMedias();
+        }
         mediaInstance.upload = function (file, mediaId) {
             return (
                 Upload.upload({

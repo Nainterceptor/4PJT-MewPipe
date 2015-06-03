@@ -57,6 +57,14 @@ func MediaFromId(oid bson.ObjectId) (*Media, error) {
 	return media, err
 }
 
+func MediaList(bson bson.M, start int, number int) ([]Media, error) {
+	medias := make([]Media, number)
+
+	err := mediaCollection.Find(bson).Skip(start).Limit(number).All(&medias)
+
+	return medias, err
+}
+
 func (m *Media) Normalize() {
 	if m.Scope != "link" && m.Scope != "private" {
 		m.Scope = "public"

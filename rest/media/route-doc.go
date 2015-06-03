@@ -41,6 +41,15 @@ func MediaRoute(container *restful.Container) {
 		Reads(entities.Media{}))
 
 	service.Route(service.
+		GET("").
+		Filter(filters.MustBeLogged).
+		To(mediasGet).
+		Doc("Get a media list").
+		Operation("mediasGet").
+		Returns(http.StatusOK, "Medias has been returned", nil).
+		Returns(http.StatusInternalServerError, "Return of MongoDB find", nil))
+
+	service.Route(service.
 		GET("/{media-id}").
 		Filter(filters.InjectMediaMeta).
 		Filter(filters.InjectUser).

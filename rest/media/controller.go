@@ -7,6 +7,7 @@ import (
 	"supinfo/mewpipe/entities"
 
 	"github.com/emicklei/go-restful"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func mediaCreate(request *restful.Request, response *restful.Response) {
@@ -141,6 +142,28 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
 		return
 	}
 	response.WriteHeader(http.StatusNoContent)
+}
+
+func mediasGet(request *restful.Request, response *restful.Response) {
+	start, err := strconv.Atoi(request.QueryParameter("start"))
+	if err != nil {
+		start = 0
+	}
+	limit, err := strconv.Atoi(request.QueryParameter("limit"))
+	if err != nil {
+		limit = 25
+	}
+	if limit < 1 || limit > 100 {
+		limit = 25
+	}
+	medias, err := entities.MediaList(bson.M{}, start, limit)
+
+	if err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+
+	response.WriteEntity(medias)
 }
 
 func mediaGet(request *restful.Request, response *restful.Response) {

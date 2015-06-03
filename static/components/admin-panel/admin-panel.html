@@ -1,72 +1,13 @@
 <div class="container-fluid">
     <h2>Admin Panel</h2>
-
     <div class="row">
-        <div class="col-md-6">
-            <h3>Users</h3>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>FirstName</th>
-                    <th>LastName</th>
-                    <th>NickName</th>
-                    <th>Email</th>
-                    <th>Roles</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="user in adminPanel.user.users | startFrom:pagination.page.currentPage*pagination.page.numPerPage | limitTo:pagination.page.numPerPage">
-                    <td>{{user.name.firstname}}</td>
-                    <td>{{user.name.lastname}}</td>
-                    <td>{{user.name.nickname}}</td>
-                    <td>{{user.email}}</td>
-                    <td>{{user.roles}}</td>
-                    <td>
-                        <button class="btn btn-primary" ng-controller="AuthenticationController as auth"
-                                ng-click="auth.updateUser()">Update
-                        </button>
-                        <button class="btn btn-danger" ng-click="adminPanel.user.deleteUser(user.id)">Delete</button>
-                    </td>
-                    <modal-update-user></modal-update-user>
-                </tr>
-                </tbody>
-            </table>
-            <pagination></pagination>
-        </div>
-        <div class="col-md-6">
-            <h3>Medias</h3>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Publisher</th>
-                    <th>Create at</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Test</td>
-                    <td>Test</td>
-                    <td>Test</td>
-                    <td>
-                        <button class="btn btn-primary">Update</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <ul class="nav nav-tabs nav-justified">
+            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'users'}"><a ng-click="adminPanel.active('users')" class="pointer">Users</a></li>
+            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'medias'}"><a ng-click="adminPanel.active('medias')" class="pointer">Medias</a></li>
+        </ul>
     </div>
-
-    <hr/>
     <div class="row">
-        <div class="col-md-6">
-            <h3>Most Shared</h3>
-        </div>
-        <div class="col-md-6">
-            <h3>Most Viewed</h3>
-        </div>
+        <users ng-if="adminPanel.activeTab == 'users'"></users>
+        <medias ng-if="adminPanel.activeTab == 'medias'"></medias>
     </div>
 </div>

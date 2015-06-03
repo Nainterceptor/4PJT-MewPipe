@@ -54,7 +54,7 @@
         this.updateUser = function () {
             angular.element('#updateUserModal').appendTo('body').modal('show');
         };
-        this.deleteUser = function() {
+        this.deleteUser = function () {
             userFactory.deleteUser(this.id);
         };
     }
@@ -92,7 +92,8 @@
             restrict: 'E',
             templateUrl: 'app/templates/update-user.html',
             controllerAs: 'updateUser',
-            controller: function () {
+            controller: function ($scope, $element, $attrs) {
+                console.log($scope);
                 this.update = function () {
                     userFactory.updateUser(this.id, this.email, this.firstname, this.lastname, this.nickname, this.password);
                     angular.element('#updateUserModal').appendTo('body').modal('hide');
