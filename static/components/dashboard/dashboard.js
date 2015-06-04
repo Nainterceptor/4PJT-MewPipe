@@ -3,7 +3,7 @@
     angular.module('mewpipe.dashboard', ['ngFileUpload'])
         .controller('DashboardController',['userFactory','notificationFactory','$location',DashboardController])
         .directive('profile',['userFactory','notificationFactory', ProfileDirective])
-        .directive('manageVideo',['userFactory','notificationFactory','mediaFactory', ManageVideoDirective])
+        .directive('manageVideo',['userFactory','notificationFactory','mediaFactory','paginationFactory', ManageVideoDirective])
     ;
 
     function DashboardController(userFactory, notificationFactory, $location){
@@ -56,7 +56,7 @@
         return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
     }
 
-    function ManageVideoDirective(userFactory,notificationFactory,mediaFactory){
+    function ManageVideoDirective(userFactory,notificationFactory,mediaFactory,paginationFactory){
         return {
             restrict: 'E',
             templateUrl: 'components/dashboard/manage-video.html',
@@ -66,6 +66,8 @@
             controller: function($scope, $element, $attrs){
                 var fileToUpload;
                 var me = this;
+                this.media = mediaFactory.userMedias;
+                paginationFactory.setPagination(me.media, 0, 10);
                 me.prog = 0;
                 this.uploading = false;
                 this.validate = function(file){

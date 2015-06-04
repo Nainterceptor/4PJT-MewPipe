@@ -246,7 +246,19 @@
                     console.log(response);
                 })
         };
+        mediaInstance.getUserMedias = function () {
+            $http.get(baseUrl + '/media/?user=' + $cookies.get('userId'), {
+                Authorization: $cookies.get('Authorization')
+            })
+                .success(function (response) {
+                    mediaInstance.userMedias = response;
+                })
+                .error(function (response) {
+                    console.log(response);
+                })
+        };
         if ($cookies.get('userId')) {
+            mediaInstance.getUserMedias();
             mediaInstance.getMedias();
         }
         mediaInstance.upload = function (file, mediaId) {

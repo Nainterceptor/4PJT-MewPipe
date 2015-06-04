@@ -5,7 +5,6 @@
         .controller('AuthenticationController', ['userFactory', 'notificationFactory', AuthenticationController])
         .directive('modalSignIn', ['userFactory', 'notificationFactory', ModalSignInDirective])
         .directive('modalSignUp', ['userFactory', 'notificationFactory', ModalSignUpDirective])
-        .directive('modalUpdateUser', ['userFactory', ModalUpdateUserDirective])
         .directive('pagination', ['paginationFactory', PaginationDirective])
     ;
 
@@ -18,7 +17,9 @@
             {path: '/dashboard', component: 'dashboard'},
             {path: '/dashboard/manage-video', component: 'dashboard'},
             {path: '/dashboard/profile', component: 'dashboard'},
-            {path: '/admin-panel', component: 'adminPanel'}
+            {path: '/admin-panel', component: 'adminPanel'},
+            {path: '/admin-panel/medias', component: 'adminPanel'},
+            {path: '/admin-panel/users', component: 'adminPanel'}
         ]);
         this.chooseTheme = function (theme) {
             me.theme = themesFactory.themes[theme];
@@ -51,9 +52,6 @@
         this.getUser = function () {
             userFactory.getUser();
         };
-        this.updateUser = function () {
-            angular.element('#updateUserModal').appendTo('body').modal('show');
-        };
         this.deleteUser = function () {
             userFactory.deleteUser(this.id);
         };
@@ -82,21 +80,6 @@
                 this.signUp = function () {
                     userFactory.signUp(this.email, this.nickname, this.password);
                     angular.element('#signUpModal').appendTo('body').modal('hide');
-                };
-            }
-        }
-    }
-
-    function ModalUpdateUserDirective(userFactory) {
-        return {
-            restrict: 'E',
-            templateUrl: 'app/templates/update-user.html',
-            controllerAs: 'updateUser',
-            controller: function ($scope, $element, $attrs) {
-                console.log($scope);
-                this.update = function () {
-                    userFactory.updateUser(this.id, this.email, this.firstname, this.lastname, this.nickname, this.password);
-                    angular.element('#updateUserModal').appendTo('body').modal('hide');
                 };
             }
         }
