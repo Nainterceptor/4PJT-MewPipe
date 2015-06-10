@@ -30,6 +30,7 @@ func Parse() {
 func getMongoDBVar() *mgo.Database {
 	Parse()
 	session, err := mgo.Dial(*mongoCS)
+	defer session.Close()
 	if err != nil {
 		panic(err)
 	}
