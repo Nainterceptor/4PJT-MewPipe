@@ -14,23 +14,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="user in users.user | startFrom:pagination.page.currentPage*pagination.page.numPerPage | limitTo:pagination.page.numPerPage">
+                <tr class="repeat-user" ng-repeat="user in users.users | startFrom:pagination.page.currentPage*pagination.page.numPerPage | limitTo:pagination.page.numPerPage">
                     <td>{{user.name.firstname}}</td>
                     <td>{{user.name.lastname}}</td>
                     <td>{{user.name.nickname}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.roles}}</td>
                     <td>
-                        <button class="btn btn-primary" ng-controller="AuthenticationController as auth"
-                                ng-click="auth.updateUser()">
+                        <button class="btn btn-primary" ng-click="users.updateUser(user)">
                             Update
                         </button>
-                        <button class="btn btn-danger" ng-click="users.user.deleteUser(user.id)">Delete</button>
+                        <button class="btn btn-danger" ng-click="users.users.deleteUser(user.id)">Delete</button>
                     </td>
-                    <modal-update-user></modal-update-user>
                 </tr>
                 </tbody>
             </table>
+            <modal-update-user></modal-update-user>
             <pagination></pagination>
         </div>
     </div>

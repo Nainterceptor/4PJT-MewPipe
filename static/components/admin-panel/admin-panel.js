@@ -4,6 +4,7 @@
         .controller('AdminPanelController', ['userFactory', 'notificationFactory', '$location', AdminPanelController])
         .directive('users', ['userFactory', 'paginationFactory', UsersDirective])
         .directive('medias', ['mediaFactory', 'paginationFactory', MediasDirective])
+        .directive('modalUpdateUser', ['userFactory', ModalUpdateUserDirective])
         .filter('startFrom', AdminPanelFilter)
     ;
 
@@ -18,8 +19,8 @@
     }
 
     function AdminPanelController(userFactory, notificationFactory, $location) {
-        this.canActivate = function(){
-            if (!userFactory.accessToken){
+        this.canActivate = function () {
+            if (!userFactory.accessToken) {
                 notificationFactory.addAlert('You need to be connected, return to <a class="alert-link" href="/">Home</a>', 'danger', 3000);
             }
             return userFactory.accessToken;
@@ -51,9 +52,12 @@
             bindToController: true,
             controllerAs: 'users',
             controller: function ($scope, $element, $attrs) {
+                this.updateUser = function (user) {
+                    angular.element('#updateUserModal' + user.id).appendTo('body').modal('show');
+                };
                 var me = this;
-                this.user = userFactory.users;
-                paginationFactory.setPagination(me.user, 0, 5);
+                this.users = userFactory.users;
+                paginationFactory.setPagination(me.users, 0, 5);
             }
         }
     }
@@ -69,6 +73,20 @@
                 var me = this;
                 this.media = mediaFactory.medias;
                 paginationFactory.setPagination(me.media, 0, 5);
+            }
+        }
+    }
+
+    function ModalUpdateUserDirective(userFactory) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/templates/update-user.html',
+            controllerAs: 'updateUser',
+            controller: function ($scope, $element, $attrs) {
+                this.update = function () {
+                    userFactory.updateUser(this.id, this.email, this.firstname, this.lastname, this.nickname, this.password);
+                    angular.element('#updateUserModal').appendTo('body').modal('hide');
+                };
             }
         }
     }
