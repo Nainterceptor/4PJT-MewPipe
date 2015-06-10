@@ -3,12 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
-	"supinfo/mewpipe/configs"
 	"supinfo/mewpipe/fixtures/entities"
 )
 
 func main() {
-	configs.Parse()
 	var args []string = os.Args[1:]
 	if len(args) == 0 {
 		fmt.Println("Full import")
