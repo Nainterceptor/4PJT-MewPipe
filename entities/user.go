@@ -7,12 +7,18 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 const tokenExpiration = 3600
 
 var userCollection = configs.MongoDB.C("users")
+
+//useful for UT
+func ChangeUserDB(db *mgo.Database) {
+	userCollection = db.C("users")
+}
 
 type name struct {
 	FirstName string `json:"firstname"`

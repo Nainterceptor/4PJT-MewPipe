@@ -9,6 +9,11 @@ import (
 
 var viewCollection = configs.MongoDB.C("media.views")
 
+//useful for UT
+func ChangeViewDB(db *mgo.Database) {
+	viewCollection = db.C("media.views")
+}
+
 type View struct {
 	Id    bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	User  bson.ObjectId `json:"user,omitempty" bson:"user,omitempty"`

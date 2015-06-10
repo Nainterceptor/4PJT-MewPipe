@@ -15,6 +15,11 @@ import (
 var mediaCollection = configs.MongoDB.C("media")
 var mediaGridFS = configs.MongoDB.GridFS("media")
 
+//useful for UT
+func ChangeMediaDB(db *mgo.Database) {
+	mediaCollection = db.C("media")
+}
+
 type scope string
 
 const (
