@@ -16,26 +16,17 @@ var HttpBinding = flag.String("http_binding", "localhost:8080", "IP/Port to list
 var mongoCS = flag.String("mongodb_CS", "localhost", "Connection endpoint for mongodb driver")
 var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")
 
-var MongoDB = getMongoDBVar()
+var MongoDB *mgo.Database
 
-var isParsed = false
-
-func Parse() {
-	if !isParsed {
-		iniflags.Parse()
-		isParsed = true
-	}
-}
-
-func getMongoDBVar() *mgo.Database {
-	Parse()
+func init() {
+	iniflags.Parse()
 	session, err := mgo.Dial(*mongoCS)
-	defer session.Close()
 	if err != nil {
 		panic(err)
 	}
 	session.SetMode(mgo.Monotonic, true)
-	return session.DB(*mongoName)
+	MongoDB = session.DB(*mongoName)
+
 }
 
 func ConfigureSwagger(wsContainer *restful.Container) {
