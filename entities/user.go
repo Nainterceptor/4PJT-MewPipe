@@ -13,11 +13,8 @@ import (
 
 const tokenExpiration = 3600
 
-var userCollection = configs.MongoDB.C("users")
-
-//useful for UT
-func ChangeUserDB(db *mgo.Database) {
-	userCollection = db.C("users")
+func getUserCollection() *mgo.Collection {
+	return configs.MongoDB.C("users")
 }
 
 type name struct {
@@ -64,7 +61,7 @@ func UserNewFromId(oid bson.ObjectId) *User {
 
 func UserFromId(oid bson.ObjectId) (*User, error) {
 	user := new(User)
-	err := userCollection.FindId(oid).One(&user)
+	err := getUserCollection().FindId(oid).One(&user)
 	if err != nil {
 		user = UserNewFromId(oid)
 	}
@@ -75,7 +72,7 @@ func UserFromId(oid bson.ObjectId) (*User, error) {
 func UserList(bson bson.M, start int, number int) ([]User, error) {
 	users := make([]User, number)
 
-	err := userCollection.Find(bson).Skip(start).Limit(number).All(&users)
+	err := getUserCollection().Find(bson).Skip(start).Limit(number).All(&users)
 
 	return users, err
 }
@@ -83,7 +80,7 @@ func UserList(bson bson.M, start int, number int) ([]User, error) {
 func UserFromCredentials(email string, password string) (*User, error) {
 	user := new(User)
 
-	if err := userCollection.Find(bson.M{"email": email}).One(&user); err != nil {
+	if err := getUserCollection().Find(bson.M{"email": email}).One(&user); err != nil {
 		return new(User), err
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
@@ -99,7 +96,7 @@ func UserFromToken(token string) (*User, error) {
 	if err != nil {
 		return new(User), err
 	}
-	if err := userCollection.Find(bson.M{"usertokens.token": bson.ObjectId(tokenDecoded)}).One(&user); err != nil {
+	if err := getUserCollection().Find(bson.M{"usertokens.token": bson.ObjectId(tokenDecoded)}).One(&user); err != nil {
 		return new(User), err
 	}
 	user.Clean()
@@ -168,7 +165,7 @@ func (u *User) Insert() error {
 		return errors.New("`password` is empty")
 	}
 	u.hashPassword()
-	if err := userCollection.Insert(&u); err != nil {
+	if err := getUserCollection().Insert(&u); err != nil {
 		return err
 	}
 	return nil
@@ -181,7 +178,7 @@ func (u *User) Update() error {
 		u.hashPassword()
 	}
 
-	if err := userCollection.UpdateId(u.Id, &u); err != nil {
+	if err := getUserCollection().UpdateId(u.Id, &u); err != nil {
 		return err
 	}
 	mediaCol, err := u.GetMedia()
@@ -199,7 +196,7 @@ func (u *User) Update() error {
 }
 
 func (u *User) Delete() error {
-	if err := userCollection.RemoveId(u.Id); err != nil {
+	if err := getUserCollection().RemoveId(u.Id); err != nil {
 		return err
 	}
 	mediaCol, err := u.GetMedia()
