@@ -10,15 +10,9 @@ import (
 )
 
 func ClearMedia() {
-	if err := configs.MongoDB.C("media.chunks").DropCollection(); err != nil {
-		fmt.Println(err)
-	}
-	if err := configs.MongoDB.C("media.files").DropCollection(); err != nil {
-		fmt.Println(err)
-	}
-	if err := configs.MongoDB.C("media").DropCollection(); err != nil {
-		fmt.Println(err)
-	}
+	configs.MongoDB.C("media.chunks").DropCollection()
+	configs.MongoDB.C("media.files").DropCollection()
+	configs.MongoDB.C("media").DropCollection()
 	fmt.Println("All media deleted")
 }
 

@@ -9,10 +9,7 @@ import (
 )
 
 func ClearUsers() {
-	if err := configs.MongoDB.C("users").DropCollection(); err != nil {
-		panic(err)
-		return
-	}
+	configs.MongoDB.C("users").DropCollection()
 	fmt.Println("All users deleted")
 }
 
