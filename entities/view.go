@@ -7,11 +7,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var viewCollection = configs.MongoDB.C("media.views")
-
-//useful for UT
-func ChangeViewDB(db *mgo.Database) {
-	viewCollection = db.C("media.views")
+func getViewCollection() *mgo.Collection {
+	return configs.MongoDB.C("media.views")
 }
 
 type View struct {
@@ -37,6 +34,6 @@ func ViewNew(user bson.ObjectId, media bson.ObjectId) error {
 
 func upsertOnCriteria(query interface{}) error {
 	view := new(View)
-	_, err := viewCollection.Find(query).Apply(change, &view)
+	_, err := getViewCollection().Find(query).Apply(change, &view)
 	return err
 }
