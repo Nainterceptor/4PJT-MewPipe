@@ -10,13 +10,8 @@ import (
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"gopkg.in/mgo.v2/dbtest"
 )
-
-var Server dbtest.DBServer
-var Session *mgo.Session
 
 func init() {
 
@@ -25,10 +20,6 @@ func init() {
 
 	Session = Server.Session()
 	configs.MongoDB = Session.DB("test_mewpipe")
-}
-
-func Wipe() {
-	configs.MongoDB.DropDatabase()
 }
 
 func TestUserNew(t *testing.T) {
@@ -139,6 +130,11 @@ func TestUserInsert(t *testing.T) {
 		Convey("User Password should be Empty", func() {
 			So(usr.Password, ShouldBeEmpty)
 		})
+		usr = getBarUser()
+		usr.Password = ""
+		Convey("Insertion without password should fail", func() {
+			So(usr.Insert(), ShouldNotBeNil)
+		})
 	})
 }
 
@@ -155,6 +151,10 @@ func TestUserDelete(t *testing.T) {
 		_, err = UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
 		Convey("User should not be found", func() {
 			So(err, ShouldNotBeNil)
+		})
+		usr = getBarUser()
+		Convey("Removal on inexisting ID should fail", func() {
+			So(usr.Delete(), ShouldNotBeNil)
 		})
 	})
 }
@@ -179,6 +179,11 @@ func TestUserUpdate(t *testing.T) {
 		Convey("New user should be found", func() {
 			So(err, ShouldBeNil)
 		})
+		usr = getBarUser()
+		Convey("Update on inexisting ID should fail", func() {
+			So(usr.Update(), ShouldNotBeNil)
+		})
+
 	})
 }
 
@@ -215,6 +220,11 @@ func TestUserTokenGeneration(t *testing.T) {
 		})
 		Convey("User should be found from token", func() {
 			So(err, ShouldBeNil)
+		})
+		usr = getBarUser()
+		_, err = usr.TokenNew()
+		Convey("Update on inexisting ID should fail", func() {
+			So(err, ShouldNotBeNil)
 		})
 	})
 }
