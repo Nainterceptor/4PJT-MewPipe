@@ -80,7 +80,7 @@ func (m *Media) Normalize() {
 	}
 }
 
-func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHeader) error {
+func (m *Media) Upload(postedFile io.Reader, fileHeader *multipart.FileHeader) error {
 	mongoFile, err := getMediaGridFSCollection().Create(fileHeader.Filename)
 	defer mongoFile.Close()
 	if err != nil {
