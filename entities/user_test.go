@@ -76,12 +76,12 @@ func TestUserInsert(t *testing.T) {
 	Convey("Test user insertion", t, func() {
 		usr := getFooUser()
 		usr.Insert()
-		usrCompare, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		_, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
 		Convey("User should be found", func() {
 			So(err, ShouldBeNil)
 		})
-		Convey("User Nickname should be Foo", func() {
-			So(usrCompare.Name.NickName, ShouldEqual, usr.Name.NickName)
+		Convey("User Password should be Empty", func() {
+			So(usr.Password, ShouldBeEmpty)
 		})
 	})
 }
@@ -97,8 +97,31 @@ func TestUserDelete(t *testing.T) {
 		})
 		usr.Delete()
 		_, err = UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
-		Convey("User should be not found", func() {
+		Convey("User should not be found", func() {
 			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
+func TestUserUpdate(t *testing.T) {
+	Wipe()
+	Convey("Test user updating", t, func() {
+		usr := getFooUser()
+		usr.Insert()
+		_, err := UserFromCredentials("foo@bar.tld", "Foo")
+		Convey("User should be found", func() {
+			So(err, ShouldBeNil)
+		})
+		usr.Email = "bar@foo.tld"
+		usr.Password = "Bar"
+		usr.Update()
+		_, err = UserFromCredentials("foo@bar.tld", "Foo")
+		Convey("Old user should not be found", func() {
+			So(err, ShouldNotBeNil)
+		})
+		_, err = UserFromCredentials("bar@foo.tld", "Bar")
+		Convey("New user should be found", func() {
+			So(err, ShouldBeNil)
 		})
 	})
 }
