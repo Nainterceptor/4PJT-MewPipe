@@ -5,6 +5,8 @@ import (
 	"supinfo/mewpipe/configs"
 	"testing"
 
+	"encoding/base64"
+
 	. "github.com/smartystreets/goconvey/convey"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -47,17 +49,31 @@ func TestUserDelete(t *testing.T) {
 	Convey("Test user removal", t, func() {
 		usr := getFooUser()
 		usr.Insert()
-		usrCompare, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		_, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
 		Convey("User should be found", func() {
 			So(err, ShouldBeNil)
 		})
-		Convey("User Nickname should be Foo", func() {
-			So(usrCompare.Name.NickName, ShouldEqual, usr.Name.NickName)
-		})
 		usr.Delete()
-		usrCompare, err = UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		_, err = UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
 		Convey("User should be not found", func() {
 			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
+func TestUserTokenGeneration(t *testing.T) {
+	Wipe()
+	Convey("Test user token generation", t, func() {
+		usr := getFooUser()
+		usr.Insert()
+		_, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		Convey("User should be found", func() {
+			So(err, ShouldBeNil)
+		})
+		token, err := usr.TokenNew()
+		_, err = UserFromToken(base64.StdEncoding.EncodeToString([]byte(token.Token)))
+		Convey("User should be found from token", func() {
+			So(err, ShouldBeNil)
 		})
 	})
 }
