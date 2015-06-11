@@ -224,7 +224,7 @@ func (u *User) Delete() error {
 
 func (u *User) GetMedia() ([]Media, error) {
 	var media []Media
-	err := mediaCollection.Find(bson.M{"publisher._id": u.Id}).All(&media)
+	err := getMediaCollection().Find(bson.M{"publisher._id": u.Id}).All(&media)
 	return media, err
 }
 
