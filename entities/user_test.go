@@ -2,54 +2,72 @@ package entities
 
 import (
 	"io/ioutil"
+	"supinfo/mewpipe/configs"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/mgo.v2/dbtest"
 )
 
-func TestInsert(t *testing.T) {
+var Server dbtest.DBServer
+var Session *mgo.Session
+
+func init() {
+
+	tempDir, _ := ioutil.TempDir("", "testing")
+	Server.SetPath(tempDir)
+
+	Session = Server.Session()
+	configs.MongoDB = Session.DB("test_mewpipe")
+}
+
+func Wipe() {
+	configs.MongoDB.DropDatabase()
+}
+
+func TestUserInsert(t *testing.T) {
+	Wipe()
 	Convey("Test user insertion", t, func() {
-		WrapperUser(func() {
-			usr := getAdminUser()
-			usr.Insert()
-			usrCompare, err := UserFromId(bson.ObjectIdHex("555a076a2fd06c1891000002"))
-			Convey("usr to compare should be nil", func() {
-				So(err, ShouldBeNil)
-			})
-			Convey("User Nickname should be Admin", func() {
-				So(usrCompare.Name.NickName, ShouldEqual, usr.Name.NickName)
-			})
+		usr := getFooUser()
+		usr.Insert()
+		usrCompare, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		Convey("User should be found", func() {
+			So(err, ShouldBeNil)
+		})
+		Convey("User Nickname should be Foo", func() {
+			So(usrCompare.Name.NickName, ShouldEqual, usr.Name.NickName)
 		})
 	})
 }
 
-func WrapperUser(toWrap func()) {
-	var server dbtest.DBServer
-	defer server.Stop()
-	tempDir, err := ioutil.TempDir("", "testing")
-	Convey("TempDir err should be nil", func() {
-		So(err, ShouldBeNil)
+func TestUserDelete(t *testing.T) {
+	Wipe()
+	Convey("Test user removal", t, func() {
+		usr := getFooUser()
+		usr.Insert()
+		usrCompare, err := UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		Convey("User should be found", func() {
+			So(err, ShouldBeNil)
+		})
+		Convey("User Nickname should be Foo", func() {
+			So(usrCompare.Name.NickName, ShouldEqual, usr.Name.NickName)
+		})
+		usr.Delete()
+		usrCompare, err = UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+		Convey("User should be not found", func() {
+			So(err, ShouldNotBeNil)
+		})
 	})
-	server.SetPath(tempDir)
-	session := server.Session()
-	db := session.DB("test_mewpipe")
-	defer session.Close()
-	Convey("db should be nil", func() {
-		So(err, ShouldBeNil)
-	})
-	ChangeUserDB(db)
-	toWrap()
 }
 
-func getAdminUser() *User {
-	usr := UserNewFromId(bson.ObjectIdHex("555a076a2fd06c1891000002"))
-	usr.Email = "admin@admin.com"
-	usr.Password = "Admin"
-	usr.Name.FirstName = "Admin"
-	usr.Name.LastName = "Admin"
-	usr.Name.NickName = "Admin"
-	usr.Roles = append(usr.Roles, "Admin")
+func getFooUser() *User {
+	usr := UserNewFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
+	usr.Email = "foo@bar.tld"
+	usr.Password = "Foo"
+	usr.Name.FirstName = "Foo"
+	usr.Name.LastName = "Foo"
+	usr.Name.NickName = "Foo"
 	return usr
 }
