@@ -12,12 +12,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var mediaCollection = configs.MongoDB.C("media")
-var mediaGridFS = configs.MongoDB.GridFS("media")
+func getMediaCollection() *mgo.Collection {
+	return configs.MongoDB.C("users")
+}
 
-//useful for UT
-func ChangeMediaDB(db *mgo.Database) {
-	mediaCollection = db.C("media")
+func getMediaGridFSCollection() *mgo.GridFS {
+	return configs.MongoDB.GridFS("media")
 }
 
 type scope string
@@ -59,7 +59,7 @@ func MediaNewFromId(oid bson.ObjectId) *Media {
 }
 func MediaFromId(oid bson.ObjectId) (*Media, error) {
 	media := new(Media)
-	err := mediaCollection.FindId(oid).One(&media)
+	err := getMediaCollection().FindId(oid).One(&media)
 	if err != nil {
 		media = MediaNewFromId(oid)
 	}
@@ -69,7 +69,7 @@ func MediaFromId(oid bson.ObjectId) (*Media, error) {
 func MediaList(bson bson.M, start int, number int, sort ...string) ([]Media, error) {
 	medias := make([]Media, number)
 
-	err := mediaCollection.Find(bson).Sort(sort...).Skip(start).Limit(number).All(&medias)
+	err := getMediaCollection().Find(bson).Sort(sort...).Skip(start).Limit(number).All(&medias)
 
 	return medias, err
 }
@@ -81,7 +81,7 @@ func (m *Media) Normalize() {
 }
 
 func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHeader) error {
-	mongoFile, err := mediaGridFS.Create(fileHeader.Filename)
+	mongoFile, err := getMediaGridFSCollection().Create(fileHeader.Filename)
 	defer mongoFile.Close()
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHead
 	}
 
 	if m.File != "" {
-		mediaGridFS.RemoveId(m.File)
+		getMediaGridFSCollection().RemoveId(m.File)
 	}
 	m.File = mongoFile.Id().(bson.ObjectId)
 
@@ -105,7 +105,7 @@ func (m *Media) Upload(postedFile multipart.File, fileHeader *multipart.FileHead
 }
 
 func (m *Media) OpenFile() error {
-	file, err := mediaGridFS.OpenId(m.File)
+	file, err := getMediaGridFSCollection().OpenId(m.File)
 	m.mgofile = file
 
 	if err != nil {
@@ -144,7 +144,7 @@ func (m *Media) CopyTo(target io.Writer) error {
 
 func (m *Media) Insert() error {
 	m.Normalize()
-	if err := mediaCollection.Insert(&m); err != nil {
+	if err := getMediaCollection().Insert(&m); err != nil {
 		return err
 	}
 	return nil
@@ -152,7 +152,7 @@ func (m *Media) Insert() error {
 
 func (m *Media) Update() error {
 	m.Normalize()
-	if err := mediaCollection.UpdateId(m.Id, &m); err != nil {
+	if err := getMediaCollection().UpdateId(m.Id, &m); err != nil {
 		return err
 	}
 	return nil
@@ -160,9 +160,9 @@ func (m *Media) Update() error {
 
 func (m *Media) Delete() error {
 	if m.File != "" {
-		mediaGridFS.RemoveId(m.File)
+		getMediaGridFSCollection().RemoveId(m.File)
 	}
-	if err := mediaCollection.RemoveId(m.Id); err != nil {
+	if err := getMediaCollection().RemoveId(m.Id); err != nil {
 		return err
 	}
 	return nil
