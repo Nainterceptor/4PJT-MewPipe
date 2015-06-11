@@ -53,7 +53,7 @@ func MediaNew() *Media {
 }
 
 func MediaNewFromId(oid bson.ObjectId) *Media {
-	media := new(Media)
+	media := MediaNew()
 	media.Id = oid
 	return media
 }
