@@ -2,10 +2,14 @@ package entities
 
 import (
 	"io/ioutil"
+	"os"
 	"supinfo/mewpipe/configs"
-	"testing"
 
 	"time"
+
+	"testing"
+
+	"mime/multipart"
 
 	. "github.com/smartystreets/goconvey/convey"
 	"gopkg.in/mgo.v2/bson"
@@ -135,6 +139,115 @@ func TestMediaDelete(t *testing.T) {
 			So(media.Delete(), ShouldBeNil)
 		})
 	})
+}
+
+func TestMediaUpload(t *testing.T) {
+	Convey("Test media upload", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		media.Insert()
+		header := new(multipart.FileHeader)
+		header.Filename = "sample.mp4"
+		header.Header = make(map[string][]string)
+		header.Header.Add("Content-Type", "video/mp4")
+		sampleFile, err := os.Open("../fixtures/files/sample.mp4")
+		Convey("Sample reading must be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		err = media.Upload(sampleFile, header)
+		Convey("Sample upload should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+	})
+}
+
+func TestMediaReadUpload(t *testing.T) {
+	Convey("Test media Read", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		media.Insert()
+		header := new(multipart.FileHeader)
+		header.Filename = "sample.mp4"
+		header.Header = make(map[string][]string)
+		header.Header.Add("Content-Type", "video/mp4")
+		sampleFile, err := os.Open("../fixtures/files/sample.mp4")
+		Convey("Sample reading must be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		err = media.Upload(sampleFile, header)
+		Convey("Sample upload should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+
+		//Now, Read !
+		err = media.OpenFile()
+		defer media.CloseFile()
+		Convey("Media open should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+
+		Convey("Media should be mp4", func() {
+			So(media.ContentType(), ShouldEqual, "video/mp4")
+		})
+
+		start := 0
+		intSize := int(media.Size())
+		err = media.SeekSet(int64(start))
+		Convey("Seek should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		buffer := make([]byte, intSize)
+
+		err = media.Read(buffer)
+		Convey("Read should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+	})
+}
+
+func TestMediaCopy(t *testing.T) {
+	Convey("Test media copy", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		media.Insert()
+		header := new(multipart.FileHeader)
+		header.Filename = "sample.mp4"
+		header.Header = make(map[string][]string)
+		header.Header.Add("Content-Type", "video/mp4")
+		sampleFile, err := os.Open("../fixtures/files/sample.mp4")
+		Convey("Sample reading must be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		err = media.Upload(sampleFile, header)
+		Convey("Sample upload should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+
+		//Now, Read !
+		err = media.OpenFile()
+		defer media.CloseFile()
+		Convey("Media open should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		Convey("Media Read should be a success", func() {
+			file, err := ioutil.TempFile("", "fixtures_")
+			Convey("Media Read should be a success", func() {
+				So(err, ShouldBeNil)
+			})
+			So(media.CopyTo(file), ShouldBeNil)
+		})
+	})
+}
+
+func TestMediaOpen(t *testing.T) {
+	Convey("Test media open", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		Convey("Media without file should back an error", func() {
+			So(media.OpenFile(), ShouldNotBeNil)
+		})
+	})
+
 }
 
 func getAmazingMedia() *Media {
