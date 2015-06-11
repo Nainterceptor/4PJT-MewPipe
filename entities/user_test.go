@@ -143,6 +143,20 @@ func TestUserTokenGeneration(t *testing.T) {
 	})
 }
 
+func TestUserHasRole(t *testing.T) {
+	Wipe()
+	Convey("Test user has role", t, func() {
+		usr := getFooUser()
+		Convey("User should not have Test role", func() {
+			So(usr.HasRole("Test"), ShouldBeFalse)
+		})
+		usr.Roles = append(usr.Roles, "Test")
+		Convey("User should have Test role", func() {
+			So(usr.HasRole("Test"), ShouldBeTrue)
+		})
+	})
+}
+
 func getFooUser() *User {
 	usr := UserNewFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
 	usr.Email = "foo@bar.tld"
