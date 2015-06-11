@@ -130,9 +130,10 @@ func (u *User) Validate() error {
 }
 
 func (u *User) hasToken(token string) bool {
+	oid := bson.ObjectId(token)
 	found := false
 	for _, token := range u.UserTokens {
-		if token.Token == token.Token {
+		if token.Token == oid {
 			found = true
 		}
 	}
