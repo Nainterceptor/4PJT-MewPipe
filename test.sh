@@ -11,4 +11,4 @@ cd $DIR
 
 go get golang.org/x/tools/cmd/cover
 go get github.com/smartystreets/goconvey
-$GOPATH/bin/goconvey
+$GOPATH/bin/goconvey -timeout="20s"
