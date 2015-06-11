@@ -192,7 +192,11 @@ func TestUserTokenGeneration(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 		token, err := usr.TokenNew()
-		_, err = UserFromToken(base64.StdEncoding.EncodeToString([]byte(token.Token)))
+		tokenBase64 := base64.StdEncoding.EncodeToString([]byte(token.Token))
+		_, err = UserFromToken(tokenBase64)
+		Convey("User must have token", func() {
+			So(usr.hasToken(string(token.Token)), ShouldBeTrue)
+		})
 		Convey("User should be found from token", func() {
 			So(err, ShouldBeNil)
 		})
