@@ -13,7 +13,7 @@ import (
 )
 
 func getMediaCollection() *mgo.Collection {
-	return configs.MongoDB.C("users")
+	return configs.MongoDB.C("media")
 }
 
 func getMediaGridFSCollection() *mgo.GridFS {
