@@ -182,6 +182,22 @@ func TestUserUpdate(t *testing.T) {
 	})
 }
 
+func TestUserFromCredentials(t *testing.T) {
+	Wipe()
+	Convey("Test get user from credentials", t, func() {
+		usr := getFooUser()
+		usr.Insert()
+		_, err := UserFromCredentials("foo@bar.tld", "Foo")
+		Convey("User should be found", func() {
+			So(err, ShouldBeNil)
+		})
+		_, err = UserFromCredentials("foo@bar.tld", "BadPassword")
+		Convey("User should not be found", func() {
+			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
 func TestUserTokenGeneration(t *testing.T) {
 	Wipe()
 	Convey("Test user token generation", t, func() {
@@ -199,6 +215,35 @@ func TestUserTokenGeneration(t *testing.T) {
 		})
 		Convey("User should be found from token", func() {
 			So(err, ShouldBeNil)
+		})
+	})
+}
+
+func TestUserFromToken(t *testing.T) {
+	Wipe()
+	Convey("Test user from token", t, func() {
+		usr := getFooUser()
+		usr.Insert()
+		token, _ := usr.TokenNew()
+		tokenBase64 := base64.StdEncoding.EncodeToString([]byte(token.Token))
+		_, err := UserFromToken("BadToken$@`£")
+		Convey("Incorrect token should return an error", func() {
+			So(err, ShouldNotBeNil)
+		})
+		_, err = UserFromToken("BadToken")
+		Convey("Bad token should return an error", func() {
+			So(err, ShouldNotBeNil)
+		})
+		_, err = UserFromToken(tokenBase64)
+		Convey("Good token should not return an error", func() {
+			So(err, ShouldBeNil)
+		})
+		usr.UserTokens[0].ExpireAt = time.Now().Add(-1*time.Second*tokenExpiration - 1)
+		//Do not use Update, which clean the old token.
+		getUserCollection().UpdateId(usr.Id, &usr)
+		_, err = UserFromToken(tokenBase64)
+		Convey("Old token should return an error", func() {
+			So(err, ShouldNotBeNil)
 		})
 	})
 }
