@@ -29,6 +29,48 @@ func Wipe() {
 	configs.MongoDB.DropDatabase()
 }
 
+func TestUserValidation(t *testing.T) {
+	Convey("Test user validation", t, func() {
+		Convey("Fullfilled user should not back an error", func() {
+			usr := getFooUser()
+			So(usr.Validate(), ShouldBeNil)
+		})
+		Convey("User email should not be empty", func() {
+			usr := getFooUser()
+			usr.Email = ""
+			So(usr.Validate(), ShouldNotBeNil)
+		})
+		Convey("User email should be valid", func() {
+			usr := getFooUser()
+			usr.Email = "NotAnEmail"
+			So(usr.Validate(), ShouldNotBeNil)
+		})
+		Convey("User Nickname should not be empty", func() {
+			usr := getFooUser()
+			usr.Name.NickName = ""
+			So(usr.Validate(), ShouldNotBeNil)
+		})
+	})
+}
+
+func TestUserNormalize(t *testing.T) {
+	Convey("Test user normalize", t, func() {
+		Convey("User must be trimed", func() {
+			usr := getFooUser()
+			usr.Email = " " + usr.Email + " "
+			usr.Name.NickName = " " + usr.Name.NickName + " "
+			usr.Name.LastName = " " + usr.Name.LastName + " "
+			usr.Name.FirstName = " " + usr.Name.FirstName + " "
+			usr.Normalize()
+			So(usr.Email, ShouldEqual, "foo@bar.tld")
+			So(usr.Name.NickName, ShouldEqual, "Foo")
+			So(usr.Name.LastName, ShouldEqual, "Foo")
+			So(usr.Name.FirstName, ShouldEqual, "Foo")
+		})
+
+	})
+}
+
 func TestUserInsert(t *testing.T) {
 	Wipe()
 	Convey("Test user insertion", t, func() {

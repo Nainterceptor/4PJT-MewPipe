@@ -6,6 +6,7 @@ import (
 	"supinfo/mewpipe/configs"
 	"time"
 
+	"github.com/asaskevich/govalidator"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -107,12 +108,23 @@ func UserFromToken(token string) (*User, error) {
 	return user, nil
 }
 
+func (u *User) Normalize() {
+	u.Email = govalidator.Trim(u.Email, "")
+	u.Name.FirstName = govalidator.Trim(u.Name.FirstName, "")
+	u.Name.LastName = govalidator.Trim(u.Name.LastName, "")
+	u.Name.NickName = govalidator.Trim(u.Name.NickName, "")
+}
+
 func (u *User) Validate() error {
+	u.Normalize()
 	if u.Email == "" {
 		return errors.New("`email` is empty")
 	}
 	if u.Name.NickName == "" {
 		return errors.New("`nickname` is empty")
+	}
+	if !govalidator.IsEmail(u.Email) {
+		return errors.New("`email` must be valid")
 	}
 	return nil
 }
