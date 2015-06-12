@@ -202,7 +202,7 @@
         var page = {};
         page.setPagination = function (items, currentPage, numPerPage) {
             page = {
-                totalItems: items.length,
+                totalItems: 0,
                 currentPage: currentPage,
                 numPerPage: numPerPage
             };

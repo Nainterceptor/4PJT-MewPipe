@@ -101,7 +101,7 @@
                             console.log(me.vidHeight);
                             $scope.$digest();
                             $timeout(function(){
-                                canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                                    canvas.getContext('2d').drawImage(video, 0, 0,300, 300 * video.videoHeight/ video.videoWidth);
                                 me.img = canvas.toDataURL("image/png");
                                 console.log(me.img);
                             },500);
