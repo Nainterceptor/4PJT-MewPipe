@@ -170,7 +170,7 @@ func mediasGet(request *restful.Request, response *restful.Response) {
 	orderParam := request.QueryParameter("order")
 	order := "_id"
 
-	regexOrder, _ := regexp.Compile("-?(_id|createdAt)")
+	regexOrder, _ := regexp.Compile("-?(_id|createdAt|views)")
 	if regexOrder.MatchString(orderParam) {
 		order = orderParam
 	}
@@ -193,6 +193,7 @@ func mediaGet(request *restful.Request, response *restful.Response) {
 		user := userAttribute.(*entities.User)
 		entities.ViewNew(user.Id, media.Id)
 	}
+	media.CountViews()
 
 	response.WriteEntity(media)
 }

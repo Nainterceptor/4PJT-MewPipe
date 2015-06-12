@@ -43,7 +43,7 @@ type Media struct {
 	File      bson.ObjectId `json:"file,omitempty" bson:",omitempty"`
 	Scope     scope         `json:"scope,omitempty" bson:"scope,omitempty"`
 	mgofile   *mgo.GridFile `json:"-" bson:"-"`
-	Views     int           `json:"views, omitempty" bson:"-"`
+	Views     int           `json:"views,omitempty" bson:"views,omitempty"`
 }
 
 func MediaNew() *Media {
@@ -64,7 +64,6 @@ func MediaFromId(oid bson.ObjectId) (*Media, error) {
 	if err != nil {
 		media = MediaNewFromId(oid)
 	}
-	media.CountViews()
 	return media, err
 }
 
@@ -174,4 +173,5 @@ func (m *Media) CountViews() {
 		m.Views = 0
 	}
 	m.Views = view.Count
+	m.Update()
 }
