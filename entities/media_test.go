@@ -136,8 +136,25 @@ func TestMediaDelete(t *testing.T) {
 		})
 		Convey("Test delete", func() {
 			media.Insert()
+			header := new(multipart.FileHeader)
+			header.Filename = "sample.mp4"
+			header.Header = make(map[string][]string)
+			header.Header.Add("Content-Type", "video/mp4")
+			sampleFile, err := os.Open("../fixtures/files/sample.mp4")
+			Convey("Sample reading must be a success", func() {
+				So(err, ShouldBeNil)
+			})
+			err = media.Upload(sampleFile, header)
+			Convey("Sample upload should be a success", func() {
+				So(err, ShouldBeNil)
+			})
+			So(countFiles(), ShouldEqual, 1)
+			So(countChunks(), ShouldAlmostEqual, 1)
 			So(media.Delete(), ShouldBeNil)
+			So(countFiles(), ShouldEqual, 0)
+			So(countChunks(), ShouldEqual, 0)
 		})
+
 	})
 }
 
@@ -157,6 +174,22 @@ func TestMediaUpload(t *testing.T) {
 		err = media.Upload(sampleFile, header)
 		Convey("Sample upload should be a success", func() {
 			So(err, ShouldBeNil)
+		})
+		Convey("Sample upload should be a success again", func() {
+			So(countFiles(), ShouldEqual, 1)
+			err = media.Upload(sampleFile, header)
+			So(err, ShouldBeNil)
+			So(countFiles(), ShouldEqual, 1)
+		})
+		Convey("Sample upload should fail if Update fail", func() {
+			media.Id = bson.NewObjectId()
+			err = media.Upload(sampleFile, header)
+			So(err, ShouldNotBeNil)
+		})
+		Convey("Sample upload should fail when file is closed", func() {
+			sampleFile.Close()
+			err = media.Upload(sampleFile, header)
+			So(err, ShouldNotBeNil)
 		})
 	})
 }
@@ -248,6 +281,16 @@ func TestMediaOpen(t *testing.T) {
 		})
 	})
 
+}
+
+func countFiles() int {
+	count, _ := configs.MongoDB.C("media.files").Count()
+	return count
+}
+
+func countChunks() int {
+	count, _ := configs.MongoDB.C("media.chunks").Count()
+	return count
 }
 
 func getAmazingMedia() *Media {

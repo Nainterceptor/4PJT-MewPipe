@@ -81,13 +81,10 @@ func (m *Media) Normalize() {
 }
 
 func (m *Media) Upload(postedFile io.Reader, fileHeader *multipart.FileHeader) error {
-	mongoFile, err := getMediaGridFSCollection().Create(fileHeader.Filename)
+	mongoFile, _ := getMediaGridFSCollection().Create(fileHeader.Filename)
 	defer mongoFile.Close()
-	if err != nil {
-		return err
-	}
 	mongoFile.SetContentType(fileHeader.Header.Get("Content-Type"))
-	_, err = io.Copy(mongoFile, postedFile)
+	_, err := io.Copy(mongoFile, postedFile)
 	if err != nil {
 		return err
 	}
