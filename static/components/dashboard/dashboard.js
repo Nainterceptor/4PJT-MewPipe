@@ -3,7 +3,7 @@
     angular.module('mewpipe.dashboard', ['ngFileUpload'])
         .controller('DashboardController',['userFactory','notificationFactory','$location',DashboardController])
         .directive('profile',['userFactory','notificationFactory', ProfileDirective])
-        .directive('manageVideo',['userFactory','notificationFactory','mediaFactory','paginationFactory','$timeout','$sce', ManageVideoDirective])
+        .directive('manageVideo',['userFactory','notificationFactory','mediaFactory','paginationFactory','$timeout', ManageVideoDirective])
         .config(function($sceProvider){
             $sceProvider.enabled(false);
         })
@@ -59,7 +59,7 @@
         return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
     }
 
-    function ManageVideoDirective(userFactory,notificationFactory,mediaFactory,paginationFactory,$timeout,$sce){
+    function ManageVideoDirective(userFactory,notificationFactory,mediaFactory,paginationFactory,$timeout){
         return {
             restrict: 'E',
             templateUrl: 'components/dashboard/manage-video.html',
@@ -84,38 +84,17 @@
                         console.log(file);
                         fileToUpload = file;
                          var URL = window.URL;
-                        console.log(URL.createObjectURL(file));
-                        $sce.trustAsResourceUrl(URL.createObjectURL(file));
-                        console.log($sce.getTrustedResourceUrl());
                         me.videoUrl = URL.createObjectURL(file);
                         $scope.$digest();
-                        //var canvas = angular.element('#canvas');
-                        //var video = angular.element('#video');
                         $timeout(function(){
-                            //var canvas = window.document.getElementById('canvas');
-                            //var video = window.document.getElementById('video');
                             var canvas = angular.element('#canvas')[0];
                             var video = angular.element('#video')[0];
                             me.vidHeight =video.videoHeight;
                             me.vidWidth =video.videoWidth;
-                            console.log(me.vidHeight);
-                            $scope.$digest();
-                            $timeout(function(){
-                                    canvas.getContext('2d').drawImage(video, 0, 0,300, 300 * video.videoHeight/ video.videoWidth);
-                                me.img = canvas.toDataURL("image/png");
-                                console.log(me.img);
-                            },500);
+                            canvas.getContext('2d').drawImage(video, 0, 0,300, 300 * video.videoHeight/ video.videoWidth);
+                            me.img = canvas.toDataURL("image/png");
+                            console.log(me.img);
                         },100);
-
-                        //var fileReader = new FileReader();
-                        //fileReader.readAsDataURL(file);
-                        //fileReader.onload = function(e) {
-                        //    $timeout(function() {
-                        //        console.log(e.target.result);
-                        //        me.video = e.target.result;
-                        //    });
-                        //};
-
                         meta(file);
                     }
                 };
