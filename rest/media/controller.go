@@ -50,11 +50,13 @@ func mediaUpload(request *restful.Request, response *restful.Response) {
 
 func mediaThumbnail(request *restful.Request, response *restful.Response) {
 	media := request.Attribute("media").(*entities.Media)
-	if media.Thumbnail == nil {
+	if media.Thumbnail == "" {
 		response.WriteErrorString(http.StatusNotFound, "No thumbnail")
+		return
 	}
 	if err := media.OpenThumbnail(); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
+		return
 	}
 	defer media.CloseThumbnail()
 	response.AddHeader("Content-type", "image/jpeg")
@@ -67,11 +69,13 @@ func mediaThumbnail(request *restful.Request, response *restful.Response) {
 
 func mediaRead(request *restful.Request, response *restful.Response) {
 	media := request.Attribute("media").(*entities.Media)
-	if media.File == nil {
-		response.WriteErrorString(http.StatusNotFound, "No thumbnail")
+	if media.File == "" {
+		response.WriteErrorString(http.StatusNotFound, "No video")
+		return
 	}
 	if err := media.OpenFile(); err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
+		return
 	}
 	defer media.CloseFile()
 

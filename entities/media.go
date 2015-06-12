@@ -93,18 +93,17 @@ func (m *Media) Normalize() {
 
 func (m *Media) ExtractThumbnailFromFile(postedFile io.Reader) error {
 	tempFile, err := ioutil.TempFile("", "mewpipe_video")
-	//	defer os.Remove(tempFile.Name())
+	defer os.Remove(tempFile.Name())
 	if err != nil {
 		return err
 	}
 	tempThumb, err := ioutil.TempFile("", "mewpipe_thumb")
-	//	defer os.Remove(tempThumb.Name())
+	defer os.Remove(tempThumb.Name())
 	if err != nil {
 
 		return err
 	}
 	io.Copy(tempFile, postedFile)
-	//	tempFile.Close()
 	screenGenerator, err := screengen.NewGenerator(tempFile.Name())
 	if err != nil {
 		return err
