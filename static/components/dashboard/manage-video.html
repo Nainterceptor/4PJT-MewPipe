@@ -8,6 +8,15 @@
         </div>
     </div>
     <hr>
+    <div>
+        <pre>Video</pre>
+        <video id="video" ng-if="mngVideo.videoUrl" ng-src="{{mngVideo.videoUrl}}"></video>
+        <pre >canvas</pre>
+        <canvas id="canvas" ng-style="{'width': mngVideo.vidWidth, 'height':mngVideo.vidHeight}"></canvas>
+        <pre>Image</pre>
+        <img ng-src="{{mngVideo.img}}" alt=""/>
+
+    </div>
     <div class="row">
         <div class="col-md-offset-2 col-md-8">
             <h3>Medias</h3>

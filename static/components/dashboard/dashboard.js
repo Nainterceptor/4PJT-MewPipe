@@ -3,7 +3,10 @@
     angular.module('mewpipe.dashboard', ['ngFileUpload'])
         .controller('DashboardController',['userFactory','notificationFactory','$location',DashboardController])
         .directive('profile',['userFactory','notificationFactory', ProfileDirective])
-        .directive('manageVideo',['userFactory','notificationFactory','mediaFactory','paginationFactory', ManageVideoDirective])
+        .directive('manageVideo',['userFactory','notificationFactory','mediaFactory','paginationFactory','$timeout','$sce', ManageVideoDirective])
+        .config(function($sceProvider){
+            $sceProvider.enabled(false);
+        })
     ;
 
     function DashboardController(userFactory, notificationFactory, $location){
@@ -56,7 +59,7 @@
         return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
     }
 
-    function ManageVideoDirective(userFactory,notificationFactory,mediaFactory,paginationFactory){
+    function ManageVideoDirective(userFactory,notificationFactory,mediaFactory,paginationFactory,$timeout,$sce){
         return {
             restrict: 'E',
             templateUrl: 'components/dashboard/manage-video.html',
@@ -78,12 +81,48 @@
                         } else if (file.size > 524288000){
                             notificationFactory.addAlert('Your file should not be superior to 500MB (file size : ' + ByteFilter(file.size) + ')', 'danger');
                         }
-                        fileToUpload =  file;
+                        console.log(file);
+                        fileToUpload = file;
+                         var URL = window.URL;
+                        console.log(URL.createObjectURL(file));
+                        $sce.trustAsResourceUrl(URL.createObjectURL(file));
+                        console.log($sce.getTrustedResourceUrl());
+                        me.videoUrl = URL.createObjectURL(file);
+                        $scope.$digest();
+                        //var canvas = angular.element('#canvas');
+                        //var video = angular.element('#video');
+                        $timeout(function(){
+                            //var canvas = window.document.getElementById('canvas');
+                            //var video = window.document.getElementById('video');
+                            var canvas = angular.element('#canvas')[0];
+                            var video = angular.element('#video')[0];
+                            me.vidHeight =video.videoHeight;
+                            me.vidWidth =video.videoWidth;
+                            console.log(me.vidHeight);
+                            $scope.$digest();
+                            $timeout(function(){
+                                canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                                me.img = canvas.toDataURL("image/png");
+                                console.log(me.img);
+                            },500);
+                        },100);
+
+                        //var fileReader = new FileReader();
+                        //fileReader.readAsDataURL(file);
+                        //fileReader.onload = function(e) {
+                        //    $timeout(function() {
+                        //        console.log(e.target.result);
+                        //        me.video = e.target.result;
+                        //    });
+                        //};
+
                         meta(file);
                     }
                 };
                 var meta = function(file){
                     me.title = file.name;
+
+                    $scope.$digest();
                     angular.element('#metaModal').appendTo('body').modal('show');
                 };
                 this.upload = function(){
