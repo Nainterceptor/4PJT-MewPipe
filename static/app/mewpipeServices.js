@@ -20,15 +20,9 @@
         var userInstance = {};
         userInstance.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
         userInstance.getUsers = function () {
-            $http.get(baseUrl + '/users', {
+            return ($http.get(baseUrl + '/users', {
                 Authorization: userInstance.accessToken
-            })
-                .success(function (response) {
-                    userInstance.users = response;
-                })
-                .error(function (response) {
-                    console.log(response);
-                })
+            }))
         };
         userInstance.getUser = function () {
             $http.get(baseUrl + '/users/' + userInstance.user.id, {
