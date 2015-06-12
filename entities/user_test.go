@@ -147,6 +147,8 @@ func TestUserDelete(t *testing.T) {
 		Convey("User should be found", func() {
 			So(err, ShouldBeNil)
 		})
+		media := getAmazingMedia()
+		media.Insert()
 		usr.Delete()
 		_, err = UserFromId(bson.ObjectIdHex("5578b8c4f711886e75dec3fd"))
 		Convey("User should not be found", func() {
@@ -159,6 +161,11 @@ func TestUserDelete(t *testing.T) {
 	})
 }
 
+func TestUserGetMedia(t *testing.T) {
+	usr := getFooUser()
+	usr.GetMedia()
+}
+
 func TestUserUpdate(t *testing.T) {
 	Wipe()
 	Convey("Test user updating", t, func() {
@@ -168,6 +175,7 @@ func TestUserUpdate(t *testing.T) {
 		Convey("User should be found", func() {
 			So(err, ShouldBeNil)
 		})
+		getAmazingMedia().Insert()
 		usr.Email = "bar@foo.tld"
 		usr.Password = "Bar"
 		usr.Update()
@@ -178,6 +186,10 @@ func TestUserUpdate(t *testing.T) {
 		_, err = UserFromCredentials("bar@foo.tld", "Bar")
 		Convey("New user should be found", func() {
 			So(err, ShouldBeNil)
+		})
+		Convey("Media must be updated cascade", func() {
+			media, _ := usr.GetMedia()
+			So(media[0].Publisher.Email, ShouldEqual, usr.Email)
 		})
 		usr = getBarUser()
 		Convey("Update on inexisting ID should fail", func() {

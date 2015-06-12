@@ -194,10 +194,7 @@ func (u *User) Update() error {
 	if err := getUserCollection().UpdateId(u.Id, &u); err != nil {
 		return err
 	}
-	mediaCol, err := u.GetMedia()
-	if err != nil {
-		return err
-	}
+	mediaCol, _ := u.GetMedia()
 	for _, media := range mediaCol {
 		media.Publisher.Id = u.Id
 		media.Publisher.Email = u.Email
@@ -212,10 +209,7 @@ func (u *User) Delete() error {
 	if err := getUserCollection().RemoveId(u.Id); err != nil {
 		return err
 	}
-	mediaCol, err := u.GetMedia()
-	if err != nil {
-		return err
-	}
+	mediaCol, _ := u.GetMedia()
 	for _, media := range mediaCol {
 		media.Delete()
 	}
