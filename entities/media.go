@@ -43,6 +43,7 @@ type Media struct {
 	File      bson.ObjectId `json:"file,omitempty" bson:",omitempty"`
 	Scope     scope         `json:"scope,omitempty" bson:"scope,omitempty"`
 	mgofile   *mgo.GridFile `json:"-" bson:"-"`
+	Views     int           `json:"views, omitempty" bson:"-"`
 }
 
 func MediaNew() *Media {
@@ -63,6 +64,7 @@ func MediaFromId(oid bson.ObjectId) (*Media, error) {
 	if err != nil {
 		media = MediaNewFromId(oid)
 	}
+	media.CountViews()
 	return media, err
 }
 
@@ -163,4 +165,13 @@ func (m *Media) Delete() error {
 		return err
 	}
 	return nil
+}
+
+func (m *Media) CountViews() {
+	view := new(View)
+	err := getViewCollection().Pipe([]bson.M{{"$match": bson.M{"media": m.Id}}, {"$group": bson.M{"_id": "$media", "count": bson.M{"$sum": "$count"}}}}).One(&view)
+	if err != nil {
+		m.Views = 0
+	}
+	m.Views = view.Count
 }
