@@ -8,11 +8,6 @@ import (
 
 	"time"
 
-	"io/ioutil"
-
-	"image/jpeg"
-
-	"github.com/opennota/screengen"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -91,53 +86,6 @@ func (m *Media) Normalize() {
 	}
 }
 
-func (m *Media) ExtractThumbnailFromFile(postedFile io.Reader) error {
-	tempFile, err := ioutil.TempFile("", "mewpipe_video")
-	defer os.Remove(tempFile.Name())
-	if err != nil {
-		return err
-	}
-	tempThumb, err := ioutil.TempFile("", "mewpipe_thumb")
-	defer os.Remove(tempThumb.Name())
-	if err != nil {
-
-		return err
-	}
-	io.Copy(tempFile, postedFile)
-	screenGenerator, err := screengen.NewGenerator(tempFile.Name())
-	if err != nil {
-		return err
-	}
-	defer screenGenerator.Close()
-	img, err := screenGenerator.Image(1 * 1000)
-	if err != nil {
-		return err
-	}
-	jpeg.Encode(tempThumb, img, &jpeg.Options{Quality: 100})
-	tempThumb.Seek(0, 0)
-	mongoFile, err := getMediaThumbnailGridFSCollection().Create("")
-	defer mongoFile.Close()
-	if err != nil {
-		return err
-	}
-	mongoFile.SetContentType("image/jpeg")
-	_, err = io.Copy(mongoFile, tempThumb)
-	if err != nil {
-		return err
-	}
-
-	if m.Thumbnail != "" {
-		getMediaThumbnailGridFSCollection().RemoveId(m.Thumbnail)
-	}
-	m.Thumbnail = mongoFile.Id().(bson.ObjectId)
-
-	if err := m.Update(); err != nil {
-		mongoFile.Abort()
-		return err
-	}
-	return nil
-}
-
 func (m *Media) Upload(postedFile io.Reader, fileHeader *multipart.FileHeader) error {
 	mongoFile, _ := getMediaGridFSCollection().Create(fileHeader.Filename)
 	defer mongoFile.Close()
@@ -151,6 +99,27 @@ func (m *Media) Upload(postedFile io.Reader, fileHeader *multipart.FileHeader) e
 		getMediaGridFSCollection().RemoveId(m.File)
 	}
 	m.File = mongoFile.Id().(bson.ObjectId)
+
+	if err := m.Update(); err != nil {
+		mongoFile.Abort()
+		return err
+	}
+	return nil
+}
+
+func (m *Media) UploadThumbnail(postedFile io.Reader, fileHeader *multipart.FileHeader) error {
+	mongoFile, _ := getMediaThumbnailGridFSCollection().Create(fileHeader.Filename)
+	defer mongoFile.Close()
+	mongoFile.SetContentType(fileHeader.Header.Get("Content-Type"))
+	_, err := io.Copy(mongoFile, postedFile)
+	if err != nil {
+		return err
+	}
+
+	if m.Thumbnail != "" {
+		getMediaThumbnailGridFSCollection().RemoveId(m.File)
+	}
+	m.Thumbnail = mongoFile.Id().(bson.ObjectId)
 
 	if err := m.Update(); err != nil {
 		mongoFile.Abort()

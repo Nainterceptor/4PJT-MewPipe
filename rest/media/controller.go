@@ -35,15 +35,18 @@ func mediaUpload(request *restful.Request, response *restful.Response) {
 	media := request.Attribute("media").(*entities.Media)
 
 	request.Request.ParseMultipartForm(500 * 1000 * 1000)
-	postedFile, handler, err := request.Request.FormFile("file")
-	if err != nil {
-		response.WriteError(http.StatusBadRequest, err)
-		return
-	}
-	defer postedFile.Close()
+	mediaFile, handler, err := request.Request.FormFile("file")
+	if err == nil {
+		defer mediaFile.Close()
+		go media.Upload(mediaFile, handler)
 
-	go media.Upload(postedFile, handler)
-	go media.ExtractThumbnailFromFile(postedFile)
+	}
+
+	thumbnailFile, handler, err := request.Request.FormFile("thumbnail")
+	if err == nil {
+		defer thumbnailFile.Close()
+		go media.UploadThumbnail(thumbnailFile, handler)
+	}
 
 	response.WriteEntity(media)
 }
