@@ -42,18 +42,36 @@ func mediaUpload(request *restful.Request, response *restful.Response) {
 	}
 	defer postedFile.Close()
 
-	if err := media.Upload(postedFile, handler); err != nil {
-		response.WriteError(http.StatusInternalServerError, err)
-		return
-	}
+	go media.Upload(postedFile, handler)
+	go media.ExtractThumbnailFromFile(postedFile)
 
 	response.WriteEntity(media)
 }
 
+func mediaThumbnail(request *restful.Request, response *restful.Response) {
+	media := request.Attribute("media").(*entities.Media)
+	if media.Thumbnail == nil {
+		response.WriteErrorString(http.StatusNotFound, "No thumbnail")
+	}
+	if err := media.OpenThumbnail(); err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+	}
+	defer media.CloseThumbnail()
+	response.AddHeader("Content-type", "image/jpeg")
+	response.AddHeader("Content-Length", strconv.FormatInt(media.ThumbnailSize(), 10))
+	if err := media.CopyThumbnailTo(response); err != nil {
+		response.WriteError(http.StatusInternalServerError, err)
+		return
+	}
+}
+
 func mediaRead(request *restful.Request, response *restful.Response) {
 	media := request.Attribute("media").(*entities.Media)
+	if media.File == nil {
+		response.WriteErrorString(http.StatusNotFound, "No thumbnail")
+	}
 	if err := media.OpenFile(); err != nil {
-
+		response.WriteError(http.StatusInternalServerError, err)
 	}
 	defer media.CloseFile()
 

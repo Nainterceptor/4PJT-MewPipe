@@ -8,6 +8,11 @@ import (
 
 	"time"
 
+	"io/ioutil"
+
+	"image/jpeg"
+
+	"github.com/opennota/screengen"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -18,6 +23,9 @@ func getMediaCollection() *mgo.Collection {
 
 func getMediaGridFSCollection() *mgo.GridFS {
 	return configs.MongoDB.GridFS("media")
+}
+func getMediaThumbnailGridFSCollection() *mgo.GridFS {
+	return configs.MongoDB.GridFS("media.thumbnails")
 }
 
 type scope string
@@ -35,15 +43,17 @@ type user struct {
 }
 
 type Media struct {
-	Id        bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
-	Title     string        `json:"title" bson:",omitempty"`
-	Summary   string        `json:"summary" bson:",omitempty"`
-	Publisher user          `json:"user,omitempty" bson:",omitempty"`
-	File      bson.ObjectId `json:"file,omitempty" bson:",omitempty"`
-	Scope     scope         `json:"scope,omitempty" bson:"scope,omitempty"`
-	mgofile   *mgo.GridFile `json:"-" bson:"-"`
-	Views     int           `json:"views,omitempty" bson:"views,omitempty"`
+	Id           bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	CreatedAt    time.Time     `json:"createdAt" bson:"createdAt"`
+	Title        string        `json:"title" bson:",omitempty"`
+	Summary      string        `json:"summary" bson:",omitempty"`
+	Publisher    user          `json:"user,omitempty" bson:",omitempty"`
+	File         bson.ObjectId `json:"file,omitempty" bson:",omitempty"`
+	Thumbnail    bson.ObjectId `json:"thumbnail,omitempty" bson:",omitempty"`
+	Scope        scope         `json:"scope,omitempty" bson:"scope,omitempty"`
+	mgofile      *mgo.GridFile `json:"-" bson:"-"`
+	mgothumbnail *mgo.GridFile `json:"-" bson:"-"`
+	Views        int           `json:"views,omitempty" bson:"views,omitempty"`
 }
 
 func MediaNew() *Media {
@@ -81,6 +91,54 @@ func (m *Media) Normalize() {
 	}
 }
 
+func (m *Media) ExtractThumbnailFromFile(postedFile io.Reader) error {
+	tempFile, err := ioutil.TempFile("", "mewpipe_video")
+	//	defer os.Remove(tempFile.Name())
+	if err != nil {
+		return err
+	}
+	tempThumb, err := ioutil.TempFile("", "mewpipe_thumb")
+	//	defer os.Remove(tempThumb.Name())
+	if err != nil {
+
+		return err
+	}
+	io.Copy(tempFile, postedFile)
+	//	tempFile.Close()
+	screenGenerator, err := screengen.NewGenerator(tempFile.Name())
+	if err != nil {
+		return err
+	}
+	defer screenGenerator.Close()
+	img, err := screenGenerator.Image(1 * 1000)
+	if err != nil {
+		return err
+	}
+	jpeg.Encode(tempThumb, img, &jpeg.Options{Quality: 100})
+	tempThumb.Seek(0, 0)
+	mongoFile, err := getMediaThumbnailGridFSCollection().Create("")
+	defer mongoFile.Close()
+	if err != nil {
+		return err
+	}
+	mongoFile.SetContentType("image/jpeg")
+	_, err = io.Copy(mongoFile, tempThumb)
+	if err != nil {
+		return err
+	}
+
+	if m.Thumbnail != "" {
+		getMediaThumbnailGridFSCollection().RemoveId(m.Thumbnail)
+	}
+	m.Thumbnail = mongoFile.Id().(bson.ObjectId)
+
+	if err := m.Update(); err != nil {
+		mongoFile.Abort()
+		return err
+	}
+	return nil
+}
+
 func (m *Media) Upload(postedFile io.Reader, fileHeader *multipart.FileHeader) error {
 	mongoFile, _ := getMediaGridFSCollection().Create(fileHeader.Filename)
 	defer mongoFile.Close()
@@ -106,11 +164,14 @@ func (m *Media) OpenFile() error {
 	file, err := getMediaGridFSCollection().OpenId(m.File)
 	m.mgofile = file
 
-	if err != nil {
-		return err
-	}
+	return err
+}
 
-	return nil
+func (m *Media) OpenThumbnail() error {
+	file, err := getMediaThumbnailGridFSCollection().OpenId(m.Thumbnail)
+	m.mgothumbnail = file
+
+	return err
 }
 
 func (m *Media) ContentType() string {
@@ -121,8 +182,16 @@ func (m *Media) Size() int64 {
 	return m.mgofile.Size()
 }
 
+func (m *Media) ThumbnailSize() int64 {
+	return m.mgothumbnail.Size()
+}
+
 func (m *Media) CloseFile() error {
 	return m.mgofile.Close()
+}
+
+func (m *Media) CloseThumbnail() error {
+	return m.mgothumbnail.Close()
 }
 
 func (m *Media) SeekSet(offset int64) error {
@@ -137,6 +206,11 @@ func (m *Media) Read(buffer []byte) error {
 
 func (m *Media) CopyTo(target io.Writer) error {
 	_, err := io.Copy(target, m.mgofile)
+	return err
+}
+
+func (m *Media) CopyThumbnailTo(target io.Writer) error {
+	_, err := io.Copy(target, m.mgothumbnail)
 	return err
 }
 

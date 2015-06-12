@@ -108,5 +108,17 @@ func MediaRoute(container *restful.Container) {
 		Returns(http.StatusNotFound, "Media not found", nil).
 		Returns(http.StatusInternalServerError, "MongoDB fail while reading (Seek, Read, Write)", nil))
 
+	service.Route(service.
+		GET("/{media-id}/thumbnail").
+		Filter(filters.InjectMediaMeta).
+		To(mediaThumbnail).
+		Doc("Get a thumbnail (bin)").
+		Operation("mediaThumbnail").
+		Param(service.PathParameter("media-id", "identifier of the media").DataType("string")).
+		Returns(http.StatusOK, "Image has been read", nil).
+		Returns(http.StatusBadRequest, "Bad ID", nil).
+		Returns(http.StatusNotFound, "Media not found", nil).
+		Returns(http.StatusInternalServerError, "MongoDB fail while reading (Seek, Read, Write)", nil))
+
 	container.Add(service)
 }
