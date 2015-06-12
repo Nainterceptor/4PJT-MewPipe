@@ -52,12 +52,14 @@
             bindToController: true,
             controllerAs: 'users',
             controller: function ($scope, $element, $attrs) {
+                var me = this;
                 this.updateUser = function (user) {
                     angular.element('#updateUserModal' + user.id).appendTo('body').modal('show');
                 };
-                var me = this;
-                this.users = userFactory.users;
-                paginationFactory.setPagination(me.users, 0, 5);
+                userFactory.getUsers().success(function(response){
+                    me.users = response;
+                    paginationFactory.setPagination(me.users, 0, 5);
+                });
             }
         }
     }
