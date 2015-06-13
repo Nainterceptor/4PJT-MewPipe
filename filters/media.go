@@ -34,3 +34,13 @@ func MustBeOwnerOrAdmin(request *restful.Request, response *restful.Response, ch
 	}
 	chain.ProcessFilter(request, response)
 }
+
+func ScopeControl(request *restful.Request, response *restful.Response, chain *restful.FilterChain) {
+	user := request.Attribute("user")
+	media := request.Attribute("media").(*entities.Media)
+	if media.Scope == "private" && (user == nil || user.(*entities.User).Id == "") {
+		response.WriteErrorString(http.StatusForbidden, "This video is private")
+		return
+	}
+	chain.ProcessFilter(request, response)
+}
