@@ -11,11 +11,6 @@
 
     function DashboardController(userFactory, notificationFactory, $location) {
         var me = this;
-        if(userFactory.getUser()){
-            userFactory.getUser().success(function (response) {
-                userFactory.setUser(response);
-            });
-        }
         this.canActivate = function () {
             if (!userFactory.accessToken) {
                 notificationFactory.addAlert('You need to be connected, return to <a class="alert-link" href="/">Home</a>', 'danger', 3000);
