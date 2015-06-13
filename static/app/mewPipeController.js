@@ -1,14 +1,26 @@
 (function () {
     "use strict";
     angular.module('mewpipe')
-        .controller('MainController', ['$router', '$scope', 'userFactory', 'notificationFactory', 'themesFactory', MainController])
+        .controller('MainController', ['$router', '$scope', 'userFactory', 'notificationFactory', 'themesFactory','$cookies', MainController])
         .controller('AuthenticationController', ['userFactory', 'notificationFactory', AuthenticationController])
         .directive('modalSignIn', ['userFactory', 'notificationFactory', ModalSignInDirective])
         .directive('modalSignUp', ['userFactory', 'notificationFactory', ModalSignUpDirective])
     ;
 
-    function MainController($router, $scope, userFactory, notificationFactory, themesFactory) {
+    function MainController($router, $scope, userFactory, notificationFactory, themesFactory, $cookies) {
         var me = this;
+        if ($cookies.get('userId')) {
+            userFactory.user = {
+                id: $cookies.get('userId')
+            };
+            userFactory.getUser()
+                .success(function (response) {
+                    userFactory.setUser(response);
+                })
+                .error(function (response) {
+                    console.log(response);
+                });
+        }
         this.themes = themesFactory.themes;
         $router.config([
             {path: '/', component: 'home'},
