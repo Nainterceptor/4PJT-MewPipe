@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/emicklei/go-restful"
+	"github.com/Nainterceptor/go-restful"
 )
 
 func StaticRouter(container *restful.Container) {

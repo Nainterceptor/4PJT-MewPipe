@@ -3,8 +3,8 @@ package configs
 import (
 	"flag"
 
-	"github.com/emicklei/go-restful"
-	"github.com/emicklei/go-restful/swagger"
+	"github.com/Nainterceptor/go-restful"
+	"github.com/Nainterceptor/go-restful/swagger"
 	"github.com/vharitonsky/iniflags"
 	"gopkg.in/mgo.v2"
 )

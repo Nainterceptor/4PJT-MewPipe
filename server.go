@@ -6,7 +6,7 @@ import (
 	"supinfo/mewpipe/rest/media"
 	"supinfo/mewpipe/rest/users"
 
-	"github.com/emicklei/go-restful"
+	"github.com/Nainterceptor/go-restful"
 )
 
 func main() {
