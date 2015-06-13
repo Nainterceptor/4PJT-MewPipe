@@ -2176,7 +2176,9 @@ SwaggerSpecConverter.prototype.declaration = function(obj, swagger) {
   if(!obj.apis) {
     return;
   }
-
+  if (!obj.basePath) {
+    obj.basePath = location.protocol + '//' + location.host;
+  }
   if (obj.basePath.indexOf('http://') === 0) {
     var p = obj.basePath.substring('http://'.length);
     var pos = p.indexOf('/');
