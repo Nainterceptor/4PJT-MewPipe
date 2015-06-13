@@ -3,23 +3,17 @@
     angular.module('mewpipe.home',[
         'mewpipeServices'
     ])
-        .controller('HomeController',['statsFactory', HomeController]);
+        .controller('HomeController',['mediaFactory', 'paginationFactory', '$location', HomeController]);
 
-    function HomeController(statsFactory){
+    function HomeController(mediaFactory, paginationFactory, $location){
         var me = this;
-        this.mostViewed = [];
-        angular.forEach(statsFactory.mostViewed, function(stat, key){
-            if(key % 6 === 0){
-                me.mostViewed.push([]);
-            }
-            me.mostViewed[Math.floor(key / 6)].push(stat);
-        });
         this.mostShared = [];
-        angular.forEach(statsFactory.mostShared, function(stat, key){
-            if(key % 6 === 0){
-                me.mostShared.push([]);
-            }
-            me.mostShared[Math.floor(key / 6)].push(stat);
+
+        mediaFactory.getMedias().success(function (response) {
+            me.baseUrl = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/";
+            me.medias = response;
+            paginationFactory.setPagination(me.medias);
+            me.page = paginationFactory.getParams();
         });
     }
 }());
