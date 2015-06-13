@@ -31,6 +31,7 @@ type UserToken struct {
 
 type User struct {
 	Id             bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	CreatedAt      time.Time     `json:"createdAt" bson:"createdAt"`
 	Name           name          `json:"name" bson:",omitempty"`
 	Email          string        `json:"email" bson:",omitempty"`
 	Roles          []string      `json:"roles,omitempty" bson",omitempty"`
@@ -42,6 +43,8 @@ type User struct {
 func UserNew() *User {
 	user := new(User)
 	user.Id = bson.NewObjectId()
+	user.CreatedAt = time.Now()
+
 	return user
 }
 
@@ -57,6 +60,8 @@ func userTokenNew() *UserToken {
 func UserNewFromId(oid bson.ObjectId) *User {
 	user := new(User)
 	user.Id = oid
+	user.CreatedAt = time.Now()
+
 	return user
 }
 
