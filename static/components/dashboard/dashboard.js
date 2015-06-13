@@ -112,6 +112,8 @@
                             var video = angular.element('#video')[0];
                             me.vidHeight =video.videoHeight;
                             me.vidWidth =video.videoWidth;
+                            canvas.width = 300;
+                            canvas.height = 300*video.videoHeight/ video.videoWidth;
                             canvas.getContext('2d').drawImage(video, 0, 0,300, 300*video.videoHeight/ video.videoWidth);
                             me.img = canvas.toDataURL("image/png");
                             thumbnail = dataURItoBlob(me.img);
