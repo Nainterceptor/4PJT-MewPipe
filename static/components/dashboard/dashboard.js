@@ -90,6 +90,7 @@
                 var fileToUpload;
                 var thumbnail;
                 var me = this;
+                this.mediaFactory = mediaFactory;
                 mediaFactory.getUserMedias()
                     .success(function (response) {
                         me.baseUrl = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/";
