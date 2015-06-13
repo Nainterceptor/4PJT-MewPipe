@@ -57,6 +57,7 @@ func MediaRoute(container *restful.Container) {
 		GET("/{media-id}").
 		Filter(filters.InjectMediaMeta).
 		Filter(filters.InjectUser).
+		Filter(filters.ScopeControl).
 		To(mediaGet).
 		Doc("Get a vidéo (metadocument)").
 		Operation("mediaGet").
@@ -97,6 +98,8 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		GET("/{media-id}/read").
 		Filter(filters.InjectMediaMeta).
+		Filter(filters.InjectUser).
+		Filter(filters.ScopeControl).
 		To(mediaRead).
 		Doc("Play a vidéo (bin)").
 		Notes("Can handle a range request").
@@ -111,6 +114,8 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		GET("/{media-id}/thumbnail").
 		Filter(filters.InjectMediaMeta).
+		Filter(filters.InjectUser).
+		Filter(filters.ScopeControl).
 		To(mediaThumbnail).
 		Doc("Get a thumbnail (bin)").
 		Operation("mediaThumbnail").

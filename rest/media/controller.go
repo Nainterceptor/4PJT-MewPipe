@@ -170,6 +170,8 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
 }
 
 func mediasGet(request *restful.Request, response *restful.Response) {
+	user := request.Attribute("user")
+
 	start, err := strconv.Atoi(request.QueryParameter("start"))
 	if err != nil {
 		start = 0
@@ -199,6 +201,18 @@ func mediasGet(request *restful.Request, response *restful.Response) {
 	if regexOrder.MatchString(orderParam) {
 		order = orderParam
 	}
+
+	var scopes []string
+	scopes = append(scopes, "public")
+
+	if user != nil {
+		user := user.(*entities.User)
+		if user.Id != "" {
+			scopes = append(scopes, "private")
+		}
+	}
+	search["scope"] = bson.M{"$in": scopes}
+
 	medias, err := entities.MediaList(search, start, limit, order)
 
 	if err != nil {
