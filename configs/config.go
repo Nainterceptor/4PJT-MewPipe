@@ -16,6 +16,9 @@ var HttpBinding = flag.String("http_binding", "localhost:8080", "IP/Port to list
 var mongoCS = flag.String("mongodb_CS", "localhost", "Connection endpoint for mongodb driver")
 var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")
 
+var TWITTER_KEY = flag.String("TWITTER_KEY", "", "Twitter app key")
+var TWITTER_SECRET = flag.String("TWITTER_SECRET", "", "Twitter app secret")
+
 var MongoDB *mgo.Database
 
 func init() {

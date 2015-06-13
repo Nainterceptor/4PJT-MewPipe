@@ -125,6 +125,28 @@ func UserRoute(container *restful.Container) {
 		Reads(entities.User{}))
 
 	service.Route(service.
+		GET("/login/{provider}").
+		To(userThirdPartyLogin).
+		Doc("Third party login").
+		Notes("Only Password and Email are important").
+		Operation("userThirdPartyLogin").
+		Returns(http.StatusOK, "User, token, and ExpirationDate are returned", nil).
+		Returns(http.StatusBadRequest, "Can't read entity", nil).
+		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail about authentication", nil).
+		Returns(http.StatusInternalServerError, "Something failed while token generation", nil))
+
+	service.Route(service.
+		GET("/login/{provider}/callback").
+		To(userThirdPartyLoginCallback).
+		Doc("Third party login").
+		Notes("Only Password and Email are important").
+		Operation("userThirdPartyLogin").
+		Returns(http.StatusOK, "User, token, and ExpirationDate are returned", nil).
+		Returns(http.StatusBadRequest, "Can't read entity", nil).
+		Returns(http.StatusNotFound, "User not found, eventually another MongoDB Fail about authentication", nil).
+		Returns(http.StatusInternalServerError, "Something failed while token generation", nil))
+
+	service.Route(service.
 		POST("/refresh-token").
 		Filter(filters.MustBeLogged).
 		To(userRefreshToken).

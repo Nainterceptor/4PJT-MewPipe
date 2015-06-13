@@ -24,6 +24,10 @@ type name struct {
 	NickName  string `json:"nickname"`
 }
 
+type twitter struct {
+	UserId string `json:"-" bson:"userId,omitempty"`
+}
+
 type UserToken struct {
 	Token    bson.ObjectId `json:"token"`
 	ExpireAt time.Time     `json:"expireAt"`
@@ -33,11 +37,12 @@ type User struct {
 	Id             bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	CreatedAt      time.Time     `json:"createdAt" bson:"createdAt"`
 	Name           name          `json:"name" bson:",omitempty"`
-	Email          string        `json:"email" bson:",omitempty"`
+	Email          string        `json:"email,omitempty" bson:",omitempty"`
 	Roles          []string      `json:"roles,omitempty" bson",omitempty"`
 	Password       string        `json:"password,omitempty" bson:"-"`
 	HashedPassword string        `json:"-" bson:",omitempty"`
 	UserTokens     []UserToken   `json:"-" bson:",omitempty"`
+	Twitter        twitter       `json:"-" bson:"twitter,omitempty"`
 }
 
 func UserNew() *User {
@@ -91,6 +96,15 @@ func UserFromCredentials(email string, password string) (*User, error) {
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
 	if err != nil {
+		return new(User), err
+	}
+	return user, nil
+}
+
+func UserFromTwitterUserID(UserId string) (*User, error) {
+	user := new(User)
+
+	if err := getUserCollection().Find(bson.M{"twitter.userId": UserId}).One(&user); err != nil {
 		return new(User), err
 	}
 	return user, nil
@@ -179,9 +193,6 @@ func (u *User) HasRole(search string) bool {
 func (u *User) Insert() error {
 	defer u.Clean()
 
-	if u.Password == "" {
-		return errors.New("`password` is empty")
-	}
 	u.hashPassword()
 	if err := getUserCollection().Insert(&u); err != nil {
 		return err
