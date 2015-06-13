@@ -8,32 +8,61 @@
         </div>
     </div>
     <hr>
-    <div>
-        <pre>Video</pre>
-        <video type="video/mp4" id="video" ng-if="mngVideo.videoUrl" ng-src="{{mngVideo.videoUrl}}"></video>
-        <pre >canvas</pre>
-        <canvas id="canvas"></canvas>
-        <pre>Image</pre>
-        <img ng-src="{{mngVideo.img}}" alt=""/>
-
-    </div>
+    <form ng-if="mngVideo.videoUrl" ng-submit="mngVideo.upload()" name="form" class="container" novalidate>
+        <video style="display: none" type="video/mp4" id="video" ng-if="mngVideo.videoUrl"
+               ng-src="{{mngVideo.videoUrl}}"></video>
+        <canvas id="canvas" style="display: none"></canvas>
+        <div class="form-group">
+            <label for="title1" class="col-sm-2 control-label">Title</label>
+            <input type="text" name="title" class="form-control" id="title1"
+                   ng-model="mngVideo.title">
+        </div>
+        <div class="form-group">
+            <label for="summary1" class="col-sm-2 control-label">Summary</label>
+             <textarea name="summary" type="" class="form-control" id="summary1"
+                       ng-model="mngVideo.summary" placeholder="Summary"></textarea>
+        </div>
+        <div class="pull-right">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+        <div class="col-md-12">
+            <div ng-show="mngVideo.uploading" class="progress">
+                <div class="progress-bar progress-bar-striped active"
+                     role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
+                     ng-style="{width: mngVideo.prog+'%'}">
+                    {{mngVideo.prog}}% Complete
+                </div>
+            </div>
+            <div ng-show="mngVideo.playerUrl" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Share your video</h3>
+                </div>
+                <div class="panel-body">
+                    <a ng-link="player({id: mngVideo.playerUrl})">{{mngVideo.link}}</a>
+                </div>
+            </div>
+        </div>
+    </form>
     <div class="row">
-        <div class="col-md-offset-2 col-md-8">
-            <h3>Medias</h3>
+        <div class="col-md-12">
+            <h3>Yours Media</h3>
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Publisher</th>
                     <th>Summary</th>
+                    <th>Share</th>
+                    <th>Thumbnail</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="media in mngVideo.media | startFrom:pagination.page.currentPage*pagination.page.numPerPage | limitTo:pagination.page.numPerPage">
                     <td>{{media.title}}</td>
-                    <td>{{media.user.name.firstname}} {{media.user.name.lastname}}</td>
                     <td>{{media.summary}}</td>
+                    <td><a ng-link="player({id: media.id})">{{mngVideo.baseUrl}}{{media.id}}</a></td>
+                    <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></td>
                     <td>
                         <button class="btn btn-primary">
                             Update
@@ -46,57 +75,5 @@
             <pagination></pagination>
         </div>
     </div>
-    <div class="modal fade" id="metaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Upload</h4>
-                </div>
-                <form ng-submit="mngVideo.upload()" name="form" class="form-horizontal" novalidate>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="title1" class="col-sm-2 control-label">Title</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" name="title" class="form-control" id="title1"
-                                       ng-model="mngVideo.title">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="summary1" class="col-sm-2 control-label">Summary</label>
-
-                            <div class="col-sm-10">
-                                <textarea name="summary" type="" class="form-control" id="summary1"
-                                          ng-model="mngVideo.summary" placeholder="Summary"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                    <div class="col-md-12">
-                        <div ng-show="mngVideo.uploading" class="progress">
-                            <div class="progress-bar progress-bar-striped active"
-                                 role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                                 ng-style="{width: mngVideo.prog+'%'}">
-                                {{mngVideo.prog}}% Complete
-                            </div>
-                        </div>
-                        <div ng-show="mngVideo.videoUrl" class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Share your video</h3>
-                            </div>
-                            <div class="panel-body">
-                                <a ng-link="player({id: mngVideo.videoUrl})">{{mngVideo.videoUrl}}</a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+</div>
 </div>
