@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"path"
 
+	"os"
+
 	"github.com/Nainterceptor/go-restful"
 )
 
@@ -18,6 +20,9 @@ func StaticRouter(container *restful.Container) {
 
 func staticHandler(req *restful.Request, resp *restful.Response) {
 	actual := path.Join(*staticPath, req.PathParameter("subpath"))
+	if _, err := os.Stat(actual); os.IsNotExist(err) {
+		actual = path.Join(*staticPath, "index.html")
+	}
 	fmt.Printf("serving %s ... (from %s)\n", actual, req.PathParameter("subpath"))
 	http.ServeFile(
 		resp.ResponseWriter,
