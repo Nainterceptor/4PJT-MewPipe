@@ -5,7 +5,6 @@
         .controller('AuthenticationController', ['userFactory', 'notificationFactory', AuthenticationController])
         .directive('modalSignIn', ['userFactory', 'notificationFactory', ModalSignInDirective])
         .directive('modalSignUp', ['userFactory', 'notificationFactory', ModalSignUpDirective])
-        .directive('pagination', ['paginationFactory', PaginationDirective])
     ;
 
     function MainController($router, $scope, userFactory, notificationFactory, themesFactory) {
@@ -80,21 +79,6 @@
                 this.signUp = function () {
                     userFactory.signUp(this.email, this.nickname, this.password);
                     angular.element('#signUpModal').appendTo('body').modal('hide');
-                };
-            }
-        }
-    }
-
-    function PaginationDirective(paginationFactory) {
-        return {
-            restrict: 'E',
-            templateUrl: 'app/templates/pagination.html',
-            controllerAs: 'pagination',
-            controller: function () {
-                this.page = {
-                    currentPage: paginationFactory.getParams().currentPage,
-                    numPerPage: paginationFactory.getParams().numPerPage,
-                    numberOfPages: paginationFactory.numberOfPages()
                 };
             }
         }

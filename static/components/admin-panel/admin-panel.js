@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     angular.module('mewpipe.adminPanel', [])
-        .controller('AdminPanelController', ['userFactory', 'notificationFactory', '$location', AdminPanelController])
+        .controller('AdminPanelController', ['userFactory', 'mediaFactory','notificationFactory', '$location', AdminPanelController])
         .directive('users', ['userFactory', 'paginationFactory', UsersDirective])
         .directive('medias', ['mediaFactory', 'paginationFactory', MediasDirective])
         .directive('modalUpdateUser', ['userFactory', ModalUpdateUserDirective])
@@ -18,7 +18,7 @@
         }
     }
 
-    function AdminPanelController(userFactory, notificationFactory, $location) {
+    function AdminPanelController(userFactory, mediaFactory, notificationFactory, $location) {
         this.canActivate = function () {
             if (!userFactory.accessToken) {
                 notificationFactory.addAlert('You need to be connected, return to <a class="alert-link" href="/">Home</a>', 'danger', 3000);
@@ -26,6 +26,7 @@
             return userFactory.accessToken;
         };
         var me = this;
+        this.media = mediaFactory;
         this.user = userFactory;
 
         if ($location.url() != '/admin-panel/medias') {
@@ -42,6 +43,14 @@
             }
             me.activeTab = tab;
         };
+
+        userFactory.getUsers().success(function(response){
+            me.users = response;
+        });
+
+        mediaFactory.getMedias().success(function (response) {
+            me.medias = response;
+        });
     }
 
     function UsersDirective(userFactory, paginationFactory) {
@@ -53,12 +62,14 @@
             controllerAs: 'users',
             controller: function ($scope, $element, $attrs) {
                 var me = this;
+                this.user = userFactory;
                 this.updateUser = function (user) {
                     angular.element('#updateUserModal' + user.id).appendTo('body').modal('show');
                 };
                 userFactory.getUsers().success(function(response){
                     me.users = response;
-                    paginationFactory.setPagination(me.users, 0, 5);
+                    paginationFactory.setPagination(me.users);
+                    me.page = paginationFactory.getParams();
                 });
             }
         }
@@ -73,8 +84,12 @@
             controllerAs: 'medias',
             controller: function ($scope, $element, $attrs) {
                 var me = this;
-                this.media = mediaFactory.medias;
-                paginationFactory.setPagination(me.media, 0, 5);
+                this.media = mediaFactory;
+                mediaFactory.getMedias().success(function (response) {
+                    me.medias = response;
+                    paginationFactory.setPagination(me.medias);
+                    me.page = paginationFactory.getParams();
+                });
             }
         }
     }

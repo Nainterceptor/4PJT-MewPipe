@@ -1,13 +1,75 @@
 <div class="container-fluid">
     <h2>Admin Panel</h2>
+
     <div class="row">
         <ul class="nav nav-tabs nav-justified">
-            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'users'}"><a ng-click="adminPanel.active('users')" class="pointer">Users</a></li>
-            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'medias'}"><a ng-click="adminPanel.active('medias')" class="pointer">Medias</a></li>
+            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'users'}"><a
+                    ng-click="adminPanel.active('users')" class="pointer">Users</a></li>
+            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'medias'}"><a
+                    ng-click="adminPanel.active('medias')" class="pointer">Medias</a></li>
         </ul>
     </div>
     <div class="row">
         <users ng-if="adminPanel.activeTab == 'users'"></users>
         <medias ng-if="adminPanel.activeTab == 'medias'"></medias>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-5">
+            <h2>Most Recent Users</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nickname</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in adminPanel.users | startFrom:0 | limitTo:3 | orderBy: '-id'">
+                    <td>{{user.id}}</td>
+                    <td>{{user.name.nickname}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.roles}}</td>
+                    <td>
+                        <button class="btn btn-primary">
+                            Update
+                        </button>
+                        <button class="btn btn-danger" ng-click="adminPanel.media.deleteMedia(media.id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-5">
+            <h2>Most Recent Media</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Publisher</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="media in adminPanel.medias | startFrom:0 | limitTo:3 | orderBy: '-createdAt'">
+                    <td>{{media.id}}</td>
+                    <td>{{media.title}}</td>
+                    <td>{{media.user.name.firstname}} {{media.user.name.lastname}}</td>
+                    <td>{{media.createdAt | date:"dd/MM/yyyy 'at' HH:mm"}}</td>
+                    <td>
+                        <button class="btn btn-primary">
+                            Update
+                        </button>
+                        <button class="btn btn-danger" ng-click="adminPanel.media.deleteMedia(media.id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

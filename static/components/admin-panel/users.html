@@ -14,7 +14,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="repeat-user" ng-repeat="user in users.users | startFrom:pagination.page.currentPage*pagination.page.numPerPage | limitTo:pagination.page.numPerPage">
+                <tr class="repeat-user"
+                    ng-repeat="user in users.users | startFrom:users.page.currentPage*users.page.numPerPage | limitTo:users.page.numPerPage">
                     <td>{{user.name.firstname}}</td>
                     <td>{{user.name.lastname}}</td>
                     <td>{{user.name.nickname}}</td>
@@ -24,13 +25,23 @@
                         <button class="btn btn-primary" ng-click="users.updateUser(user)">
                             Update
                         </button>
-                        <button class="btn btn-danger" ng-click="users.users.deleteUser(user.id)">Delete</button>
+                        <button class="btn btn-danger" ng-click="users.user.deleteUser(user.id)">Delete</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <modal-update-user></modal-update-user>
-            <pagination></pagination>
+            <button class="btn btn-default" ng-hide="users.page.currentPage == 0"
+                    ng-click="users.page.currentPage=users.page.currentPage-1">
+                Previous
+            </button>
+
+            <span ng-hide="users.page.numberOfPages<=1">{{users.page.currentPage+1}}/{{users.page.numberOfPages}}</span>
+
+            <button class="btn btn-default" ng-hide="users.page.numberOfPages-1<=users.page.currentPage"
+                    ng-click="users.page.currentPage=users.page.currentPage+1">
+                Next
+            </button>
         </div>
     </div>
 </div>

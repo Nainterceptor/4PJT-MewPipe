@@ -13,7 +13,7 @@
         .factory('notificationFactory', ['$rootScope', NotificationFactory])
         .factory('themesFactory', ['$cookies', ThemesFactory])
         .factory('paginationFactory', [PaginationFactory])
-        .factory('mediaFactory', ['$http', '$cookies', 'Upload', MediaFactory])
+        .factory('mediaFactory', ['$http', '$cookies', 'Upload', 'notificationFactory', MediaFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory) {
@@ -102,6 +102,7 @@
                 })
         };
         userInstance.deleteUser = function (userId) {
+            console.log("eeee");
             $http.delete(baseUrl + '/users/' + userId, {
                 Authorization: userInstance.accessToken
             })
@@ -200,27 +201,26 @@
 
     function PaginationFactory() {
         var page = {};
-        page.setPagination = function (items, currentPage, numPerPage) {
+        page.setPagination = function (items) {
             page = {
-                totalItems: 0,
-                currentPage: currentPage,
-                numPerPage: numPerPage
+                totalItems: items.length,
+                currentPage: 0,
+                numPerPage: 5
             };
         };
         page.getParams = function () {
             return {
                 totalItems: page.totalItems,
                 currentPage: page.currentPage,
-                numPerPage: page.numPerPage
+                numPerPage: page.numPerPage,
+                numberOfPages: Math.ceil(page.totalItems / page.numPerPage)
             };
         };
-        page.numberOfPages = function () {
-            return Math.ceil(page.totalItems / page.numPerPage);
-        };
+
         return page;
     }
 
-    function MediaFactory($http, $cookies, Upload) {
+    function MediaFactory($http, $cookies, Upload, notificationFactory) {
         var mediaInstance = {};
         mediaInstance.createMedia = function (user, title, summary) {
             return ($http.post(baseUrl + '/media', {
@@ -230,31 +230,22 @@
             }))
         };
         mediaInstance.getMedias = function () {
-            $http.get(baseUrl + '/media', {
-                Authorization: $cookies.get('Authorization')
-            })
-                .success(function (response) {
-                    mediaInstance.medias = response;
-                })
-                .error(function (response) {
-                    console.log(response);
-                })
+            return ($http.get(baseUrl + '/media'))
         };
         mediaInstance.getUserMedias = function () {
-            $http.get(baseUrl + '/media/?user=' + $cookies.get('userId'), {
-                Authorization: $cookies.get('Authorization')
+            return ($http.get(baseUrl + '/media/?user=' + $cookies.get('userId')))
+        };
+        mediaInstance.deleteMedia = function (mediaId) {
+            $http.delete(baseUrl + '/media/' + mediaId, {
             })
                 .success(function (response) {
-                    mediaInstance.userMedias = response;
+                    notificationFactory.addAlert('Media deleted !', 'danger');
                 })
                 .error(function (response) {
+                    notificationFactory.addAlert('Fail to delete media', 'danger');
                     console.log(response);
                 })
         };
-        if ($cookies.get('userId')) {
-            mediaInstance.getUserMedias();
-            mediaInstance.getMedias();
-        }
         mediaInstance.upload = function (file, thumbnail, mediaId) {
             return (
                 Upload.upload({
