@@ -95,8 +95,9 @@
                         me.baseUrl = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/";
                         console.log(response);
                         me.media = response;
+                        paginationFactory.setPagination(me.media);
+                        me.page = paginationFactory.getParams();
                     });
-                paginationFactory.setPagination(me.media, 0, 10);
                 me.prog = 0;
                 this.uploading = false;
                 this.validate = function (file) {
