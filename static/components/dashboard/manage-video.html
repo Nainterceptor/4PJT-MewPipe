@@ -39,7 +39,7 @@
                     <h3 class="panel-title">Share your video</h3>
                 </div>
                 <div class="panel-body">
-                    <a ng-link="player({id: mngVideo.playerUrl})">{{mngVideo.link}}</a>
+                    <a ng-href="/player/{{mngVideo.playerUrl}}">{{mngVideo.link}}</a>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 <tr ng-repeat="media in mngVideo.media | startFrom:mngVideo.page.currentPage*mngVideo.page.numPerPage | limitTo:mngVideo.page.numPerPage">
                     <td>{{media.title}}</td>
                     <td>{{media.summary}}</td>
-                    <td><a ng-link="player({id: media.id})">{{mngVideo.baseUrl}}{{media.id}}</a></td>
+                    <td><a ng-href="/player/{{media.id}}">{{mngVideo.baseUrl}}{{media.id}}</a></td>
                     <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></td>
                     <td>
                         <button class="btn btn-primary">

@@ -12,13 +12,14 @@
 
     function PlayerController($sce,$routeParams){
         console.log($routeParams);
-        this.config = {
-            sources: [
-                {src: $sce.trustAsResourceUrl("/rest/media/"+$routeParams.id+"/read"), type:"video/mp4"}
-            ],
-            theme: "bower_components/videogular-themes-default/videogular.css",
-            plugins: {
-            }
-        };
+        //this.config = {
+        //    sources: [
+        //        {src: $sce.trustAsResourceUrl("/rest/media/"+$routeParams.id+"/read"), type:"video/mp4"}
+        //    ],
+        //    theme: "bower_components/videogular-themes-default/videogular.css",
+        //    plugins: {
+        //    }
+        //};
+        this.videoUrl = $sce.trustAsResourceUrl("/rest/media/"+$routeParams.id+"/read");
     }
 }());
