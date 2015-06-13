@@ -10,6 +10,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const (
+	MAX_FILE_SIZE = 500 * 1000 * 1000
+)
+
 func mediaCreate(request *restful.Request, response *restful.Response) {
 	user := request.Attribute("user").(*entities.User)
 
@@ -32,9 +36,10 @@ func mediaCreate(request *restful.Request, response *restful.Response) {
 }
 
 func mediaUpload(request *restful.Request, response *restful.Response) {
+	request.Request.Body = http.MaxBytesReader(response.ResponseWriter, request.Request.Body, MAX_FILE_SIZE)
 	media := request.Attribute("media").(*entities.Media)
 
-	request.Request.ParseMultipartForm(500 * 1000 * 1000)
+	request.Request.ParseMultipartForm(MAX_FILE_SIZE)
 	mediaFile, handler, err := request.Request.FormFile("file")
 	if err == nil {
 		defer mediaFile.Close()
