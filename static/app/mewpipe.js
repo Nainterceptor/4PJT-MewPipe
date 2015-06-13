@@ -7,9 +7,9 @@
         'mewpipe.player',
         'mewpipe.dashboard',
         'mewpipe.adminPanel'
-    ]);
-        /*.config(function($locationProvider){
-            //$locationProvider.html5Mode(true);
-        })*/
+    ])
+        .config(function($locationProvider){
+            $locationProvider.html5Mode(true);
+        });
 
 }());
