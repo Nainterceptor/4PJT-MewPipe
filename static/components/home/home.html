@@ -1,22 +1,15 @@
 <div class="container-fluid">
-    <h2>Most Viewed</h2>
-    <div ng-repeat="row in home.mostViewed" class="row">
-        <div ng-repeat="stat in row" class="col-md-2">
-            <div class="thumbnail">
-                <a href="/player"><img ng-src="{{stat.imgUrl}}" alt=""/></a>
-                <div class="caption">
-                    <h4>{{stat.title}}</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-    <h2>Most Shared</h2>
-    <div ng-repeat="row in home.mostShared" class="row">
-        <div ng-repeat="stat in row" class="col-md-2">
-            <div class="thumbnail">
-                <a ng-href="{{stat.videoUrl}}"><img ng-src="{{stat.imgUrl}}" alt=""/></a>
-                <div class="caption">
-                    <h4>{{stat.title}}</h4>
+    <h2>Medias</h2>
+    <div class="row">
+        <div ng-repeat="media in home.medias">
+            <div class="col-md-2">
+                <div class="thumbnail">
+                    <a ng-href="/player/{{media.id}}"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
+                    <div class="caption">
+                        <h4>{{media.title}}</h4>
+                        <p>by {{media.user.name.nickname}}</p>
+                        <p><span ng-if="media.views == null">0</span><span ng-if="media.views > 0">{{media.views}}</span> views</p>
+                    </div>
                 </div>
             </div>
         </div>

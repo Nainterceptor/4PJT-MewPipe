@@ -230,6 +230,9 @@
                 summary: summary ? summary : ""
             }))
         };
+        mediaInstance.getMedia = function (mediaId) {
+            return $http.get(baseUrl + '/media/' + mediaId)
+        };
         mediaInstance.getMedias = function () {
             return $http.get(baseUrl + '/media')
         };

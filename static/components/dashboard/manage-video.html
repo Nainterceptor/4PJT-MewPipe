@@ -53,6 +53,7 @@
                     <th>Title</th>
                     <th>Summary</th>
                     <th>Share</th>
+                    <th>Views</th>
                     <th>Thumbnail</th>
                     <th>Actions</th>
                 </tr>
@@ -62,6 +63,7 @@
                     <td>{{media.title}}</td>
                     <td>{{media.summary}}</td>
                     <td><a ng-href="/player/{{media.id}}">{{mngVideo.baseUrl}}{{media.id}}</a></td>
+                    <td><span ng-if="media.views">{{media.views}}</span></td>
                     <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></td>
                     <td>
                         <button class="btn btn-primary">
