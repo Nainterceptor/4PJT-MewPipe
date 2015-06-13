@@ -255,11 +255,12 @@
             mediaInstance.getUserMedias();
             mediaInstance.getMedias();
         }
-        mediaInstance.upload = function (file, mediaId) {
+        mediaInstance.upload = function (file, thumbnail, mediaId) {
             return (
                 Upload.upload({
                     url: baseUrl + "/media/" + mediaId + "/upload",
-                    file: file
+                    file: [file, thumbnail],
+                    fileFormDataName: ['file', 'thumbnail']
                 })
             )
         };

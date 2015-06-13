@@ -59,6 +59,26 @@
         return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
     }
 
+    function dataURItoBlob(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([ia], {type:mimeString});
+    }
+
     function ManageVideoDirective(userFactory,notificationFactory,mediaFactory,paginationFactory,$timeout){
         return {
             restrict: 'E',
@@ -68,6 +88,7 @@
             controllerAs: 'mngVideo',
             controller: function($scope, $element, $attrs){
                 var fileToUpload;
+                var thumbnail;
                 var me = this;
                 this.media = mediaFactory.userMedias;
                 paginationFactory.setPagination(me.media, 0, 10);
@@ -91,8 +112,9 @@
                             var video = angular.element('#video')[0];
                             me.vidHeight =video.videoHeight;
                             me.vidWidth =video.videoWidth;
-                            canvas.getContext('2d').drawImage(video, 0, 0,300, 300 * video.videoHeight/ video.videoWidth);
+                            canvas.getContext('2d').drawImage(video, 0, 0,300, 300*video.videoHeight/ video.videoWidth);
                             me.img = canvas.toDataURL("image/png");
+                            thumbnail = dataURItoBlob(me.img);
                             console.log(me.img);
                         },100);
                         meta(file);
@@ -113,7 +135,7 @@
                         .success(function(response){
                             console.log(response);
                             me.uploading = true;
-                            mediaFactory.upload(fileToUpload, response.id)
+                            mediaFactory.upload(fileToUpload, thumbnail, response.id)
                                 .progress(function(evt) {
                                     var prog = parseInt(100.0 * evt.loaded / evt.total);
                                     console.log('progress: ' + prog + '% file :'+ evt.config.file.name);
