@@ -113,21 +113,24 @@
                         var URL = window.URL;
                         me.title = file.name;
                         me.videoUrl = URL.createObjectURL(file);
+                        $scope.$emit('videoRendered');
                         $scope.$digest();
-                        meta(file);
                     }
                 };
-                var meta = function (file) {
+                $scope.$on('videoRendered', function (videoRenderedEvent) {
                     $timeout(function () {
-                        var video = angular.element('#video')[0];
-                        var canvas = angular.element('#canvas')[0];
-                        canvas.width = 300;
-                        canvas.height = 300 * video.videoHeight / video.videoWidth;
-                        canvas.getContext('2d').drawImage(video, 0, 0, 300, 300 * video.videoHeight / video.videoWidth);
-                        var img = canvas.toDataURL("image/png");
-                        thumbnail = dataURItoBlob(img);
-                        console.log(me.img);
-                    }, 100);
+                        meta();
+                    }, 0, false);
+                });
+                var meta = function () {
+                    var video = angular.element('#video')[0];
+                    var canvas = angular.element('#canvas')[0];
+                    canvas.width = 300;
+                    canvas.height = 300 * video.videoHeight / video.videoWidth;
+                    canvas.getContext('2d').drawImage(video, 0, 0, 300, 300 * video.videoHeight / video.videoWidth);
+                    var img = canvas.toDataURL("image/png");
+                    thumbnail = dataURItoBlob(img);
+                    console.log(me.img);
                 };
                 this.upload = function () {
                     console.log(me.title, me.summary);
