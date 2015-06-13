@@ -18,29 +18,40 @@
 
     function UserFactory($http, $cookies, notificationFactory) {
         var userInstance = {};
+        var isAdmin = function (user) {
+            if (user.roles) {
+                return user.roles.indexOf("Admin") !== -1;
+            }
+            return false;
+        };
         userInstance.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
         userInstance.getUsers = function () {
-            return ($http.get(baseUrl + '/users', {
-                Authorization: userInstance.accessToken
-            }))
+            return ($http.get(baseUrl + '/users'))
+        };
+        userInstance.setUser = function (user) {
+            userInstance.user = user;
+            userInstance.isAdmin = isAdmin(user);
         };
         userInstance.getUser = function () {
-            $http.get(baseUrl + '/users/' + userInstance.user.id, {
-                Authorization: userInstance.accessToken
-            })
-                .success(function (response) {
-                    userInstance.user = response;
-                })
-                .error(function (response) {
-                    console.log(response);
-                })
+            if ((!userInstance.user || !userInstance.user.id) && $cookies.get('userId')) {
+                userInstance.user = {
+                    id: $cookies.get('userId')
+                };
+                return ($http.get(baseUrl + '/users/' + userInstance.user.id))
+            }
+            return false;
         };
         if ($cookies.get('userId')) {
             userInstance.user = {
                 id: $cookies.get('userId')
             };
-            userInstance.getUser();
-            userInstance.getUsers();
+            userInstance.getUser()
+                .success(function (response) {
+                    userInstance.setUser(response);
+                })
+                .error(function (response) {
+                    console.log(response);
+                });
         }
         userInstance.logIn = function (email, password) {
             $http.post(baseUrl + '/users/login', {
@@ -84,7 +95,6 @@
         };
         userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
             $http.put(baseUrl + '/users/' + userId, {
-                Authorization: userInstance.accessToken,
                 email: email,
                 name: {
                     firstname: firstname,
@@ -102,9 +112,7 @@
                 })
         };
         userInstance.deleteUser = function (userId) {
-            $http.delete(baseUrl + '/users/' + userId, {
-                Authorization: userInstance.accessToken
-            })
+            $http.delete(baseUrl + '/users/' + userId)
                 .success(function (response) {
                     notificationFactory.addAlert('User deleted !', 'danger');
                 })
@@ -230,31 +238,11 @@
             }))
         };
         mediaInstance.getMedias = function () {
-            $http.get(baseUrl + '/media', {
-                Authorization: $cookies.get('Authorization')
-            })
-                .success(function (response) {
-                    mediaInstance.medias = response;
-                })
-                .error(function (response) {
-                    console.log(response);
-                })
+            return $http.get(baseUrl + '/media')
         };
         mediaInstance.getUserMedias = function () {
-            $http.get(baseUrl + '/media/?user=' + $cookies.get('userId'), {
-                Authorization: $cookies.get('Authorization')
-            })
-                .success(function (response) {
-                    mediaInstance.userMedias = response;
-                })
-                .error(function (response) {
-                    console.log(response);
-                })
+            return $http.get(baseUrl + '/media/?user=' + $cookies.get('userId'))
         };
-        if ($cookies.get('userId')) {
-            mediaInstance.getUserMedias();
-            mediaInstance.getMedias();
-        }
         mediaInstance.upload = function (file, thumbnail, mediaId) {
             return (
                 Upload.upload({

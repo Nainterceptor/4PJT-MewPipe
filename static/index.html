@@ -27,7 +27,7 @@
             <ul class="nav navbar-nav">
                 <li><a ng-link="home">Home</a></li>
                 <li><a ng-show="main.user.accessToken" ng-link="dashboard">Dashboard</a></li>
-                <li><a ng-show="main.user.accessToken" ng-link="adminPanel">Admin Panel</a></li>
+                <li><a ng-show="main.user.isAdmin" ng-link="adminPanel">Admin Panel</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
