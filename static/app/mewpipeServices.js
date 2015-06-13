@@ -33,13 +33,7 @@
             userInstance.isAdmin = isAdmin(user);
         };
         userInstance.getUser = function () {
-            if ((!userInstance.user || !userInstance.user.id) && $cookies.get('userId')) {
-                userInstance.user = {
-                    id: $cookies.get('userId')
-                };
-                return ($http.get(baseUrl + '/users/' + userInstance.user.id))
-            }
-            return false;
+            return ($http.get(baseUrl + '/users/' + userInstance.user.id))
         };
         if ($cookies.get('userId')) {
             userInstance.user = {
