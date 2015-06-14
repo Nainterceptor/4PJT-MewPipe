@@ -37,6 +37,25 @@ body {
     margin-bottom: 0;
 }
 
+.navbar-brand {
+    padding: 6px 6px 6px 20px;
+}
+
+.navbar-right {
+    background: #EE3E3E;
+}
+.navbar-default .navbar-nav.navbar-right > li > a  {
+    color: #FFF;
+}
+.navbar-default .navbar-nav.navbar-right > li > a:hover {
+    color: #eee;
+}
+
+.navbar-default {
+    color: #FFF;
+    border: none;
+}
+
 .pointer{
     cursor: pointer;
 }
