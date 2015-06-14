@@ -203,6 +203,9 @@ func (m *Media) Delete() error {
 	if m.File != "" {
 		getMediaGridFSCollection().RemoveId(m.File)
 	}
+	if m.Thumbnail != "" {
+		getMediaThumbnailGridFSCollection().RemoveId(m.Thumbnail)
+	}
 	if err := getMediaCollection().RemoveId(m.Id); err != nil {
 		return err
 	}
