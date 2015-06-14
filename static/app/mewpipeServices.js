@@ -14,6 +14,7 @@
         .factory('themesFactory', ['$cookies', ThemesFactory])
         .factory('paginationFactory', [PaginationFactory])
         .factory('mediaFactory', ['$http', '$cookies', 'Upload', 'notificationFactory', MediaFactory])
+        .factory('twitterFactory', ['$http','notificationFactory', TwitterFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory) {
@@ -260,6 +261,17 @@
             )
         };
         return mediaInstance;
+    }
+
+    function TwitterFactory($http, notificationFactory){
+        console.log('toto');
+        var twitterInstance = {};
+
+        twitterInstance.login = function(oauth_token, oauth_verifier){
+            return $http.get(baseUrl + '/users/login/twitter/callback?oauth_token='+oauth_token+'&oauth_verifier='+oauth_verifier);
+        };
+
+        return twitterInstance;
     }
 
 }());

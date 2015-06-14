@@ -6,7 +6,8 @@
         'mewpipe.home',
         'mewpipe.player',
         'mewpipe.dashboard',
-        'mewpipe.adminPanel'
+        'mewpipe.adminPanel',
+        'mewpipe.login'
     ])
         .config(function($locationProvider){
             $locationProvider.html5Mode(true);

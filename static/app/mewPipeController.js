@@ -30,7 +30,9 @@
             {path: '/dashboard/profile', component: 'dashboard'},
             {path: '/admin-panel', component: 'adminPanel'},
             {path: '/admin-panel/medias', component: 'adminPanel'},
-            {path: '/admin-panel/users', component: 'adminPanel'}
+            {path: '/admin-panel/users', component: 'adminPanel'},
+            {path: '/login/twitter', component: 'login'},
+            {path: '/login/twitter/callback', component: 'login'}
         ]);
         this.chooseTheme = function (theme) {
             me.theme = themesFactory.themes[theme];
