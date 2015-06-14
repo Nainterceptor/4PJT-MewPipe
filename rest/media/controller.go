@@ -210,6 +210,8 @@ func mediaGetAll(request *restful.Request, response *restful.Response) {
 	var scopes []string
 	scopes = append(scopes, "public")
 
+	var searchOr []bson.M
+
 	if user != nil {
 		user := user.(*entities.User)
 		if user.Id != "" || user.HasRole("Admin") {
@@ -218,9 +220,11 @@ func mediaGetAll(request *restful.Request, response *restful.Response) {
 		if user.HasRole("Admin") {
 			scopes = append(scopes, "link")
 		}
+		searchOr = append(searchOr, bson.M{"publisher._id": user.Id})
 	}
-	search["scope"] = bson.M{"$in": scopes}
+	searchOr = append(searchOr, bson.M{"scopes": bson.M{"$in": scopes}})
 
+	search["$or"] = searchOr
 	medias, err := entities.MediaList(search, start, limit, order)
 
 	if err != nil {
