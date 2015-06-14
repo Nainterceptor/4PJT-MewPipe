@@ -102,7 +102,7 @@
                         paginationFactory.setPagination(me.media);
                         me.page = paginationFactory.getParams();
                     });
-                me.mediaScopes = [ "public", "link", "private"];
+                me.mediaScopes = ["public", "link", "private"];
                 me.mediaScope = me.mediaScopes[0];
                 me.prog = 0;
                 this.uploading = false;
