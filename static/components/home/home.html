@@ -1,7 +1,7 @@
 <div class="container-fluid">
-    <h2>Medias</h2>
+    <h2>Most Viewed</h2>
     <div class="row">
-        <div ng-repeat="media in home.medias">
+        <div ng-repeat="media in (home.medias | startFrom: 0 | limitTo: 12 | orderBy: '-views' | emptyToEnd: 'views')">
             <div class="col-md-2">
                 <div class="thumbnail">
                     <a ng-href="/player/{{media.id}}"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
@@ -9,6 +9,21 @@
                         <h4>{{media.title}}</h4>
                         <p>by {{media.user.name.nickname}}</p>
                         <p><span ng-if="media.views == null">0</span><span ng-if="media.views > 0">{{media.views}}</span> views</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2>Most Shared</h2>
+    <div class="row">
+        <div ng-repeat="media in (home.medias | startFrom: 0 | limitTo: 12 | orderBy: '-shares' | emptyToEnd: 'shares')">
+            <div class="col-md-2">
+                <div class="thumbnail">
+                    <a ng-href="/player/{{media.id}}"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
+                    <div class="caption">
+                        <h4>{{media.title}}</h4>
+                        <p>by {{media.user.name.nickname}}</p>
+                        <p><span ng-if="media.shares == null">0</span><span ng-if="media.shares > 0">{{media.shares}}</span> shares</p>
                     </div>
                 </div>
             </div>

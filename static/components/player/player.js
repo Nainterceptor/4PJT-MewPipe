@@ -7,10 +7,10 @@
         "com.2fdevs.videogular.plugins.overlayplay",
         "com.2fdevs.videogular.plugins.poster"
     ])
-        .controller('PlayerController', ["$sce", '$routeParams', 'mediaFactory', PlayerController])
+        .controller('PlayerController', ["$sce", '$routeParams', 'mediaFactory', '$location', PlayerController])
     ;
 
-    function PlayerController($sce, $routeParams, mediaFactory) {
+    function PlayerController($sce, $routeParams, mediaFactory, $location) {
         var me = this;
         //this.config = {
         //    sources: [
@@ -21,8 +21,10 @@
         //    }
         //};
         this.videoUrl = $sce.trustAsResourceUrl("/rest/media/" + $routeParams.id + "/read");
+        this.mediaFactory = mediaFactory;
 
         mediaFactory.getMedia($routeParams.id).success(function (response) {
+            me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
             me.media = response;
         });
     }

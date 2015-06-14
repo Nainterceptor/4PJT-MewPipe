@@ -1,11 +1,26 @@
-(function(){
+(function () {
     "use strict";
-    angular.module('mewpipe.home',[
+    angular.module('mewpipe.home', [
         'mewpipeServices'
     ])
-        .controller('HomeController',['mediaFactory', 'paginationFactory', '$location', HomeController]);
+        .controller('HomeController', ['mediaFactory', 'paginationFactory', '$location', HomeController])
+        .filter('emptyToEnd', [EmptyToEnd])
+    ;
 
-    function HomeController(mediaFactory, paginationFactory, $location){
+    function EmptyToEnd() {
+        return function (array, key) {
+            if (!angular.isArray(array)) return;
+            var present = array.filter(function (item) {
+                return item[key];
+            });
+            var empty = array.filter(function (item) {
+                return !item[key]
+            });
+            return present.concat(empty);
+        };
+    }
+
+    function HomeController(mediaFactory, paginationFactory, $location) {
         var me = this;
         this.mostShared = [];
 

@@ -231,6 +231,11 @@
                 summary: summary ? summary : ""
             }))
         };
+        mediaInstance.setMediaShare = function (mediaId, shares) {
+            return $http.put(baseUrl + '/media/' + mediaId, {
+                shares: shares+1
+            })
+        };
         mediaInstance.getMedia = function (mediaId) {
             return $http.get(baseUrl + '/media/' + mediaId)
         };
