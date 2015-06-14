@@ -23,6 +23,12 @@ func MustBeLogged(req *restful.Request, resp *restful.Response, chain *restful.F
 func InjectUser(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
 
 	token := req.Request.Header.Get("Authorization")
+	if token == "" {
+		cookie, err := req.Request.Cookie("accessToken")
+		if err == nil {
+			token = cookie.Value
+		}
+	}
 	if token != "" {
 		usr, err := entities.UserFromToken(token)
 		if err == nil {
