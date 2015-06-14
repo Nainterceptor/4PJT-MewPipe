@@ -12,6 +12,21 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+func init() {
+	getUserCollection().EnsureIndex(mgo.Index{
+		Key:      []string{"email"},
+		Unique:   true,
+		DropDups: true,
+		Sparse:   true,
+	})
+	getUserCollection().EnsureIndex(mgo.Index{
+		Key:      []string{"twitter.userId"},
+		Unique:   true,
+		DropDups: true,
+		Sparse:   true,
+	})
+}
+
 const tokenExpiration = 3600
 
 func getUserCollection() *mgo.Collection {
