@@ -130,11 +130,6 @@ func TestUserInsert(t *testing.T) {
 		Convey("User Password should be Empty", func() {
 			So(usr.Password, ShouldBeEmpty)
 		})
-		usr = getBarUser()
-		usr.Password = ""
-		Convey("Insertion without password should fail", func() {
-			So(usr.Insert(), ShouldNotBeNil)
-		})
 	})
 }
 
