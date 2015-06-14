@@ -67,6 +67,19 @@ func MediaRoute(container *restful.Container) {
 		Returns(http.StatusNotFound, "Media not found", nil))
 
 	service.Route(service.
+		POST("/{media-id}/share").
+		Filter(filters.InjectMediaMeta).
+		Filter(filters.InjectUser).
+		Filter(filters.ScopeControl).
+		To(mediaPostShare).
+		Doc("Set a new share and return media").
+		Operation("mediaPostShare").
+		Param(service.PathParameter("media-id", "identifier of the media").DataType("string")).
+		Returns(http.StatusOK, "Video has been returned", nil).
+		Returns(http.StatusBadRequest, "Bad ID", nil).
+		Returns(http.StatusNotFound, "Media not found", nil))
+
+	service.Route(service.
 		DELETE("/{media-id}").
 		Filter(filters.InjectMediaMeta).
 		Filter(filters.MustBeLogged).

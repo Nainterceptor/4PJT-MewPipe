@@ -49,6 +49,7 @@ type Media struct {
 	mgofile      *mgo.GridFile `json:"-" bson:"-"`
 	mgothumbnail *mgo.GridFile `json:"-" bson:"-"`
 	Views        int           `json:"views,omitempty" bson:"views,omitempty"`
+	Shares       int           `json:"shares,omitempty" bson:"shares,omitempty"`
 }
 
 func MediaNew() *Media {
@@ -215,5 +216,15 @@ func (m *Media) CountViews() {
 		m.Views = 0
 	}
 	m.Views = view.Count
+	m.Update()
+}
+
+func (m *Media) CountShares() {
+	share := new(ShareCount)
+	err := getShareCountCollection().Pipe([]bson.M{{"$match": bson.M{"media": m.Id}}, {"$group": bson.M{"_id": "$media", "count": bson.M{"$sum": "$count"}}}}).One(&share)
+	if err != nil {
+		m.Shares = 0
+	}
+	m.Shares = share.Count
 	m.Update()
 }

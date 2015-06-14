@@ -18,22 +18,22 @@ type View struct {
 	Count int           `json:"count" bson:"count"`
 }
 
-var change = mgo.Change{
+var changeView = mgo.Change{
 	Update:    bson.M{"$inc": bson.M{"count": 1}},
 	Upsert:    true,
 	ReturnNew: true,
 }
 
 func ViewNewAnonymous(media bson.ObjectId) error {
-	return upsertOnCriteria(bson.M{"media": media})
+	return upsertViewOnCriteria(bson.M{"media": media})
 }
 
 func ViewNew(user bson.ObjectId, media bson.ObjectId) error {
-	return upsertOnCriteria(bson.M{"user": user, "media": media})
+	return upsertViewOnCriteria(bson.M{"user": user, "media": media})
 }
 
-func upsertOnCriteria(query interface{}) error {
+func upsertViewOnCriteria(query interface{}) error {
 	view := new(View)
-	_, err := getViewCollection().Find(query).Apply(change, &view)
+	_, err := getViewCollection().Find(query).Apply(changeView, &view)
 	return err
 }

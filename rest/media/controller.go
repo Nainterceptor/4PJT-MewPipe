@@ -241,3 +241,17 @@ func mediaGet(request *restful.Request, response *restful.Response) {
 
 	response.WriteEntity(media)
 }
+
+func mediaPostShare(request *restful.Request, response *restful.Response) {
+	media := request.Attribute("media").(*entities.Media)
+	userAttribute := request.Attribute("user")
+	if userAttribute == nil {
+		entities.ShareCountNewAnonymous(media.Id)
+	} else {
+		user := userAttribute.(*entities.User)
+		entities.ShareCountNew(user.Id, media.Id)
+	}
+	media.CountShares()
+
+	response.WriteEntity(media)
+}
