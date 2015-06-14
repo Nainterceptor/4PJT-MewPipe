@@ -11,7 +11,7 @@
     <form ng-if="mngVideo.videoUrl" ng-submit="mngVideo.upload()" name="form" class="container" novalidate>
         <video style="display: none" type="video/mp4" id="video" ng-if="mngVideo.videoUrl"
                ng-src="{{mngVideo.videoUrl}}"></video>
-        <canvas id="canvas" style="display: none"></canvas>
+        <canvas style="display: none" id="canvas"></canvas>
         <div class="form-group">
             <label for="title1" class="col-sm-2 control-label">Title</label>
             <input type="text" name="title" class="form-control" id="title1"
@@ -24,7 +24,7 @@
         </div>
         <div class="pull-right">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Upload</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="!mngVideo.canUpload">Upload</button>
         </div>
         <div class="col-md-12">
             <div ng-show="mngVideo.uploading" class="progress">
