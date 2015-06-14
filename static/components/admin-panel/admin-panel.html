@@ -24,15 +24,17 @@
                     <th>Nickname</th>
                     <th>Email</th>
                     <th>Roles</th>
+                    <th>Date</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="user in adminPanel.users | startFrom:0 | limitTo:3 | orderBy: '-id'">
+                <tr ng-repeat="user in adminPanel.users | startFrom:0 | limitTo:3 | orderBy: '-createdAt'">
                     <td>{{user.id}}</td>
                     <td>{{user.name.nickname}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.roles}}</td>
+                    <td>{{user.createdAt | date:"dd/MM/yyyy 'at' HH:mm"}}</td>
                     <td>
                         <button class="btn btn-primary">
                             Update

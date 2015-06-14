@@ -22,6 +22,14 @@
              <textarea name="summary" type="" class="form-control" id="summary1"
                        ng-model="mngVideo.summary" placeholder="Summary"></textarea>
         </div>
+        <div class="form-group">
+            <label for="scope1" class="col-sm-2 control-label">Confidentiality</label>
+            <select id="scope1"
+                    class="form-control"
+                    ng-model="mngVideo.mediaScope"
+                    ng-options="s for s in mngVideo.mediaScopes">
+            </select>
+        </div>
         <div class="pull-right">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" ng-disabled="!mngVideo.canUpload">Upload</button>
@@ -54,22 +62,35 @@
                     <th>Summary</th>
                     <th>Share</th>
                     <th>Views</th>
+                    <th>Shares</th>
                     <th>Thumbnail</th>
+                    <th>Scope</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="media in mngVideo.media | startFrom:mngVideo.page.currentPage*mngVideo.page.numPerPage | limitTo:mngVideo.page.numPerPage">
+                <tr ng-repeat="media in mngVideo.media
+                | startFrom:mngVideo.page.currentPage*mngVideo.page.numPerPage
+                | limitTo:mngVideo.page.numPerPage
+                | orderBy: '-createdAt'">
                     <td>{{media.title}}</td>
                     <td>{{media.summary}}</td>
                     <td><a ng-href="/player/{{media.id}}">{{mngVideo.baseUrl}}{{media.id}}</a></td>
-                    <td><span ng-if="media.views">{{media.views}}</span></td>
+                    <td>
+                        <span ng-if="media.views == null">0</span><span ng-if="media.views">{{media.views}}</span>
+                    </td>
+                    <td>
+                        <span ng-if="media.shares == null">0</span><span ng-if="media.views">{{media.shares}}</span>
+                    </td>
                     <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></td>
+                    <td>{{media.scope}}</td>
                     <td>
                         <button class="btn btn-primary">
                             Update
                         </button>
-                        <button class="btn btn-danger" ng-click="mngVideo.mediaFactory.deleteMedia(media.id)">Delete</button>
+                        <button class="btn btn-danger" ng-click="mngVideo.mediaFactory.deleteMedia(media.id)">
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 </tbody>
