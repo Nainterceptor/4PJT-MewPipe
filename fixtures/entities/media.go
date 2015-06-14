@@ -2,12 +2,20 @@ package entities
 
 import (
 	"fmt"
+	"math/rand"
 	"mime/multipart"
 	"net/textproto"
 	"os"
 	"supinfo/mewpipe/configs"
 	"supinfo/mewpipe/entities"
+	"time"
+
+	"gopkg.in/mgo.v2/bson"
 )
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
 
 func ClearMedia() {
 	configs.MongoDB.C("media.chunks").DropCollection()
@@ -15,6 +23,8 @@ func ClearMedia() {
 	configs.MongoDB.C("media.files").DropCollection()
 	configs.MongoDB.C("media.thumbnails.files").DropCollection()
 	configs.MongoDB.C("media").DropCollection()
+	configs.MongoDB.C("media.views").DropCollection()
+	configs.MongoDB.C("media.shareCounts").DropCollection()
 	fmt.Println("All media deleted")
 }
 
@@ -28,10 +38,39 @@ func InsertSomeMedia() {
 			return
 		}
 		addVideoBin(media)
-
+		numAnonViews := randInt(10, 100)
+		numFooViews := randInt(0, 7)
+		numAdminViews := randInt(0, 3)
+		for i := 0; i < numAnonViews; i++ {
+			entities.ViewNewAnonymous(media.Id)
+		}
+		for i := 0; i < numFooViews; i++ {
+			entities.ViewNew(bson.ObjectIdHex("555a076a2fd06c1891000001"), media.Id)
+		}
+		for i := 0; i < numAdminViews; i++ {
+			entities.ViewNew(bson.ObjectIdHex("555a076a2fd06c1891000002"), media.Id)
+		}
+		media.CountViews()
+		numAnonShares := randInt(0, 10)
+		numFooShares := randInt(0, 3)
+		numAdminShares := randInt(0, 1)
+		for i := 0; i < numAnonShares; i++ {
+			entities.ShareCountNewAnonymous(media.Id)
+		}
+		for i := 0; i < numFooShares; i++ {
+			entities.ShareCountNew(bson.ObjectIdHex("555a076a2fd06c1891000001"), media.Id)
+		}
+		for i := 0; i < numAdminShares; i++ {
+			entities.ShareCountNew(bson.ObjectIdHex("555a076a2fd06c1891000002"), media.Id)
+		}
+		media.CountShares()
 	}
 	addVideoBin(mediaArray[1])
 	fmt.Println("Media added")
+}
+
+func randInt(min int, max int) int {
+	return min + rand.Intn(max-min)
 }
 
 func addVideoBin(media *entities.Media) {
