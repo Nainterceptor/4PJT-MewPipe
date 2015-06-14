@@ -44,3 +44,12 @@
 .dragover {
     border: 5px dashed blue;
 }
+
+.btn-share {
+    cursor: auto;
+    background-color: white;
+}
+
+.btn-share:focus {
+    border-color: #245269;
+}
