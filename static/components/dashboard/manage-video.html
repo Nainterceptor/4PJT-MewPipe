@@ -1,58 +1,5 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-            <div ngf-drop ngf-select class="drop-box pointer" ngf-accept="mngVideo.validate($file)"
-                 ngf-drag-over-class="dragover">
-                Click or Drag your video here to upload
-            </div>
-        </div>
-    </div>
-    <hr>
-    <form ng-if="mngVideo.videoUrl" ng-submit="mngVideo.upload()" name="form" class="container" novalidate>
-        <video style="display: none" type="video/mp4" id="video" ng-if="mngVideo.videoUrl"
-               ng-src="{{mngVideo.videoUrl}}"></video>
-        <canvas style="display: none" id="canvas"></canvas>
-        <div class="form-group">
-            <label for="title1" class="col-sm-2 control-label">Title</label>
-            <input type="text" name="title" class="form-control" id="title1"
-                   ng-model="mngVideo.title">
-        </div>
-        <div class="form-group">
-            <label for="summary1" class="col-sm-2 control-label">Summary</label>
-             <textarea name="summary" type="" class="form-control" id="summary1"
-                       ng-model="mngVideo.summary" placeholder="Summary"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="scope1" class="col-sm-2 control-label">Confidentiality</label>
-            <select id="scope1"
-                    class="form-control"
-                    ng-model="mngVideo.mediaScope"
-                    ng-options="s for s in mngVideo.mediaScopes">
-            </select>
-        </div>
-        <div class="pull-right">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" ng-disabled="!mngVideo.canUpload">Upload</button>
-        </div>
-        <div class="col-md-12">
-            <div ng-show="mngVideo.uploading" class="progress">
-                <div class="progress-bar progress-bar-striped active"
-                     role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                     ng-style="{width: mngVideo.prog+'%'}">
-                    {{mngVideo.prog}}% Complete
-                </div>
-            </div>
-            <div ng-show="mngVideo.playerUrl" class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Share your video</h3>
-                </div>
-                <div class="panel-body">
-                    <a ng-href="/player/{{mngVideo.playerUrl}}">{{mngVideo.link}}</a>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div class="row">
         <div class="col-md-12">
             <h3>Yours Media</h3>
             <table class="table table-bordered">

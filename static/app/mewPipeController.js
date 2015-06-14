@@ -33,7 +33,8 @@
             {path: '/admin-panel/users', component: 'adminPanel'},
             {path: '/login', component: 'login'},
             {path: '/login/twitter', component: 'login'},
-            {path: '/login/twitter/callback', component: 'login'}
+            {path: '/login/twitter/callback', component: 'login'},
+            {path: '/upload', component: 'upload'}
         ]);
         this.chooseTheme = function (theme) {
             me.theme = themesFactory.themes[theme];
