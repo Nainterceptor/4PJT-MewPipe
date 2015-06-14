@@ -1,3 +1,37 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+body {
+    background-color: #272C2E;
+    font-weight: bold;
+    color: #6B757D;
+    font-size: 15px;
+
+}
+
+.main .nav>li>a, .main .nav>li>a {
+    color: #6B757D;
+    background-color: inherit;
+}
+
+.main {
+    padding-top: 60px;
+}
+
+.header div {
+    background-color: #FFFFFF;
+    height: 65px;
+}
+
+.header .border {
+    border-color: #F0F4F9;
+}
+
+.border {
+    border-right: 1px solid #2A3134;
+    border-left: 1px solid #2A3134;
+}
+
 .navbar {
     border-radius: 0;
     margin-bottom: 0;

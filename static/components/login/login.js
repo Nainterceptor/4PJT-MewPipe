@@ -2,9 +2,9 @@
     "use strict";
     angular.module('mewpipe.login', [
     ])
-        .controller('LoginController', ['twitterFactory','$location',LoginController]);
+        .controller('LoginController', ['twitterFactory','$location','userFactory',LoginController]);
 
-    function LoginController(twitterFactory,$location) {
+    function LoginController(twitterFactory,$location,userFactory) {
         var partUri = $location.path().split('/');
         var urlParams = $location.search();
         this.twitterConnect = function(){
@@ -14,10 +14,17 @@
             twitterFactory.login(urlParams.oauth_token, urlParams.oauth_verifier)
                 .success(function(response){
                     console.log(response);
+                    userFactory.initiate(response);
                 })
                 .error(function(response){
                     console.log(response);
                 });
         }
+        this.logIn = function () {
+            userFactory.logIn(this.signInEmail, this.signInPassword);
+        };
+        this.signUp = function () {
+            userFactory.signUp(this.signUpEmail, this.signUpNickname, this.signUpPassword);
+        };
     }
 }());
