@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"supinfo/mewpipe/entities"
 
-	"github.com/Nainterceptor/go-restful"
+	"github.com/emicklei/go-restful"
 )
 
 func userMeUpdate(request *restful.Request, response *restful.Response) {

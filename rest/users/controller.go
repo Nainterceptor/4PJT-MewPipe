@@ -11,7 +11,7 @@ import (
 
 	"supinfo/mewpipe/configs"
 
-	"github.com/Nainterceptor/go-restful"
+	"github.com/emicklei/go-restful"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/twitter"

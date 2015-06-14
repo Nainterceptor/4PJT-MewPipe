@@ -7,7 +7,7 @@ import (
 
 	"os"
 
-	"github.com/Nainterceptor/go-restful"
+	"github.com/emicklei/go-restful"
 )
 
 func StaticRouter(container *restful.Container) {

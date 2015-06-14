@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"supinfo/mewpipe/entities"
 
-	"github.com/Nainterceptor/go-restful"
+	"github.com/emicklei/go-restful"
 	"gopkg.in/mgo.v2/bson"
 )
 
