@@ -11,7 +11,8 @@ import (
 
 var staticPath = flag.String("static_path", "static", "Localisation for static files")
 
-var HttpBinding = flag.String("http_binding", "localhost:8080", "IP/Port to listen HTTP Server")
+var HttpBinding = flag.String("http_binding", "localhost:1337", "IP/Port to listen HTTP Server")
+var ServerDomain = flag.String("server_domain", "localhost:1337", "Useful to forward to OpenID")
 
 var mongoCS = flag.String("mongodb_CS", "localhost", "Connection endpoint for mongodb driver")
 var mongoName = flag.String("mongodb_DB", "MewPipe", "Database to mount")

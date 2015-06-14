@@ -20,7 +20,7 @@ import (
 
 func init() {
 	goth.UseProviders(
-		twitter.New(*configs.TWITTER_KEY, *configs.TWITTER_SECRET, "http://localhost:1337/rest/users/login/twitter/callback"),
+		twitter.New(*configs.TWITTER_KEY, *configs.TWITTER_SECRET, "http://"+(*configs.ServerDomain)+"/login/twitter/callback"),
 	)
 }
 
