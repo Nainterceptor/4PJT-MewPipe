@@ -212,8 +212,11 @@ func mediaGetAll(request *restful.Request, response *restful.Response) {
 
 	if user != nil {
 		user := user.(*entities.User)
-		if user.Id != "" {
+		if user.Id != "" || user.HasRole("Admin") {
 			scopes = append(scopes, "private")
+		}
+		if user.HasRole("Admin") {
+			scopes = append(scopes, "link")
 		}
 	}
 	search["scope"] = bson.M{"$in": scopes}
