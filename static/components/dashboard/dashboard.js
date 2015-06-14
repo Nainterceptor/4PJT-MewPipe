@@ -90,6 +90,7 @@
                 var fileToUpload;
                 var thumbnail;
                 var me = this;
+                me.canUpload = false;
                 this.mediaFactory = mediaFactory;
                 mediaFactory.getUserMedias()
                     .success(function (response) {
@@ -102,6 +103,7 @@
                 me.prog = 0;
                 this.uploading = false;
                 this.validate = function (file) {
+                    me.canUpload = false;
                     if (Object.getPrototypeOf(file).constructor === File) {
                         var videoType = new RegExp("video/");
                         if (!videoType.test(file.type)) {
@@ -113,24 +115,21 @@
                         var URL = window.URL;
                         me.title = file.name;
                         me.videoUrl = URL.createObjectURL(file);
-                        $scope.$emit('videoRendered');
                         $scope.$digest();
+                        meta();
                     }
                 };
-                $scope.$on('videoRendered', function (videoRenderedEvent) {
-                    $timeout(function () {
-                        meta();
-                    }, 0, false);
-                });
                 var meta = function () {
-                    var video = angular.element('#video')[0];
-                    var canvas = angular.element('#canvas')[0];
-                    canvas.width = 300;
-                    canvas.height = 300 * video.videoHeight / video.videoWidth;
-                    canvas.getContext('2d').drawImage(video, 0, 0, 300, 300 * video.videoHeight / video.videoWidth);
-                    var img = canvas.toDataURL("image/png");
-                    thumbnail = dataURItoBlob(img);
-                    console.log(me.img);
+                    $timeout(function () {
+                        var video = angular.element('#video')[0];
+                        var canvas = angular.element('#canvas')[0];
+                        canvas.width = 300;
+                        canvas.height = 300 * video.videoHeight / video.videoWidth;
+                        canvas.getContext('2d').drawImage(video, 0, 0, 300, 300 * video.videoHeight / video.videoWidth);
+                        var img = canvas.toDataURL("image/png");
+                        thumbnail = dataURItoBlob(img);
+                        me.canUpload = true;
+                    }, 750);
                 };
                 this.upload = function () {
                     console.log(me.title, me.summary);
