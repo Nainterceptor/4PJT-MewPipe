@@ -214,20 +214,14 @@ func (m *Media) Delete() error {
 
 func (m *Media) CountViews() {
 	view := new(View)
-	err := getViewCollection().Pipe([]bson.M{{"$match": bson.M{"media": m.Id}}, {"$group": bson.M{"_id": "$media", "count": bson.M{"$sum": "$count"}}}}).One(&view)
-	if err != nil {
-		m.Views = 0
-	}
+	getViewCollection().Pipe([]bson.M{{"$match": bson.M{"media": m.Id}}, {"$group": bson.M{"_id": "$media", "count": bson.M{"$sum": "$count"}}}}).One(&view)
 	m.Views = view.Count
 	m.Update()
 }
 
 func (m *Media) CountShares() {
 	share := new(ShareCount)
-	err := getShareCountCollection().Pipe([]bson.M{{"$match": bson.M{"media": m.Id}}, {"$group": bson.M{"_id": "$media", "count": bson.M{"$sum": "$count"}}}}).One(&share)
-	if err != nil {
-		m.Shares = 0
-	}
+	getShareCountCollection().Pipe([]bson.M{{"$match": bson.M{"media": m.Id}}, {"$group": bson.M{"_id": "$media", "count": bson.M{"$sum": "$count"}}}}).One(&share)
 	m.Shares = share.Count
 	m.Update()
 }
