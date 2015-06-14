@@ -10,54 +10,28 @@
     <base href="/">
 </head>
 <body>
-<!--<nav class="navbar navbar-default">-->
-    <!--<div class="container">-->
-        <!--&lt;!&ndash; Brand and toggle get grouped for better mobile display &ndash;&gt;-->
-        <!--<div class="navbar-header">-->
-            <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">-->
-                <!--<span class="sr-only">Toggle navigation</span>-->
-                <!--<span class="icon-bar"></span>-->
-                <!--<span class="icon-bar"></span>-->
-                <!--<span class="icon-bar"></span>-->
-            <!--</button>-->
-            <!--<a class="navbar-brand" ng-link="home">Mewpipe</a>-->
-        <!--</div>-->
+<nav class="navbar navbar-default">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ng-link="home"><img src="/img/logo.png" alt="MewPipe" height="40px"/></a>
+        </div>
 
-        <!--&lt;!&ndash; Collect the nav links, forms, and other content for toggling &ndash;&gt;-->
-        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
-            <!--<ul class="nav navbar-nav">-->
-                <!--<li><a ng-link="home">Home</a></li>-->
-                <!--<li><a ng-show="main.user.accessToken" ng-link="dashboard">Dashboard</a></li>-->
-                <!--<li><a ng-show="main.user.isAdmin" ng-link="adminPanel">Admin Panel</a></li>-->
-            <!--</ul>-->
-            <!--<ul class="nav navbar-nav navbar-right">-->
-                <!--<li class="dropdown">-->
-                    <!--<a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-expanded="false">Themes <span class="caret"></span></a>-->
-                    <!--<ul class="dropdown-menu" role="menu">-->
-                        <!--<li ng-repeat="theme in main.themes"><a class="pointer" ng-click="main.chooseTheme(theme.name)">{{theme.name}}</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
-                <!--<li ng-controller="AuthenticationController as auth" class="dropdown">-->
-                    <!--<a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-expanded="false">Sign <span class="caret"></span></a>-->
-                    <!--<ul class="dropdown-menu" role="menu">-->
-                        <!--<li><a class="pointer" ng-hide="main.user.accessToken" ng-click="auth.logIn()">Sign In</a><a class="pointer" ng-show="main.user.accessToken" ng-click="auth.logOut()">Sign Out</a></li>-->
-                        <!--<li ng-hide="main.user.accessToken" class="divider"></li>-->
-                        <!--<li><a ng-hide="main.user.accessToken" class="pointer" ng-click="auth.signUp()">Sign Up</a></li>-->
-                    <!--</ul>-->
-                    <!--<modal-sign-in></modal-sign-in>-->
-                    <!--<modal-sign-up></modal-sign-up>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>&lt;!&ndash; /.navbar-collapse &ndash;&gt;-->
-    <!--</div>&lt;!&ndash; /.container-fluid &ndash;&gt;-->
-<!--</nav>-->
-<div class="header row">
-    <div class="col-md-2"><h2>Mewpipe</h2></div>
-    <div class="col-md-9 border">
-    </div>
-    <div class="col-md-1">
-    </div>
-</div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a ng-show="main.user.isAdmin" ng-link="adminPanel">Admin Panel</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a ng-href="/upload">Upload</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+</nav>
 <div class="notif">
     <div class="notification alert" ng-repeat="alert in main.alerts" ng-class="alert.type">
         <button type="button" class="close" ng-click="main.closeAlert($index)"><span aria-hidden="true">&times;</span></button>
