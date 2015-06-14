@@ -24,11 +24,17 @@
         var me = this;
         this.mostShared = [];
 
-        mediaFactory.getMedias().success(function (response) {
+        mediaFactory.getMediasByViews().success(function (response) {
             me.baseUrl = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/";
             me.medias = response;
             paginationFactory.setPagination(me.medias);
             me.page = paginationFactory.getParams();
+        });
+
+        mediaFactory.getMediasByShares().success(function (response) {
+            me.mediasShares = response;
+            paginationFactory.setPagination(me.mediasShares);
+            me.pageShare = paginationFactory.getParams();
         });
     }
 }());

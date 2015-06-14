@@ -247,14 +247,17 @@
                     console.log(response);
                 })
         };
-        mediaInstance.getMediaShare = function() {
-
-        };
         mediaInstance.getMedia = function (mediaId) {
             return $http.get(baseUrl + '/media/' + mediaId)
         };
         mediaInstance.getMedias = function () {
             return $http.get(baseUrl + '/media')
+        };
+        mediaInstance.getMediasByShares = function () {
+            return $http.get(baseUrl + '/media?order=-shares')
+        };
+        mediaInstance.getMediasByViews = function () {
+            return $http.get(baseUrl + '/media?order=-views')
         };
         mediaInstance.getUserMedias = function () {
             return ($http.get(baseUrl + '/media/?user=' + $cookies.get('userId')))
