@@ -136,6 +136,7 @@ func TestMediaDelete(t *testing.T) {
 		})
 		Convey("Test delete", func() {
 			media.Insert()
+			//Upload Media
 			header := new(multipart.FileHeader)
 			header.Filename = "sample.mp4"
 			header.Header = make(map[string][]string)
@@ -148,11 +149,31 @@ func TestMediaDelete(t *testing.T) {
 			Convey("Sample upload should be a success", func() {
 				So(err, ShouldBeNil)
 			})
-			So(countFiles(), ShouldEqual, 1)
-			So(countChunks(), ShouldAlmostEqual, 1)
-			So(media.Delete(), ShouldBeNil)
-			So(countFiles(), ShouldEqual, 0)
-			So(countChunks(), ShouldEqual, 0)
+
+			//Upload Thumbnail
+			headerThumb := new(multipart.FileHeader)
+			headerThumb.Filename = "sample.jpg"
+			headerThumb.Header = make(map[string][]string)
+			headerThumb.Header.Add("Content-Type", "image/jpeg")
+			sampleThumb, err := os.Open("../fixtures/files/sample.jpg")
+			Convey("Thumbnail reading must be a success", func() {
+				So(err, ShouldBeNil)
+			})
+			err = media.UploadThumbnail(sampleThumb, headerThumb)
+			Convey("Thumbnail upload should be a success", func() {
+				So(err, ShouldBeNil)
+			})
+			Convey("All files should been deleted", func() {
+				So(countFiles(), ShouldEqual, 1)
+				So(countChunks(), ShouldAlmostEqual, 1)
+				So(countThumbnailFiles(), ShouldEqual, 1)
+				So(countThumbnailChunks(), ShouldEqual, 1)
+				So(media.Delete(), ShouldBeNil)
+				So(countFiles(), ShouldEqual, 0)
+				So(countChunks(), ShouldEqual, 0)
+				So(countThumbnailFiles(), ShouldEqual, 0)
+				So(countThumbnailChunks(), ShouldEqual, 0)
+			})
 		})
 
 	})
@@ -231,7 +252,7 @@ func TestThumbnailUpload(t *testing.T) {
 	})
 }
 
-func TestMediaReadUpload(t *testing.T) {
+func TestMediaRead(t *testing.T) {
 	Convey("Test media Read", t, func() {
 		Wipe()
 		media := getAmazingMedia()
@@ -271,6 +292,44 @@ func TestMediaReadUpload(t *testing.T) {
 		err = media.Read(buffer)
 		Convey("Read should be a success", func() {
 			So(err, ShouldBeNil)
+		})
+	})
+}
+
+func TestThumbnailRead(t *testing.T) {
+	Convey("Test media Read", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		media.Insert()
+		header := new(multipart.FileHeader)
+		header.Filename = "sample.jpg"
+		header.Header = make(map[string][]string)
+		header.Header.Add("Content-Type", "image/jpeg")
+		sampleFile, err := os.Open("../fixtures/files/sample.jpg")
+		Convey("Sample reading must be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		err = media.UploadThumbnail(sampleFile, header)
+		Convey("Sample upload should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+
+		//Now, Read !
+		err = media.OpenThumbnail()
+		defer media.CloseThumbnail()
+		Convey("Thumbnail open should be a success", func() {
+			So(err, ShouldBeNil)
+		})
+
+		intSize := int(media.ThumbnailSize())
+		_ = make([]byte, intSize)
+
+		Convey("Thumbnail Read should be a success", func() {
+			file, err := ioutil.TempFile("", "fixtures_")
+			Convey("Thumbnail Read should be a success", func() {
+				So(err, ShouldBeNil)
+			})
+			So(media.CopyThumbnailTo(file), ShouldBeNil)
 		})
 	})
 }
@@ -316,6 +375,62 @@ func TestMediaOpen(t *testing.T) {
 		Convey("Media without file should back an error", func() {
 			So(media.OpenFile(), ShouldNotBeNil)
 		})
+	})
+
+}
+
+func TestCountViews(t *testing.T) {
+	Convey("Test count views", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		user := getFooUser()
+		user2 := getBarUser()
+		media.Insert()
+		user.Insert()
+		user2.Insert()
+		// 4 view from anonymous
+		for i := 0; i < 4; i++ {
+			ViewNewAnonymous(media.Id)
+		}
+		// 8 view from Foo
+		for i := 0; i < 8; i++ {
+			ViewNew(user.Id, media.Id)
+		}
+		// 16 view from Bar
+		for i := 0; i < 16; i++ {
+			ViewNew(user2.Id, media.Id)
+		}
+
+		media.CountViews()
+		So(media.Views, ShouldEqual, 28)
+	})
+
+}
+
+func TestCountShares(t *testing.T) {
+	Convey("Test count shares", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		user := getFooUser()
+		user2 := getBarUser()
+		media.Insert()
+		user.Insert()
+		user2.Insert()
+		// 4 view from anonymous
+		for i := 0; i < 4; i++ {
+			ShareCountNewAnonymous(media.Id)
+		}
+		// 8 view from Foo
+		for i := 0; i < 8; i++ {
+			ShareCountNew(user.Id, media.Id)
+		}
+		// 16 view from Bar
+		for i := 0; i < 16; i++ {
+			ShareCountNew(user2.Id, media.Id)
+		}
+
+		media.CountShares()
+		So(media.Shares, ShouldEqual, 28)
 	})
 
 }
