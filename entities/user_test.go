@@ -210,6 +210,22 @@ func TestUserFromCredentials(t *testing.T) {
 	})
 }
 
+func TestUserFromTwitter(t *testing.T) {
+	Wipe()
+	Convey("Test get user from twitter", t, func() {
+		usr := getTwitterUser()
+		usr.Insert()
+		_, err := UserFromTwitterUserID("Twitter")
+		Convey("User should be found", func() {
+			So(err, ShouldBeNil)
+		})
+		_, err = UserFromTwitterUserID("BadTwitter")
+		Convey("User should not be found", func() {
+			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
 func TestUserTokenGeneration(t *testing.T) {
 	Wipe()
 	Convey("Test user token generation", t, func() {
@@ -307,5 +323,12 @@ func getAdminUser() *User {
 	usr.Name.LastName = "Admin"
 	usr.Name.NickName = "Admin"
 	usr.Roles = append(usr.Roles, "Admin")
+	return usr
+}
+
+func getTwitterUser() *User {
+	usr := UserNew()
+	usr.Name.NickName = "Twitter"
+	usr.Twitter.UserId = "Twitter"
 	return usr
 }
