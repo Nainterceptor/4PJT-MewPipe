@@ -87,6 +87,11 @@
                     console.log(response);
                 });
         };
+        userInstance.updateUser = function(user){
+            return(
+                $http.put(baseUrl + '/users/' + user.id, user)
+            )
+        };
         userInstance.logOut = function () {
             $cookies.remove('accessToken');
             $cookies.remove('userId');
@@ -94,24 +99,24 @@
             userInstance.isAdmin = undefined;
             $location.url("/");
         };
-        userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
-            $http.put(baseUrl + '/users/' + userId, {
-                email: email,
-                name: {
-                    firstname: firstname,
-                    lastname: lastname,
-                    nickname: nickname
-                },
-                password: password
-            })
-                .success(function (response) {
-                    notificationFactory.addAlert('User updated !', 'success');
-                })
-                .error(function (response) {
-                    notificationFactory.addAlert('Fail to update user', 'danger');
-                    console.log(response);
-                })
-        };
+        //userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
+        //    $http.put(baseUrl + '/users/' + userId, {
+        //        email: email,
+        //        name: {
+        //            firstname: firstname,
+        //            lastname: lastname,
+        //            nickname: nickname
+        //        },
+        //        password: password
+        //    })
+        //        .success(function (response) {
+        //            notificationFactory.addAlert('User updated !', 'success');
+        //        })
+        //        .error(function (response) {
+        //            notificationFactory.addAlert('Fail to update user', 'danger');
+        //            console.log(response);
+        //        })
+        //};
         userInstance.deleteUser = function (userId) {
             $http.delete(baseUrl + '/users/' + userId)
                 .success(function (response) {
@@ -230,6 +235,23 @@
 
     function MediaFactory($http, $cookies, Upload, notificationFactory) {
         var mediaInstance = {};
+        var currentMedia = undefined;
+        var mediaId = undefined;
+        mediaInstance.setCurrentMedia = function(media){
+            currentMedia = media;
+        };
+        mediaInstance.getCurrentMedia = function(){
+            return currentMedia;
+        };
+        mediaInstance.setMediaId = function(id){
+            mediaId = id;
+            setTimeout(function(){
+                mediaId = undefined;
+            },500);
+        };
+        mediaInstance.getMediaId = function(){
+            return mediaId;
+        };
         mediaInstance.createMedia = function (user, title, summary, scope) {
             console.log(scope);
             return ($http.post(baseUrl + '/media', {
@@ -283,6 +305,9 @@
                     fileFormDataName: ['file', 'thumbnail']
                 })
             )
+        };
+        mediaInstance.update = function(media){
+            return $http.put(baseUrl + '/media/' + media.id, media);
         };
         return mediaInstance;
     }

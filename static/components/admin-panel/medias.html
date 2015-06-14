@@ -19,7 +19,7 @@
                     <td>{{media.user.name.firstname}} {{media.user.name.lastname}}</td>
                     <td>{{media.summary}}</td>
                     <td>
-                        <button class="btn btn-primary">
+                        <button ng-click="medias.update(media)" class="btn btn-primary">
                             Update
                         </button>
                         <button class="btn btn-danger" ng-click="medias.media.deleteMedia(media.id)">Delete</button>

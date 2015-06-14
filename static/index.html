@@ -69,10 +69,10 @@
         <ul class="nav nav-pills nav-stacked">
             <li><a ng-link="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
             <br/>
-            <li><a ng-if="!main.user.accessToken" ng-href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Sign</a></li>
-            <li><a ng-show="main.user.accessToken" ng-href="/account"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My account</a></li>
-            <li><a ng-show="main.user.accessToken" ng-href="/manage-video"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> My videos</a></li>
-            <li><a ng-show="main.user.accessToken" ng-href="/upload"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</a></li>
+            <li><a ng-if="!main.user.accessToken" ng-href="/login/"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Sign</a></li>
+            <li><a ng-show="main.user.accessToken" ng-href="/account/"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My account</a></li>
+            <li><a ng-show="main.user.accessToken" ng-href="/manage-video/"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> My videos</a></li>
+            <li><a ng-show="main.user.accessToken" ng-href="/upload/"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</a></li>
             <br/>
             <li><a ng-show="main.user.isAdmin" ng-link="adminPanel"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Administration</a></li>
             <br/>
@@ -104,12 +104,13 @@
 <script src="/app/mewpipeServices.js"></script>
 <script src="/components/home/home.js"></script>
 <script src="/components/player/player.js"></script>
-<script src="/components/dashboard/dashboard.js"></script>
 <script src="/components/admin-panel/admin-panel.js"></script>
 <script src="/components/login/login.js"></script>
 <script src="/components/upload/upload.js"></script>
 <script src="/components/account/account.js"></script>
 <script src="/components/manage-video/manage-video.js"></script>
+<script src="/components/update-video/update-video.js"></script>
+<script src="/components/update-user/update-user.js"></script>
 
 </body>
 </html>

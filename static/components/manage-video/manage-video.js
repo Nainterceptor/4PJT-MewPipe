@@ -19,5 +19,9 @@
                 paginationFactory.setPagination(me.media);
                 me.page = paginationFactory.getParams();
             });
+        this.update = function(media){
+            mediaFactory.setCurrentMedia(media);
+            $location.url('/update-video/' + media.id);
+        }
     }
 }());

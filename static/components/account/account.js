@@ -6,6 +6,7 @@
     ;
 
     function AccountController(userFactory,notificationFactory) {
+        console.log('toto');
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
@@ -17,6 +18,16 @@
             userFactory.setUser(response);
             me.user = response;
         });
+        this.update = function(){
+            userFactory.updateUser(me.user)
+                .success(function(response){
+                    userFactory.setUser(response);
+                    notificationFactory.addAlert('User Updated', 'success');
+                })
+                .error(function(response){
+                    console.log(response);
+                })
+        }
 
     }
 }());

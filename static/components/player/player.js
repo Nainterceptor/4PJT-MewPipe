@@ -23,10 +23,14 @@
         this.videoUrl = $sce.trustAsResourceUrl("/rest/media/" + $routeParams.id + "/read");
         this.mediaFactory = mediaFactory;
 
-        console.log('toto');
-        mediaFactory.getMedia($routeParams.id).success(function (response) {
-            me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
-            me.media = response;
-        });
+        var mediaId = mediaFactory.getMediaId();
+        if (!mediaId || $routeParams.id !== mediaId){
+            mediaFactory.setMediaId($routeParams.id);
+            mediaFactory.getMedia($routeParams.id).success(function (response) {
+                mediaFactory.setCurrentMedia(response);
+                me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
+                me.media = response;
+            });
+        }
     }
 }());

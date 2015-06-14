@@ -3,7 +3,7 @@
     angular.module('mewpipe.adminPanel', [])
         .controller('AdminPanelController', ['userFactory', 'mediaFactory','notificationFactory', '$location', AdminPanelController])
         .directive('users', ['userFactory', 'paginationFactory', UsersDirective])
-        .directive('medias', ['mediaFactory', 'paginationFactory', MediasDirective])
+        .directive('medias', ['mediaFactory', 'paginationFactory','$location', MediasDirective])
         .directive('modalUpdateUser', ['userFactory', ModalUpdateUserDirective])
         .filter('startFrom', AdminPanelFilter)
     ;
@@ -75,7 +75,7 @@
         }
     }
 
-    function MediasDirective(mediaFactory, paginationFactory) {
+    function MediasDirective(mediaFactory, paginationFactory, $location) {
         return {
             restrict: 'E',
             templateUrl: 'components/admin-panel/medias.html',
@@ -90,6 +90,10 @@
                     paginationFactory.setPagination(me.medias);
                     me.page = paginationFactory.getParams();
                 });
+                this.update = function(media){
+                    mediaFactory.setCurrentMedia(media);
+                    $location.url('/update-video/' + media.id);
+                }
             }
         }
     }

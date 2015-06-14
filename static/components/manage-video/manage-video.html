@@ -32,7 +32,7 @@
                     <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></td>
                     <td>{{media.scope}}</td>
                     <td>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" ng-click="manageVideo.update(media)">
                             Update
                         </button>
                         <button class="btn btn-danger" ng-click="manageVideo.mediaFactory.deleteMedia(media.id)">

@@ -1,10 +1,7 @@
 (function () {
     "use strict";
-    angular.module('mewpipe.upload', [])
-        .controller('UploadController', ['userFactory', 'notificationFactory', 'mediaFactory', '$timeout', '$location', UploadController])
-        .config(function ($sceProvider) {
-            $sceProvider.enabled(false);
-        });
+    angular.module('mewpipe.updateUser', [])
+        .controller('UpdateUserController', ['userFactory', 'notificationFactory', 'mediaFactory', '$timeout', '$location', UpdateUserController]);
 
     /**
      * @return {string}
@@ -37,7 +34,7 @@
         return new Blob([ia], {type: mimeString});
     }
 
-    function UploadController(userFactory, notificationFactory, mediaFactory, $timeout, $location) {
+    function UpdateUserController(userFactory, notificationFactory, mediaFactory, $timeout, $location) {
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {

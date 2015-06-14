@@ -24,17 +24,19 @@
         this.themes = themesFactory.themes;
         $router.config([
             {path: '/', component: 'home'},
-            {path: '/player/:id', component: 'player'},
-            {path: '/dashboard', component: 'dashboard'},
-            {path: '/account', component: 'account'},
-            {path: '/manage-video', component: 'manageVideo'},
-            {path: '/admin-panel', component: 'adminPanel'},
-            {path: '/admin-panel/medias', component: 'adminPanel'},
-            {path: '/admin-panel/users', component: 'adminPanel'},
-            {path: '/login', component: 'login'},
-            {path: '/login/twitter', component: 'login'},
-            {path: '/login/twitter/callback', component: 'login'},
-            {path: '/upload', component: 'upload'}
+            {path: '/player/:id/', component: 'player'},
+            {path: '/dashboard/', component: 'dashboard'},
+            {path: '/account/', component: 'account'},
+            {path: '/manage-video/', component: 'manageVideo'},
+            {path: '/admin-panel/', component: 'adminPanel'},
+            {path: '/admin-panel/medias/', component: 'adminPanel'},
+            {path: '/admin-panel/users/', component: 'adminPanel'},
+            {path: '/login/', component: 'login'},
+            {path: '/login/twitter/', component: 'login'},
+            {path: '/login/twitter/callback/', component: 'login'},
+            {path: '/upload/', component: 'upload'},
+            {path: '/update-video/:id', component: 'updateVideo'},
+            {path: '/update-user/:id', component: 'upload'}
         ]);
         this.chooseTheme = function (theme) {
             me.theme = themesFactory.themes[theme];

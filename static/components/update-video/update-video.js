@@ -1,7 +1,7 @@
 (function () {
     "use strict";
-    angular.module('mewpipe.upload', [])
-        .controller('UploadController', ['userFactory', 'notificationFactory', 'mediaFactory', '$timeout', '$location', UploadController])
+    angular.module('mewpipe.updateVideo', [])
+        .controller('UpdateVideoController', ['userFactory', 'notificationFactory', 'mediaFactory', '$timeout', '$location','$routeParams', UpdateVideoController])
         .config(function ($sceProvider) {
             $sceProvider.enabled(false);
         });
@@ -37,7 +37,7 @@
         return new Blob([ia], {type: mimeString});
     }
 
-    function UploadController(userFactory, notificationFactory, mediaFactory, $timeout, $location) {
+    function UpdateVideoController(userFactory, notificationFactory, mediaFactory, $timeout, $location,$routeParams) {
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
@@ -45,6 +45,16 @@
             }
             return userFactory.accessToken;
         };
+        var currentMedia = mediaFactory.getCurrentMedia();
+        if(!currentMedia || $routeParams.id != currentMedia.id){
+            mediaFactory.getMedia($routeParams.id).success(function (response) {
+                mediaFactory.setCurrentMedia(response);
+                me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
+                me.media = response;
+            });
+        } else {
+            me.media = currentMedia;
+        }
         this.user = userFactory;
         var fileToUpload;
         var thumbnail;
@@ -65,30 +75,19 @@
                 }
                 fileToUpload = file;
                 var URL = window.URL;
-                me.title = file.name;
                 me.videoUrl = URL.createObjectURL(file);
-                meta();
-            }
-        };
-        var meta = function () {
-            $timeout(function () {
-                var video = angular.element('#video')[0];
-                var canvas = angular.element('#canvas')[0];
-                canvas.width = 300;
-                canvas.height = 300 * video.videoHeight / video.videoWidth;
-                canvas.getContext('2d').drawImage(video, 0, 0, 300, 300 * video.videoHeight / video.videoWidth);
-                var img = canvas.toDataURL("image/png");
-                thumbnail = dataURItoBlob(img);
-                me.canUpload = true;
-            }, 750);
-        };
-        this.upload = function () {
-            me.uploading = false;
-            me.prog = 0;
-            mediaFactory.createMedia(userFactory.user, me.title, me.summary, me.mediaScope)
-                .success(function (response) {
+                $timeout(function () {
+                    var video = angular.element('#video')[0];
+                    var canvas = angular.element('#canvas')[0];
+                    canvas.width = 300;
+                    canvas.height = 300 * video.videoHeight / video.videoWidth;
+                    canvas.getContext('2d').drawImage(video, 0, 0, 300, 300 * video.videoHeight / video.videoWidth);
+                    var img = canvas.toDataURL("image/png");
+                    thumbnail = dataURItoBlob(img);
+                    me.canUpload = true;
                     me.uploading = true;
-                    mediaFactory.upload(fileToUpload, thumbnail, response.id)
+                    me.prog = 0;
+                    mediaFactory.upload(fileToUpload, thumbnail, me.media.id)
                         .progress(function (evt) {
                             var prog = parseInt(100.0 * evt.loaded / evt.total);
                             console.log('progress: ' + prog + '% file :' + evt.config.file.name);
@@ -102,10 +101,13 @@
                         .error(function (response) {
                             console.log('fail', response);
                         });
-                })
-                .error(function (response) {
-                    console.log('fail', response);
-                });
-        }
+                }, 750);
+            }
+        };
+        this.update = function(){
+            mediaFactory.update(me.media).success(function(response){
+                notificationFactory.addAlert('Media updated', 'success');
+            });
+        };
     }
 }());
