@@ -19,6 +19,12 @@ func init() {
 		DropDups: true,
 		Sparse:   true,
 	})
+	getUserCollection().EnsureIndex(mgo.Index{
+		Key:      []string{"twitter.userId"},
+		Unique:   true,
+		DropDups: true,
+		Sparse:   true,
+	})
 }
 
 const tokenExpiration = 3600
