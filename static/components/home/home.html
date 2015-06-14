@@ -19,7 +19,7 @@
         <div ng-repeat="media in (home.mediasShares | startFrom: 0 | limitTo: 12)">
             <div class="col-md-2">
                 <div class="thumbnail">
-                    <a ng-href="/player/{{media.id}}"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
+                    <a ng-link="/player/{{media.id}}/"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
                     <div class="caption">
                         <h4>{{media.title}}</h4>
                         <p>by {{media.user.name.nickname}}</p>

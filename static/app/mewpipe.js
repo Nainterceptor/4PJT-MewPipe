@@ -8,7 +8,9 @@
         'mewpipe.dashboard',
         'mewpipe.adminPanel',
         'mewpipe.login',
-        'mewpipe.upload'
+        'mewpipe.upload',
+        'mewpipe.account',
+        'mewpipe.manageVideo'
     ])
         .config(function($locationProvider){
             $locationProvider.html5Mode(true);
