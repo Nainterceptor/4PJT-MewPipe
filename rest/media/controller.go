@@ -202,7 +202,7 @@ func mediaGetAll(request *restful.Request, response *restful.Response) {
 	orderParam := request.QueryParameter("order")
 	order := "_id"
 
-	regexOrder, _ := regexp.Compile("-?(_id|createdAt|views)")
+	regexOrder, _ := regexp.Compile("-?(_id|createdAt|views|shares)")
 	if regexOrder.MatchString(orderParam) {
 		order = orderParam
 	}
