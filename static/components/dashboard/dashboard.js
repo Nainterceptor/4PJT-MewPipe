@@ -95,11 +95,12 @@
                 mediaFactory.getUserMedias()
                     .success(function (response) {
                         me.baseUrl = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/";
-                        console.log(response);
                         me.media = response;
                         paginationFactory.setPagination(me.media);
                         me.page = paginationFactory.getParams();
                     });
+                me.mediaScopes = [ "public", "link", "private"];
+                me.mediaScope = me.mediaScopes[0];
                 me.prog = 0;
                 this.uploading = false;
                 this.validate = function (file) {
@@ -132,13 +133,10 @@
                     }, 750);
                 };
                 this.upload = function () {
-                    console.log(me.title, me.summary);
-                    console.log(fileToUpload);
                     me.uploading = false;
                     me.prog = 0;
-                    mediaFactory.createMedia(userFactory.user, me.title, me.summary)
+                    mediaFactory.createMedia(userFactory.user, me.title, me.summary, me.mediaScope)
                         .success(function (response) {
-                            console.log(response);
                             me.uploading = true;
                             mediaFactory.upload(fileToUpload, thumbnail, response.id)
                                 .progress(function (evt) {

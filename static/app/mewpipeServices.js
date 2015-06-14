@@ -224,11 +224,13 @@
 
     function MediaFactory($http, $cookies, Upload, notificationFactory) {
         var mediaInstance = {};
-        mediaInstance.createMedia = function (user, title, summary) {
+        mediaInstance.createMedia = function (user, title, summary, scope) {
+            console.log(scope);
             return ($http.post(baseUrl + '/media', {
                 title: title,
                 user: user,
-                summary: summary ? summary : ""
+                summary: summary ? summary : "",
+                scope: scope
             }))
         };
         mediaInstance.setMediaShare = function (mediaId, shares) {
