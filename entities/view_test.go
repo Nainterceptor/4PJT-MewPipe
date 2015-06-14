@@ -29,7 +29,7 @@ func TestViewNewAnonymous(t *testing.T) {
 }
 
 func TestViewNew(t *testing.T) {
-	Convey("Test new Anonymous view", t, func() {
+	Convey("Test new view", t, func() {
 		Wipe()
 		media := getAmazingMedia()
 		user := getFooUser()
