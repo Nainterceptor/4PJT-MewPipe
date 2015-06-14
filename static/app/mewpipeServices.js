@@ -48,18 +48,22 @@
                     console.log(response);
                 });
         }
+        userInstance.initiate = function(response){
+            userInstance.user = response.User;
+            userInstance.isAdmin = isAdmin(response.User);
+            $cookies.put('accessToken', response.Token, {expires: new Date(response.ExpireAt)});
+            $http.defaults.headers.common['Authorization'] = response.Token;
+            $cookies.put('userId', response.User.id, {expires: new Date(response.ExpireAt)});
+            userInstance.accessToken = response.Token;
+            notificationFactory.addAlert('Connected !', 'success');
+        };
         userInstance.logIn = function (email, password) {
             $http.post(baseUrl + '/users/login', {
                 email: email,
                 password: password
             })
                 .success(function (response) {
-                    notificationFactory.addAlert('Connected !', 'success');
-                    userInstance.user = response.User;
-                    $cookies.put('accessToken', response.Token, {expires: new Date(response.ExpireAt)});
-                    $http.defaults.headers.common['Authorization'] = response.Token;
-                    $cookies.put('userId', response.User.id, {expires: new Date(response.ExpireAt)});
-                    userInstance.accessToken = response.Token;
+                    userInstance.initiate(response);
                 })
                 .error(function (response) {
                     notificationFactory.addAlert('Invalid Email or Password', 'danger');
