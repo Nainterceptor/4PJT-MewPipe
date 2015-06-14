@@ -26,14 +26,15 @@
             {path: '/', component: 'home'},
             {path: '/player/:id', component: 'player'},
             {path: '/dashboard', component: 'dashboard'},
-            {path: '/dashboard/manage-video', component: 'dashboard'},
-            {path: '/dashboard/profile', component: 'dashboard'},
+            {path: '/account', component: 'account'},
+            {path: '/manage-video', component: 'manageVideo'},
             {path: '/admin-panel', component: 'adminPanel'},
             {path: '/admin-panel/medias', component: 'adminPanel'},
             {path: '/admin-panel/users', component: 'adminPanel'},
             {path: '/login', component: 'login'},
             {path: '/login/twitter', component: 'login'},
-            {path: '/login/twitter/callback', component: 'login'}
+            {path: '/login/twitter/callback', component: 'login'},
+            {path: '/upload', component: 'upload'}
         ]);
         this.chooseTheme = function (theme) {
             me.theme = themesFactory.themes[theme];

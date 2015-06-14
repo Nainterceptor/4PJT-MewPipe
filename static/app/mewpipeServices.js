@@ -8,7 +8,7 @@
                 $http.defaults.headers.common['Authorization'] = $cookies.get('accessToken');
             }
         }])
-        .factory('userFactory', ['$http', '$cookies', 'notificationFactory', UserFactory])
+        .factory('userFactory', ['$http', '$cookies', 'notificationFactory','$location', UserFactory])
         .factory('statsFactory', ['$http', StatsFactory])
         .factory('notificationFactory', ['$rootScope', NotificationFactory])
         .factory('themesFactory', ['$cookies', ThemesFactory])
@@ -17,7 +17,7 @@
         .factory('twitterFactory', ['$http','notificationFactory', TwitterFactory])
     ;
 
-    function UserFactory($http, $cookies, notificationFactory) {
+    function UserFactory($http, $cookies, notificationFactory, $location) {
         var userInstance = {};
         var isAdmin = function (user) {
             if (user.roles) {
@@ -91,6 +91,8 @@
             $cookies.remove('accessToken');
             $cookies.remove('userId');
             userInstance.accessToken = undefined;
+            userInstance.isAdmin = undefined;
+            $location.url("/");
         };
         userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
             $http.put(baseUrl + '/users/' + userId, {
@@ -247,14 +249,17 @@
                     console.log(response);
                 })
         };
-        mediaInstance.getMediaShare = function() {
-
-        };
         mediaInstance.getMedia = function (mediaId) {
             return $http.get(baseUrl + '/media/' + mediaId)
         };
         mediaInstance.getMedias = function () {
             return $http.get(baseUrl + '/media')
+        };
+        mediaInstance.getMediasByShares = function () {
+            return $http.get(baseUrl + '/media?order=-shares')
+        };
+        mediaInstance.getMediasByViews = function () {
+            return $http.get(baseUrl + '/media?order=-views')
         };
         mediaInstance.getUserMedias = function () {
             return ($http.get(baseUrl + '/media/?user=' + $cookies.get('userId')))

@@ -23,6 +23,7 @@
         this.videoUrl = $sce.trustAsResourceUrl("/rest/media/" + $routeParams.id + "/read");
         this.mediaFactory = mediaFactory;
 
+        console.log('toto');
         mediaFactory.getMedia($routeParams.id).success(function (response) {
             me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
             me.media = response;

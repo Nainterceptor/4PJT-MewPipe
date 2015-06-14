@@ -2,7 +2,7 @@
     "use strict";
     angular.module('mewpipe.dashboard', ['ngFileUpload'])
         .controller('DashboardController', ['userFactory', 'notificationFactory', '$location', DashboardController])
-        .directive('profile', ['userFactory', 'notificationFactory', ProfileDirective])
+        .directive('profile', ['userFactory', 'notificationFactory', profileDirective])
         .directive('manageVideo', ['userFactory', 'notificationFactory', 'mediaFactory', 'paginationFactory', '$timeout', '$location', ManageVideoDirective])
         .config(function ($sceProvider) {
             $sceProvider.enabled(false);
@@ -19,11 +19,14 @@
         };
         this.user = userFactory;
 
+
         if ($location.url() != '/dashboard/manage-video') {
             this.activeTab = 'profile';
         } else {
             this.activeTab = 'video';
         }
+        console.log($location.url());
+        console.log(this.activeTab);
 
         this.active = function (tab) {
             if (tab === 'profile') {
@@ -35,7 +38,7 @@
         };
     }
 
-    function ProfileDirective(userFactory, notificationFactory) {
+    function profileDirective(userFactory, notificationFactory) {
         return {
             restrict: 'E',
             templateUrl: 'components/dashboard/profile.html',
