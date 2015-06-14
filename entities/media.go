@@ -82,8 +82,8 @@ func MediaList(bson bson.M, start int, number int, sort ...string) ([]Media, err
 }
 
 func (m *Media) Normalize() {
-	if m.Scope != "link" && m.Scope != "private" {
-		m.Scope = "public"
+	if m.Scope != string(Link) && m.Scope != string(Private) {
+		m.Scope = string(Public)
 	}
 }
 

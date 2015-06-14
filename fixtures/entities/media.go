@@ -24,7 +24,7 @@ func getAmazingMedia() *entities.Media {
 	media.Publisher.Name = user.Name
 	media.Publisher.Email = user.Email
 	media.Publisher.Id = user.Id
-	media.Scope = "public"
+	media.Scope = entities.Public
 
 	return media
 }
@@ -37,7 +37,7 @@ func getBadMedia() *entities.Media {
 	media.Publisher.Name = user.Name
 	media.Publisher.Email = user.Email
 	media.Publisher.Id = user.Id
-	media.Scope = "private"
+	media.Scope = entities.Private
 
 	return media
 }
