@@ -8,7 +8,7 @@
                 $http.defaults.headers.common['Authorization'] = $cookies.get('accessToken');
             }
         }])
-        .factory('userFactory', ['$http', '$cookies', 'notificationFactory', UserFactory])
+        .factory('userFactory', ['$http', '$cookies', 'notificationFactory','$location', UserFactory])
         .factory('statsFactory', ['$http', StatsFactory])
         .factory('notificationFactory', ['$rootScope', NotificationFactory])
         .factory('themesFactory', ['$cookies', ThemesFactory])
@@ -17,7 +17,7 @@
         .factory('twitterFactory', ['$http','notificationFactory', TwitterFactory])
     ;
 
-    function UserFactory($http, $cookies, notificationFactory) {
+    function UserFactory($http, $cookies, notificationFactory, $location) {
         var userInstance = {};
         var isAdmin = function (user) {
             if (user.roles) {
@@ -91,6 +91,8 @@
             $cookies.remove('accessToken');
             $cookies.remove('userId');
             userInstance.accessToken = undefined;
+            userInstance.isAdmin = undefined;
+            $location.url("/");
         };
         userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
             $http.put(baseUrl + '/users/' + userId, {
