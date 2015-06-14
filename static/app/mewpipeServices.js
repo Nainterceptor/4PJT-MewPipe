@@ -237,10 +237,18 @@
                 scope: scope
             }))
         };
-        mediaInstance.setMediaShare = function (mediaId, shares) {
-            return $http.put(baseUrl + '/media/' + mediaId, {
-                shares: shares+1
+        mediaInstance.mediaShare = function (mediaId) {
+            return $http.post(baseUrl + '/media/' + mediaId + '/share', {
             })
+                .success(function (response) {
+                    notificationFactory.addAlert('Thanks for sharing', 'success');
+                })
+                .error(function (response) {
+                    console.log(response);
+                })
+        };
+        mediaInstance.getMediaShare = function() {
+
         };
         mediaInstance.getMedia = function (mediaId) {
             return $http.get(baseUrl + '/media/' + mediaId)
