@@ -43,7 +43,7 @@ func MediaRoute(container *restful.Container) {
 	service.Route(service.
 		GET("").
 		Filter(filters.InjectUser).
-		To(mediasGet).
+		To(mediaGetAll).
 		Doc("Get a media list").
 		Operation("mediasGet").
 		Param(service.QueryParameter("user", "Filter user media").DataType("string")).

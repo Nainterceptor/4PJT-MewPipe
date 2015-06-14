@@ -174,7 +174,7 @@ func mediaDelete(request *restful.Request, response *restful.Response) {
 	response.WriteHeader(http.StatusNoContent)
 }
 
-func mediasGet(request *restful.Request, response *restful.Response) {
+func mediaGetAll(request *restful.Request, response *restful.Response) {
 	user := request.Attribute("user")
 
 	start, err := strconv.Atoi(request.QueryParameter("start"))
