@@ -194,6 +194,43 @@ func TestMediaUpload(t *testing.T) {
 	})
 }
 
+func TestThumbnailUpload(t *testing.T) {
+	Convey("Test thumbnail upload", t, func() {
+		Wipe()
+		media := getAmazingMedia()
+		media.Insert()
+		header := new(multipart.FileHeader)
+		header.Filename = "sample.jpg"
+		header.Header = make(map[string][]string)
+		header.Header.Add("Content-Type", "image/jpeg")
+		sampleFile, err := os.Open("../fixtures/files/sample.jpg")
+		Convey("Sample reading must be a success", func() {
+			So(err, ShouldBeNil)
+		})
+		err = media.UploadThumbnail(sampleFile, header)
+		Convey("Sample upload should be a success", func() {
+			So(err, ShouldBeNil)
+			So(media.Thumbnail, ShouldNotBeEmpty)
+		})
+		Convey("Sample upload should be a success again", func() {
+			So(countThumbnailFiles(), ShouldEqual, 1)
+			err = media.UploadThumbnail(sampleFile, header)
+			So(err, ShouldBeNil)
+			So(countThumbnailFiles(), ShouldEqual, 1)
+		})
+		Convey("Sample upload should fail if Update fail", func() {
+			media.Id = bson.NewObjectId()
+			err = media.UploadThumbnail(sampleFile, header)
+			So(err, ShouldNotBeNil)
+		})
+		Convey("Sample upload should fail when file is closed", func() {
+			sampleFile.Close()
+			err = media.UploadThumbnail(sampleFile, header)
+			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
 func TestMediaReadUpload(t *testing.T) {
 	Convey("Test media Read", t, func() {
 		Wipe()
@@ -290,6 +327,16 @@ func countFiles() int {
 
 func countChunks() int {
 	count, _ := configs.MongoDB.C("media.chunks").Count()
+	return count
+}
+
+func countThumbnailFiles() int {
+	count, _ := configs.MongoDB.C("media.thumbnails.files").Count()
+	return count
+}
+
+func countThumbnailChunks() int {
+	count, _ := configs.MongoDB.C("media.thumbnails.chunks").Count()
 	return count
 }
 

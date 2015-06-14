@@ -118,7 +118,7 @@ func (m *Media) UploadThumbnail(postedFile io.Reader, fileHeader *multipart.File
 	}
 
 	if m.Thumbnail != "" {
-		getMediaThumbnailGridFSCollection().RemoveId(m.File)
+		getMediaThumbnailGridFSCollection().RemoveId(m.Thumbnail)
 	}
 	m.Thumbnail = mongoFile.Id().(bson.ObjectId)
 
