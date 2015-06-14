@@ -22,10 +22,10 @@
                     <td>{{user.email}}</td>
                     <td>{{user.roles}}</td>
                     <td>
-                        <button class="btn btn-primary" ng-click="users.updateUser(user)">
+                        <button class="btn btn-primary" ng-click="users.updateUser(user.id)">
                             Update
                         </button>
-                        <button class="btn btn-danger" ng-click="users.user.deleteUser(user.id)">Delete</button>
+                        <button class="btn btn-danger" ng-click="users.deleteUser(user.id)">Delete</button>
                     </td>
                 </tr>
                 </tbody>

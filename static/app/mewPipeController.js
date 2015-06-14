@@ -36,7 +36,7 @@
             {path: '/login/twitter/callback/', component: 'login'},
             {path: '/upload/', component: 'upload'},
             {path: '/update-video/:id', component: 'updateVideo'},
-            {path: '/update-user/:id', component: 'upload'}
+            {path: '/update-user/:id', component: 'updateUser'}
         ]);
         this.chooseTheme = function (theme) {
             me.theme = themesFactory.themes[theme];

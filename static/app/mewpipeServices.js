@@ -36,6 +36,9 @@
         userInstance.getUser = function () {
             return ($http.get(baseUrl + '/users/' + userInstance.user.id))
         };
+        userInstance.getUserById = function(id){
+            return $http.get(baseUrl + '/users/' + id);
+        };
         if ($cookies.get('userId')) {
             userInstance.user = {
                 id: $cookies.get('userId')
@@ -99,33 +102,8 @@
             userInstance.isAdmin = undefined;
             $location.url("/");
         };
-        //userInstance.updateUser = function (userId, email, firstname, lastname, nickname, password) {
-        //    $http.put(baseUrl + '/users/' + userId, {
-        //        email: email,
-        //        name: {
-        //            firstname: firstname,
-        //            lastname: lastname,
-        //            nickname: nickname
-        //        },
-        //        password: password
-        //    })
-        //        .success(function (response) {
-        //            notificationFactory.addAlert('User updated !', 'success');
-        //        })
-        //        .error(function (response) {
-        //            notificationFactory.addAlert('Fail to update user', 'danger');
-        //            console.log(response);
-        //        })
-        //};
         userInstance.deleteUser = function (userId) {
-            $http.delete(baseUrl + '/users/' + userId)
-                .success(function (response) {
-                    notificationFactory.addAlert('User deleted !', 'danger');
-                })
-                .error(function (response) {
-                    notificationFactory.addAlert('Fail to delete user', 'danger');
-                    console.log(response);
-                })
+            return($http.delete(baseUrl + '/users/' + userId))
         };
 
         return userInstance;
@@ -287,15 +265,7 @@
             return ($http.get(baseUrl + '/media/?user=' + $cookies.get('userId')))
         };
         mediaInstance.deleteMedia = function (mediaId) {
-            $http.delete(baseUrl + '/media/' + mediaId, {
-            })
-                .success(function (response) {
-                    notificationFactory.addAlert('Media deleted !', 'danger');
-                })
-                .error(function (response) {
-                    notificationFactory.addAlert('Fail to delete media', 'danger');
-                    console.log(response);
-                })
+           return $http.delete(baseUrl + '/media/' + mediaId)
         };
         mediaInstance.upload = function (file, thumbnail, mediaId) {
             return (

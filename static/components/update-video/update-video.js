@@ -97,6 +97,7 @@
                             console.log(response);
                             me.playerUrl = response.id;
                             me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
+                            notificationFactory.addAlert('Media updated', 'success')
                         })
                         .error(function (response) {
                             console.log('fail', response);
