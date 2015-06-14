@@ -34,15 +34,26 @@ func getAdminUser() *entities.User {
 	return usr
 }
 
+func getTwitterUser() *entities.User {
+	usr := entities.UserNew()
+	usr.Name.FirstName = "Twitter"
+	usr.Name.LastName = "Twitter"
+	usr.Name.NickName = "Twitter"
+	usr.Twitter.UserId = "999999"
+	return usr
+}
+
 func InsertSomeUser() {
 	var userArray []*entities.User
 	userArray = append(userArray, getFooUser())
 	userArray = append(userArray, getAdminUser())
+	userArray = append(userArray, getTwitterUser())
 	for _, usr := range userArray {
 		if err := usr.Insert(); err != nil {
 			panic(err)
 			return
 		}
+		usr.TokenNew()
 	}
 
 	fmt.Println("Users added")
