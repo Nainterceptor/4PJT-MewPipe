@@ -98,6 +98,7 @@
                             console.log(response);
                             me.playerUrl = response.id;
                             me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
+                            me.id = response.id;
                         })
                         .error(function (response) {
                             console.log('fail', response);
