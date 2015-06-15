@@ -33,7 +33,6 @@ hr {
 }
 
 .form-mewpipe {
-    background-color: #333333;
     padding: 30px 30px 30px 30px;
     border: solid 1px #c0c0c0;
     margin-top: 40px;
@@ -190,7 +189,7 @@ hr {
     margin: 1px;
 }
 
-input.form-control {
+.form-control {
     background: #30383B;
     color: #879099;
     font-weight: normal;
