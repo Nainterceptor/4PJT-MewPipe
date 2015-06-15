@@ -6,12 +6,6 @@
 
     function UserController(userFactory, mediaFactory, notificationFactory, $routeParams, paginationFactory, $location) {
         var me = this;
-        this.canActivate = function () {
-            if (!userFactory.accessToken) {
-                notificationFactory.addAlert('You need to be connected, return to <a class="alert-link" href="/">Home</a>', 'danger', 3000);
-            }
-            return userFactory.accessToken;
-        };
         userFactory.getOneUser($routeParams.id).success(function (response) {
             me.user = response;
         });
