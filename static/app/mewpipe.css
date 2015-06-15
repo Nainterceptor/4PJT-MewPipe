@@ -7,7 +7,7 @@ body {
     font-weight: bold;
     color: #6B757D;
     font-size: 15px;
-
+    padding-bottom: 20px;
 }
 
 h1,
@@ -153,6 +153,10 @@ hr {
     border-color: #245269;
 }
 
+.btn {
+    font-size: 12px;
+}
+
 .btn.btn-share {
     color: #fff;
     background-color: #2b669a;
@@ -161,6 +165,34 @@ hr {
     -moz-border-radius: 0;
 }
 
+.btn.btn-default {
+    background: #30383B;
+    color: #879099;
+    border: none;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+input.form-control {
+    background: #30383B;
+    color: #879099;
+    font-weight: normal;
+    border: none;
+    border-bottom: 1px solid gray;
+    border-radius: 0;
+}
+
+.form-control:focus {
+    box-shadow: 0 2px 0 rgba(102, 175, 233, 0.6);
+}
+
+.has-success .form-control:focus {
+    box-shadow: 0 2px 0 #67B168;
+}
+
+.has-error .form-control:focus {
+    box-shadow: 0 2px 0 #CE8483;
+}
 /* Tables */
 
 .table.table-bordered {
