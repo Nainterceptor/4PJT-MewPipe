@@ -1,5 +1,5 @@
 <div class="pushTo45px"></div>
-<h2>{{user.user.name.firstname}} {{user.user.name.lastname}}</h2>
+<h2>{{user.user.name.nickname}}</h2>
 <fieldset class="margin-cancel">
     <h2>Informations</h2>
     <div class="row">
@@ -9,7 +9,7 @@
                     <label>Email : {{user.user.email}}</label>
                 </li>
                 <li>
-                    <label>Nickname : {{user.user.name.nickname}}</label>
+                    <label ng-if="user.user.name != null">Name : {{user.user.name.firstname}} {{user.user.name.lastname}}</label>
                 </li>
             </ul>
         </div>
