@@ -24,6 +24,14 @@ hr {
 
 /* Container */
 
+.media p {
+    font-size: 1em;
+}
+
+.description {
+    margin-top: 20%;
+}
+
 .container-video {
     background-color: #000;
 }
@@ -217,6 +225,12 @@ hr {
 
 .table.table-striped > thead > tr > th {
     color: #FFF;
+}
+
+.my-video-information {
+    list-style-type: none;
+    margin-top: 4%;
+    margin-left: -10%;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
