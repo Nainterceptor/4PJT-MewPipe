@@ -1,47 +1,41 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8">
-            <h3>Users</h3>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>FirstName</th>
-                    <th>LastName</th>
-                    <th>NickName</th>
-                    <th>Email</th>
-                    <th>Roles</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="repeat-user"
-                    ng-repeat="user in users.users | startFrom:users.page.currentPage*users.page.numPerPage | limitTo:users.page.numPerPage">
-                    <td>{{user.name.firstname}}</td>
-                    <td>{{user.name.lastname}}</td>
-                    <td>{{user.name.nickname}}</td>
-                    <td>{{user.email}}</td>
-                    <td>{{user.roles}}</td>
-                    <td>
-                        <button class="btn btn-primary" ng-click="users.updateUser(user.id)">
-                            Update
-                        </button>
-                        <button class="btn btn-danger" ng-click="users.deleteUser(user.id)">Delete</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <modal-update-user></modal-update-user>
-            <button class="btn btn-default" ng-hide="users.page.currentPage == 0"
-                    ng-click="users.page.currentPage=users.page.currentPage-1">
-                Previous
+<h3>Users</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>LastName</th>
+            <th>NickName</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr class="repeat-user"
+        ng-repeat="user in users.users | startFrom:users.page.currentPage*users.page.numPerPage | limitTo:users.page.numPerPage">
+        <td>{{user.name.firstname}}</td>
+        <td>{{user.name.lastname}}</td>
+        <td>{{user.name.nickname}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.roles}}</td>
+        <td>
+            <button class="btn btn-primary" ng-click="users.updateUser(user.id)">
+                Update
             </button>
+            <button class="btn btn-danger" ng-click="users.deleteUser(user.id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<modal-update-user></modal-update-user>
+<button class="btn btn-default" ng-hide="users.page.currentPage == 0"
+        ng-click="users.page.currentPage=users.page.currentPage-1">
+    Previous
+</button>
 
-            <span ng-hide="users.page.numberOfPages<=1">{{users.page.currentPage+1}}/{{users.page.numberOfPages}}</span>
+<span ng-hide="users.page.numberOfPages<=1">{{users.page.currentPage+1}}/{{users.page.numberOfPages}}</span>
 
-            <button class="btn btn-default" ng-hide="users.page.numberOfPages-1<=users.page.currentPage"
-                    ng-click="users.page.currentPage=users.page.currentPage+1">
-                Next
-            </button>
-        </div>
-    </div>
-</div>
+<button class="btn btn-default" ng-hide="users.page.numberOfPages-1<=users.page.currentPage"
+        ng-click="users.page.currentPage=users.page.currentPage+1">
+    Next
+</button>

@@ -1,43 +1,37 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Medias</h3>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Publisher</th>
-                    <th>Summary</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="media in medias.medias | startFrom:medias.page.currentPage*medias.page.numPerPage | limitTo:medias.page.numPerPage">
-                    <td>{{media.id}}</td>
-                    <td>{{media.title}}</td>
-                    <td>{{media.user.name.firstname}} {{media.user.name.lastname}}</td>
-                    <td>{{media.summary}}</td>
-                    <td>
-                        <button ng-click="medias.update(media)" class="btn btn-primary">
-                            Update
-                        </button>
-                        <button class="btn btn-danger" ng-click="medias.delete(media.id)">Delete</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <button class="btn btn-default" ng-hide="medias.page.currentPage == 0"
-                    ng-click="medias.page.currentPage=medias.page.currentPage-1">
-                Previous
+<h3>Medias</h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Publisher</th>
+        <th>Summary</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="media in medias.medias | startFrom:medias.page.currentPage*medias.page.numPerPage | limitTo:medias.page.numPerPage">
+        <td>{{media.id}}</td>
+        <td>{{media.title}}</td>
+        <td>{{media.user.name.firstname}} {{media.user.name.lastname}}</td>
+        <td>{{media.summary}}</td>
+        <td>
+            <button ng-click="medias.update(media)" class="btn btn-primary">
+                Update
             </button>
+            <button class="btn btn-danger" ng-click="medias.delete(media.id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<button class="btn btn-default" ng-hide="medias.page.currentPage == 0"
+        ng-click="medias.page.currentPage=medias.page.currentPage-1">
+    Previous
+</button>
 
-            <span ng-hide="medias.page.numberOfPages<=1">{{medias.page.currentPage+1}}/{{medias.page.numberOfPages}}</span>
+<span ng-hide="medias.page.numberOfPages<=1">{{medias.page.currentPage+1}}/{{medias.page.numberOfPages}}</span>
 
-            <button class="btn btn-default" ng-hide="medias.page.numberOfPages-1<=medias.page.currentPage"
-                    ng-click="medias.page.currentPage=medias.page.currentPage+1">
-                Next
-            </button>
-        </div>
-    </div>
-</div>
+<button class="btn btn-default" ng-hide="medias.page.numberOfPages-1<=medias.page.currentPage"
+        ng-click="medias.page.currentPage=medias.page.currentPage+1">
+    Next
+</button>
