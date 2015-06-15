@@ -1,17 +1,29 @@
-<div class="container-video embed-responsive embed-responsive-16by9">
-    <video ng-src="{{player.videoUrl}}" controls></video>
-</div>
-<h3>{{player.media.title}}</h3>
-<div class="media-informations">
-    <hr />
-    <h4>by {{player.media.user.name.nickname}} | {{player.media.views}} views</h4>
-    <hr />
-    <button class="btn btn-default" ng-click="share=true"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</button>
-    <input onclick="this.select();" name="share_url" class="input-share form-control" ng-show="share"
-           ng-click="player.mediaFactory.mediaShare(player.media.id)"
-           value="{{player.link}}">
-    <div class="description">
-        <h3>Summary</h3>
-        <p>{{player.media.summary}}</p>
+<div class="container-video margin-cancel">
+    <div class=" embed-responsive embed-responsive-16by9">
+        <video ng-src="{{player.videoUrl}}" controls></video>
     </div>
 </div>
+<div class="video-primary-informations row">
+    <div class="col-sm-offset-1 col-sm-7">
+        <h2>{{player.media.title}}</h2>
+    </div>
+    <div class="col-sm-3">
+        <ul class="list-unstyled text-right">
+            <li>{{player.media.views}} <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></li>
+            <li>{{player.media.shares}} <span class="glyphicon glyphicon-share" aria-hidden="true"></span></li>
+        </ul>
+    </div>
+</div>
+<div class="media-informations row">
+    <div class="col-sm-offset-1 col-sm-6">
+        <p>By {{player.media.user.name.nickname}}</p>
+    </div>
+    <div class="col-sm-4 text-right">
+        <button ng-show="!share" class="btn btn-default" ng-click="share=true"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</button>
+        <input onclick="this.select();" name="share_url" class="form-control" ng-show="share"
+               ng-click="player.mediaFactory.mediaShare(player.media.id)"
+               value="{{player.link}}">
+    </div>
+</div>
+<h3>Summary</h3>
+<p>{{player.media.summary}}</p>

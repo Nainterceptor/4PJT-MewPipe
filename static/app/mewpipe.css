@@ -45,13 +45,29 @@ fieldset, .space-gray-banner {
 }
 
 .container-video {
-    background-color: #000;
+    background-color: #1C2022;
+    padding: 10px;
 }
 
 .media-informations {
-    margin-top: 15px;
+    background-color: #272C2E;
+    color: #6F7880;
+    padding: 20px;
 }
 
+.main .border .video-primary-informations {
+    background: #2B3134;
+}
+
+.main .border .video-primary-informations h2 {
+    color: #FFF;
+}
+
+.main .border .video-primary-informations ul {
+    color: #FFF;
+    margin-top: 12px;
+    font-size: 16px;
+}
 .form-mewpipe {
     padding: 30px 30px 30px 30px;
     border: solid 1px #c0c0c0;

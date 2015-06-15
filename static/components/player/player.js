@@ -22,6 +22,9 @@
                 mediaFactory.setCurrentMedia(response);
                 me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
                 me.media = response;
+                me.media.shares = me.media.shares || 0;
+                me.media.views = me.media.views || 0;
+
             });
         }
     }
