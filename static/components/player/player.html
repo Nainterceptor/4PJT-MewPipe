@@ -1,7 +1,29 @@
 <div class="container-video margin-cancel">
-    <div class=" embed-responsive embed-responsive-16by9">
-        <video ng-src="{{player.videoUrl}}" controls></video>
-    </div>
+    <videogular vg-theme="player.config.theme">
+    <vg-media vg-src="player.config.sources"
+    vg-tracks="player.config.tracks">
+    </vg-media>
+
+    <vg-controls>
+    <vg-play-pause-button></vg-play-pause-button>
+    <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+    <vg-scrub-bar>
+    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+    </vg-scrub-bar>
+    <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+    <vg-volume>
+    <vg-mute-button></vg-mute-button>
+    <vg-volume-bar></vg-volume-bar>
+    </vg-volume>
+    <vg-fullscreen-button></vg-fullscreen-button>
+    </vg-controls>
+
+    <vg-overlay-play></vg-overlay-play>
+    <vg-poster vg-url='player.config.plugins.poster'></vg-poster>
+    </videogular>
+    <!--<div class=" embed-responsive embed-responsive-16by9">-->
+        <!--<video ng-src="{{player.videoUrl}}" controls></video>-->
+    <!--</div>-->
 </div>
 <div class="video-primary-informations row">
     <div class="col-sm-offset-1 col-sm-7">
@@ -16,7 +38,7 @@
 </div>
 <div class="media-informations row">
     <div class="col-sm-offset-1 col-sm-6">
-        <p>By <a ng-click="player.user(player.media.user.id)">{{player.media.user.name.nickname}}</a></p>
+        <p>By <a class="pointer" ng-click="player.user(player.media.user.id)">{{player.media.user.name.nickname}}</a></p>
     </div>
     <div class="col-sm-4 text-right">
         <button ng-show="!share" class="btn btn-default" ng-click="share=true"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</button>

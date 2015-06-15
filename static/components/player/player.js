@@ -12,9 +12,16 @@
 
     function PlayerController($sce, $routeParams, mediaFactory, $location) {
         var me = this;
-        this.videoUrl = $sce.trustAsResourceUrl("/rest/media/" + $routeParams.id + "/read");
+        //this.videoUrl = $sce.trustAsResourceUrl("/rest/media/" + $routeParams.id + "/read");
         this.mediaFactory = mediaFactory;
-
+        this.config = {
+            sources: [
+                {src: $sce.trustAsResourceUrl("/rest/media/"+$routeParams.id+"/read"), type:"video/mp4"}
+            ],
+            theme: "bower_components/videogular-themes-default/videogular.css",
+            plugins: {
+            }
+        };
         var mediaId = mediaFactory.getMediaId();
         if (!mediaId || $routeParams.id !== mediaId){
             mediaFactory.setMediaId($routeParams.id);
