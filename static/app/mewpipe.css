@@ -169,9 +169,9 @@ fieldset, .space-gray-banner {
 }
 
 .notif {
-    position: absolute;
-    top: 50px;
-    right: 0;
+    position: fixed;
+    top: 20px;
+    right: 20px;
     z-index: 200;
 }
 
