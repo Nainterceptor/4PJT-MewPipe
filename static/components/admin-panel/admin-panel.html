@@ -1,9 +1,12 @@
+<div class="pushTo45px"></div>
 <h2>Admin Panel</h2>
-    <ul class="nav nav-tabs nav-justified">
-        <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'users'}"><a
-                ng-click="adminPanel.active('users')" class="pointer">Users</a></li>
-        <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'medias'}"><a
-                ng-click="adminPanel.active('medias')" class="pointer">Medias</a></li>
-    </ul>
+    <div class="space-gray-banner margin-cancel">
+        <ul class="nav nav-justified">
+            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'users'}"><a
+                    ng-click="adminPanel.active('users')" class="pointer">Users</a></li>
+            <li role="presentation" ng-class="{'active': adminPanel.activeTab == 'medias'}"><a
+                    ng-click="adminPanel.active('medias')" class="pointer">Medias</a></li>
+        </ul>
+    </div>
     <users ng-if="adminPanel.activeTab == 'users'"></users>
     <medias ng-if="adminPanel.activeTab == 'medias'"></medias>

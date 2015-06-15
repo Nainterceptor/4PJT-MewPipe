@@ -63,7 +63,11 @@ fieldset, .space-gray-banner {
 }
 
 .main .nav > li > a:hover, .main .nav > li > a:hover {
-    color: #fff;
+    color: #3378B8;
+    transition: all .1s linear;
+}
+.main .nav > li.active > a:hover, .main .nav > li.active > a:hover {
+    color: #FFF;
 }
 
 .main aside {
