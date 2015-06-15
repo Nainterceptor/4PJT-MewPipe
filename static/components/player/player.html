@@ -15,6 +15,10 @@
             <input onclick="this.select();" name="share_url" class="input-share" ng-show="share"
                    ng-click="player.mediaFactory.mediaShare(player.media.id)"
                    value="{{player.link}}">
+            <div class="description">
+                <h3>Summary</h3>
+                <p>{{player.media.summary}}</p>
+            </div>
         </div>
     </div>
 </div>
