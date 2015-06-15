@@ -1,13 +1,10 @@
-<div class="row">
-    <div class="col-md-offset-3 col-md-6">
-        <div ngf-drop ngf-select class="drop-box pointer" ngf-accept="upload.validate($file)"
-             ngf-drag-over-class="dragover">
-            Click or Drag your video here to upload
-        </div>
-    </div>
+<div ngf-drop ngf-select class="drop-box pointer" ngf-accept="upload.validate($file)"
+     ngf-drag-over-class="dragover">
+    Click or Drag your video here to upload
 </div>
-<div class="form-mewpipe row">
-    <form ng-if="upload.videoUrl" ng-submit="upload.upload()" name="form" class="form-horizontal" novalidate>
+<h2>Upload your file</h2>
+<form ng-if="upload.videoUrl" ng-submit="upload.upload()" name="form" class="form-horizontal" novalidate>
+    <fieldset class="margin-cancel">
         <video style="display: none" type="video/mp4" id="video" ng-if="upload.videoUrl"
                ng-src="{{upload.videoUrl}}"></video>
         <canvas style="display: none" id="canvas"></canvas>
@@ -34,29 +31,28 @@
                 </select>
             </div>
         </div>
-        <div class="pull-right">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" ng-disabled="!upload.canUpload">
-                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-                Upload
-            </button>
-        </div>
-        <div class="col-md-12">
+        <div class="col-sm-offset-2">
             <div ng-show="upload.uploading" class="progress">
-                <div class="progress-bar progress-bar-striped active"
+                <div class="progress-bar active"
                      role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
                      ng-style="{width: upload.prog+'%'}">
                     {{upload.prog}}% Complete
                 </div>
             </div>
             <div ng-show="upload.playerUrl" class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Share your video</h3>
-                </div>
-                <div class="panel-body">
-                    <a ng-href="/player/{{upload.playerUrl}}">{{upload.link}}</a>
-                </div>
+                <a ng-href="/player/{{upload.playerUrl}}">
+                    <button class="btn btn-default">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> View
+                    </button>
+                </a>
             </div>
         </div>
-    </form>
-</div>
+        <div ng-show="!upload.uploading" class="pull-right">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="!upload.canUpload">
+                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                Upload
+            </button>
+        </div>
+    </fieldset>
+</form>

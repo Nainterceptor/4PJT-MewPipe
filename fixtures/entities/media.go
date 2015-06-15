@@ -32,6 +32,12 @@ func InsertSomeMedia() {
 	var mediaArray []*entities.Media
 	mediaArray = append(mediaArray, getBadMedia())
 	mediaArray = append(mediaArray, getAmazingMedia())
+	mediaArray = append(mediaArray, getFooPublicMedia())
+	mediaArray = append(mediaArray, getFooPrivateMedia())
+	mediaArray = append(mediaArray, getFooLinkMedia())
+	mediaArray = append(mediaArray, getAdminPublicMedia())
+	mediaArray = append(mediaArray, getAdminPrivateMedia())
+	mediaArray = append(mediaArray, getAdminLinkMedia())
 	for _, media := range mediaArray {
 		if err := media.Insert(); err != nil {
 			panic(err)
@@ -129,6 +135,78 @@ func getBadMedia() *entities.Media {
 	media.Publisher.Email = user.Email
 	media.Publisher.Id = user.Id
 	media.Scope = entities.Private
+
+	return media
+}
+
+func getFooPublicMedia() *entities.Media {
+	media := entities.MediaNew()
+	media.Title = "FooPublic"
+	user := getFooUser()
+	media.Publisher.Name = user.Name
+	media.Publisher.Email = user.Email
+	media.Publisher.Id = user.Id
+	media.Scope = entities.Public
+
+	return media
+}
+
+func getFooPrivateMedia() *entities.Media {
+	media := entities.MediaNew()
+	media.Title = "FooPrivate"
+	user := getFooUser()
+	media.Publisher.Name = user.Name
+	media.Publisher.Email = user.Email
+	media.Publisher.Id = user.Id
+	media.Scope = entities.Private
+
+	return media
+}
+
+func getFooLinkMedia() *entities.Media {
+	media := entities.MediaNew()
+	media.Title = "FooLink"
+	user := getFooUser()
+	media.Publisher.Name = user.Name
+	media.Publisher.Email = user.Email
+	media.Publisher.Id = user.Id
+	media.Scope = entities.Link
+
+	return media
+}
+
+func getAdminPublicMedia() *entities.Media {
+	media := entities.MediaNew()
+	media.Title = "AdminPublic"
+	user := getAdminUser()
+	media.Publisher.Name = user.Name
+	media.Publisher.Email = user.Email
+	media.Publisher.Id = user.Id
+	media.Scope = entities.Public
+
+	return media
+}
+
+func getAdminPrivateMedia() *entities.Media {
+	media := entities.MediaNew()
+	media.Title = "AdminPrivate"
+	user := getAdminUser()
+	media.Publisher.Name = user.Name
+	media.Publisher.Email = user.Email
+	media.Publisher.Id = user.Id
+	media.Scope = entities.Private
+
+	return media
+}
+
+func getAdminLinkMedia() *entities.Media {
+	media := entities.MediaNew()
+	media.Title = "AdminLink"
+	user := getAdminUser()
+	media.Publisher.Name = user.Name
+	media.Publisher.Email = user.Email
+	media.Publisher.Id = user.Id
+	media.Scope = entities.Link
 
 	return media
 }

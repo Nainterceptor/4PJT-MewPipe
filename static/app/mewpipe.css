@@ -24,10 +24,13 @@ hr {
     border-top: 1px solid #c0c0c0;
 }
 
-fieldset {
-    margin: 0 -15px;
+fieldset, .space-gray-banner {
     padding: 10px;
     background-color: #2B3134;
+}
+
+.margin-cancel {
+    margin: 0 -15px;
 }
 
 /* Container */
@@ -72,7 +75,7 @@ fieldset {
 }
 
 .main > .border {
-    background: white;
+    background: #F8F8F8;
     min-height: 840px;
 }
 
@@ -168,17 +171,16 @@ fieldset {
 }
 
 .drop-box {
-    border: 5px dashed #DDD;
-    width: 100% x;
-    height: 100px;
     text-align: center;
-    padding-top: 25px;
-    margin: 10px;
-    box-shadow: inset 0 0 5px 5px rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+    padding-bottom: 60px;
+    margin: 0 -15px;
+    background: #1C2022;
+    color: #FFF;
 }
 
 .dragover {
-    border: 5px dashed blue;
+    border: 3px dashed #F8F8F8;
 }
 
 .input-share {
