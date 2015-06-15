@@ -144,6 +144,10 @@ fieldset, .space-gray-banner {
     cursor: pointer;
 }
 
+.progress-bar-update {
+    margin-top: 15px;
+}
+
 .active {
     background-color: #222222;
 }
