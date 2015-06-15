@@ -28,7 +28,7 @@
             mediaFactory.deleteMedia(id)
                 .success(function (response) {
                     notificationFactory.addAlert('Media deleted !', 'success');
-                    mediaFactory.getMedias().success(function (response) {
+                    mediaFactory.getUserMedias().success(function (response) {
                         me.media = response;
                         paginationFactory.setPagination(me.medias);
                         me.page = paginationFactory.getParams();
