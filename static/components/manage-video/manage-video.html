@@ -18,11 +18,13 @@
                         <h4 class="media-heading">{{media.title}}</h4>
                         <ul class="my-video-information">
                             <li>
-                                <span ng-if="media.views">Views : {{media.views}}</span>
+                                Views :
+                                <span ng-if="media.views"> {{media.views}}</span>
                                 <span ng-if="media.views == null">0</span>
                             </li>
                             <li>
-                                <span ng-if="media.views">Shares : {{media.shares}}</span>
+                                Shares :
+                                <span ng-if="media.views"> {{media.shares}}</span>
                                 <span ng-if="media.shares == null">0</span>
                             </li>
                             <li>
