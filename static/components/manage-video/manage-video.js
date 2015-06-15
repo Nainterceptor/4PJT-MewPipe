@@ -36,7 +36,6 @@
                 })
                 .error(function (response) {
                     notificationFactory.addAlert('Fail to delete media', 'danger');
-                    console.log(response);
                 })
         }
     }

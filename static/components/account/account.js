@@ -6,7 +6,6 @@
     ;
 
     function AccountController(userFactory,notificationFactory) {
-        console.log('toto');
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
@@ -25,7 +24,6 @@
                     notificationFactory.addAlert('User Updated', 'success');
                 })
                 .error(function(response){
-                    console.log(response);
                 })
         }
 

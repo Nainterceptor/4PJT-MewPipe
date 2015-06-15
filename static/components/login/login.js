@@ -13,11 +13,9 @@
         if(partUri[partUri.length - 1] === 'callback' && urlParams.oauth_token && urlParams.oauth_verifier){
             twitterFactory.login(urlParams.oauth_token, urlParams.oauth_verifier)
                 .success(function(response){
-                    console.log(response);
                     userFactory.initiate(response);
                 })
                 .error(function(response){
-                    console.log(response);
                 });
         }
         this.logIn = function () {

@@ -4,7 +4,6 @@
         .controller('UpdateUserController', ['userFactory', 'notificationFactory', '$routeParams', UpdateUserController]);
 
     function UpdateUserController(userFactory,notificationFactory,$routeParams) {
-        console.log('toto');
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
@@ -26,7 +25,6 @@
                     notificationFactory.addAlert('User Updated', 'success');
                 })
                 .error(function(response){
-                    console.log(response);
                 })
         }
 

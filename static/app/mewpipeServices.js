@@ -14,7 +14,7 @@
         .factory('themesFactory', ['$cookies', ThemesFactory])
         .factory('paginationFactory', [PaginationFactory])
         .factory('mediaFactory', ['$http', '$cookies', 'Upload', 'notificationFactory', MediaFactory])
-        .factory('twitterFactory', ['$http','notificationFactory', TwitterFactory])
+        .factory('twitterFactory', ['$http', TwitterFactory])
     ;
 
     function UserFactory($http, $cookies, notificationFactory, $location) {
@@ -24,6 +24,9 @@
                 return user.roles.indexOf("Admin") !== -1;
             }
             return false;
+        };
+        var stayConnected = function(expire){
+
         };
         userInstance.accessToken = $cookies.get('accessToken') ? $cookies.get('accessToken') : undefined;
         userInstance.getUsers = function () {
@@ -288,7 +291,7 @@
         return mediaInstance;
     }
 
-    function TwitterFactory($http, notificationFactory){
+    function TwitterFactory($http){
         console.log('toto');
         var twitterInstance = {};
 

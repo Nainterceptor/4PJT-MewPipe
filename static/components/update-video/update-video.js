@@ -90,17 +90,14 @@
                     mediaFactory.upload(fileToUpload, thumbnail, me.media.id)
                         .progress(function (evt) {
                             var prog = parseInt(100.0 * evt.loaded / evt.total);
-                            console.log('progress: ' + prog + '% file :' + evt.config.file.name);
                             me.prog = prog;
                         })
                         .success(function (response) {
-                            console.log(response);
                             me.playerUrl = response.id;
                             me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
                             notificationFactory.addAlert('Media updated', 'success')
                         })
                         .error(function (response) {
-                            console.log('fail', response);
                         });
                 }, 750);
             }

@@ -38,6 +38,7 @@
     }
 
     function UploadController(userFactory, notificationFactory, mediaFactory, $timeout, $location) {
+        console.log($scope);
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
@@ -91,21 +92,17 @@
                     mediaFactory.upload(fileToUpload, thumbnail, response.id)
                         .progress(function (evt) {
                             var prog = parseInt(100.0 * evt.loaded / evt.total);
-                            console.log('progress: ' + prog + '% file :' + evt.config.file.name);
                             me.prog = prog;
                         })
                         .success(function (response) {
-                            console.log(response);
                             me.playerUrl = response.id;
                             me.link = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/player/" + response.id;
                             me.id = response.id;
                         })
                         .error(function (response) {
-                            console.log('fail', response);
                         });
                 })
                 .error(function (response) {
-                    console.log('fail', response);
                 });
         }
     }
