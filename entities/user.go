@@ -151,14 +151,16 @@ func (u *User) Normalize() {
 
 func (u *User) Validate() error {
 	u.Normalize()
-	if u.Email == "" {
-		return errors.New("`email` is empty")
+	if u.Twitter.UserId == "" {
+		if u.Email == "" {
+			return errors.New("`email` is empty")
+		}
+		if !govalidator.IsEmail(u.Email) {
+			return errors.New("`email` must be valid")
+		}
 	}
 	if u.Name.NickName == "" {
 		return errors.New("`nickname` is empty")
-	}
-	if !govalidator.IsEmail(u.Email) {
-		return errors.New("`email` must be valid")
 	}
 	return nil
 }

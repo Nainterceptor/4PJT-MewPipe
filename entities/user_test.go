@@ -82,12 +82,18 @@ func TestUserValidation(t *testing.T) {
 			usr := getFooUser()
 			So(usr.Validate(), ShouldBeNil)
 		})
-		Convey("User email should not be empty", func() {
+		Convey("User email should not be empty if twitter is empty", func() {
 			usr := getFooUser()
 			usr.Email = ""
 			So(usr.Validate(), ShouldNotBeNil)
 		})
-		Convey("User email should be valid", func() {
+		Convey("User email should be empty if twitter exist", func() {
+			usr := getFooUser()
+			usr.Email = ""
+			usr.Twitter.UserId = "99999"
+			So(usr.Validate(), ShouldBeNil)
+		})
+		Convey("User email should be valid if twitter is empty", func() {
 			usr := getFooUser()
 			usr.Email = "NotAnEmail"
 			So(usr.Validate(), ShouldNotBeNil)
