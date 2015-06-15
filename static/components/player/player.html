@@ -16,7 +16,7 @@
 </div>
 <div class="media-informations row">
     <div class="col-sm-offset-1 col-sm-6">
-        <p>By {{player.media.user.name.nickname}}</p>
+        <p>By <a ng-click="player.user(player.media.user.id)">{{player.media.user.name.nickname}}</a></p>
     </div>
     <div class="col-sm-4 text-right">
         <button ng-show="!share" class="btn btn-default" ng-click="share=true"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</button>

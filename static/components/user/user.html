@@ -1,0 +1,86 @@
+<div class="pushTo45px"></div>
+<h2>{{user.user.name.firstname}} {{user.user.name.lastname}}</h2>
+<fieldset class="margin-cancel">
+    <h2>Informations</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="my-video-information">
+                <li>
+                    <label>Email : {{user.user.email}}</label>
+                </li>
+                <li>
+                    <label>Nickname : {{user.user.name.nickname}}</label>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <ul class="my-video-information">
+                <li>
+                    <label ng-if="user.user.roles != null">Roles : {{user.user.roles}}</label>
+                </li>
+                <li>
+                    <label>Registered : {{user.user.createdAt | date: "dd-MM-yyyy"}}</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <h2>{{user.user.name.firstname}} {{user.user.name.lastname}}'s Videos</h2>
+
+    <div class="media"
+         ng-repeat="media in user.media
+                | startFrom:user.page.currentPage*user.page.numPerPage
+                | limitTo:user.page.numPerPage
+                | orderBy: '-createdAt'">
+        <div class="media-left">
+            <a ng-href="/player/{{media.id}}">
+                <img ng-src="/rest/media/{{media.id}}/thumbnail" alt="Thumbnail" width="180px"/>
+            </a>
+        </div>
+        <div class="media-body row">
+            <div class="col-md-3">
+                <h4 class="media-heading">{{media.title}}</h4>
+                <ul class="my-video-information">
+                    <li>
+                        Views :
+                        <span ng-if="media.views"> {{media.views}}</span>
+                        <span ng-if="media.views == null">0</span>
+                    </li>
+                    <li>
+                        Shares :
+                        <span ng-if="media.views"> {{media.shares}}</span>
+                        <span ng-if="media.shares == null">0</span>
+                    </li>
+                    <li>
+                        Confidentiality : {{media.scope}}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-5">
+                <p>{{media.summary}}</p>
+            </div>
+            <div class="col-md-offset-1 col-md-3 row">
+                <div class="col-md-10">
+                    <a ng-href="/player/{{media.id}}">
+                        <button class="btn btn-default">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> View
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <button class="btn-striped btn-primary" ng-hide="user.page.currentPage == 0"
+                ng-click="user.page.currentPage=user.page.currentPage-1">
+            Previous
+        </button>
+
+        <span ng-hide="user.page.numberOfPages<=1">{{user.page.currentPage+1}}/{{user.page.numberOfPages}}</span>
+
+        <button class="btn-striped btn-primary" ng-hide="user.page.numberOfPages-1<=user.page.currentPage"
+                ng-click="user.page.currentPage=user.page.currentPage+1">
+            Next
+        </button>
+    </div>
+</fieldset>

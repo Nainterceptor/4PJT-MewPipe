@@ -24,8 +24,10 @@
                 me.media = response;
                 me.media.shares = me.media.shares || 0;
                 me.media.views = me.media.views || 0;
-
             });
+            this.user = function(){
+                $location.url('/user/' + me.media.user.id);
+            };
         }
     }
 }());

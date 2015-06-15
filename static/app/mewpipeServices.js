@@ -29,6 +29,9 @@
         userInstance.getUsers = function () {
             return ($http.get(baseUrl + '/users'))
         };
+        userInstance.getOneUser = function (userId) {
+            return ($http.get(baseUrl + '/users/' + userId))
+        };
         userInstance.setUser = function (user) {
             userInstance.user = user;
             userInstance.isAdmin = isAdmin(user);
@@ -263,6 +266,9 @@
         };
         mediaInstance.getUserMedias = function () {
             return ($http.get(baseUrl + '/media/?user=' + $cookies.get('userId')))
+        };
+        mediaInstance.getOneUserMedias = function (userId) {
+            return ($http.get(baseUrl + '/media/?user=' + userId))
         };
         mediaInstance.deleteMedia = function (mediaId) {
            return $http.delete(baseUrl + '/media/' + mediaId)

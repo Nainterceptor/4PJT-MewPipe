@@ -11,7 +11,8 @@
         'mewpipe.account',
         'mewpipe.manageVideo',
         'mewpipe.updateVideo',
-        'mewpipe.updateUser'
+        'mewpipe.updateUser',
+        'mewpipe.user'
     ])
         .config(function($locationProvider){
             $locationProvider.html5Mode(true);
