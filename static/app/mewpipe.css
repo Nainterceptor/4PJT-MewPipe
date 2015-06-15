@@ -1,6 +1,7 @@
 * {
     font-family: 'Open Sans', sans-serif;
 }
+
 body {
     background-color: #272C2E;
     font-weight: bold;
@@ -9,9 +10,45 @@ body {
 
 }
 
-.main .nav>li>a, .main .nav>li>a {
+h1,
+h2,
+h3,
+h4 {
+    margin-bottom: 20px;
+}
+
+hr {
+    border-top: 1px solid #c0c0c0;
+}
+
+/* Container */
+
+.container-video {
+    background-color: #000;
+}
+
+.media-informations {
+    margin-top: 70px;
+}
+
+.form-mewpipe {
+    background-color: #333333;
+    padding: 30px 30px 30px 30px;
+    border: solid 1px #c0c0c0;
+    margin-top: 40px;
+}
+
+.form-mewpipe.form-account {
+    box-shadow: 5px 5px 10px #111111;
+}
+
+.main .nav > li > a, .main .nav > li > a {
     color: #6B757D;
     background-color: inherit;
+}
+
+.main .nav > li > a:hover, .main .nav > li > a:hover {
+    color: #fff;
 }
 
 .main {
@@ -44,9 +81,11 @@ body {
 .navbar-right {
     background: #EE3E3E;
 }
-.navbar-default .navbar-nav.navbar-right > li > a  {
+
+.navbar-default .navbar-nav.navbar-right > li > a {
     color: #FFF;
 }
+
 .navbar-default .navbar-nav.navbar-right > li > a:hover {
     color: #eee;
 }
@@ -56,10 +95,15 @@ body {
     border: none;
 }
 
-.pointer{
+.pointer {
     cursor: pointer;
 }
-.notif{
+
+.active {
+    background-color: #222222;
+}
+
+.notif {
     position: absolute;
     top: 50px;
     right: 0;
@@ -88,21 +132,162 @@ body {
 
 .drop-box {
     border: 5px dashed #DDD;
-    width: 100%x;
+    width: 100% x;
     height: 100px;
     text-align: center;
     padding-top: 25px;
     margin: 10px;
+    box-shadow: inset 0 0 5px 5px rgba(0, 0, 0, 0.5);
 }
+
 .dragover {
     border: 5px dashed blue;
 }
 
-.btn-share {
-    cursor: auto;
+.input-share {
+    margin-top: 15px;
     background-color: white;
 }
 
-.btn-share:focus {
+.input-share:focus {
     border-color: #245269;
+}
+
+.btn.btn-share {
+    color: #fff;
+    background-color: #2b669a;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+}
+
+/* Tables */
+
+.table.table-bordered {
+    background-color: #333333;
+    color: #c0c0c0;
+}
+
+.table.table-bordered > thead > tr > th {
+    background-color: #111111;
+    color: #c0c0c0;
+}
+
+/* Thumbnails */
+
+.thumb.thumbnail .caption {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    -webkit-transition: all 300ms;
+    -moz-transition: all 300ms;
+    transition: all 300ms;
+    -webkit-transition-delay: 100ms;
+    -moz-transition-delay: 100ms;
+    transition-delay: 100ms;
+}
+
+.thumb.thumbnail .caption a {
+    color: #2b669a;
+}
+
+.thumbnail {
+    background-color: rgba(0, 0, 0, 0);
+    width: 350px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 0;
+    border: none;
+    margin-top: 20px;
+}
+
+.thumb.thumbnail .caption h3 {
+    color: #ffffff;
+}
+
+.thumb.thumbnail li:hover .caption {
+    -moz-transform: translateY(120px);
+    -webkit-transform: translateY(120px);
+    transform: translateY(120px);
+}
+
+.thumb figcaption {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: table;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transition: all 300ms;
+    -moz-transition: all 300ms;
+    transition: all 300ms;
+    -webkit-transition-delay: 100ms;
+    -moz-transition-delay: 100ms;
+    transition-delay: 100ms;
+    z-index: 100;
+}
+
+.thumb figcaption .glyphicon-thumb {
+    font-size: 2em;
+}
+
+.thumb figcaption h3 {
+    color: #ffffff;
+    display: table-cell;
+    font-size: 1.3em;
+    position: relative;
+    top: -40px;
+    width: 340px;
+    -webkit-transition: all 300ms ease-out;
+    -moz-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+    vertical-align: middle;
+}
+
+.thumb li:hover figcaption h3 {
+    -moz-transform: translateY(40px);
+    -webkit-transform: translateY(40px);
+    transform: translateY(40px);
+}
+
+.thumb li.color {
+    border: 5px solid rgb(20, 52, 73);
+    display: inline-block;
+}
+
+.thumb li {
+    display: inline-block;
+}
+
+.thumb li:hover figcaption {
+    opacity: 1;
+}
+
+.thumb img {
+    display: block;
+    -webkit-transition: all 300ms;
+    -moz-transition: all 300ms;
+    transition: all 300ms;
+    max-width: 100%;
+}
+
+.thumb figure {
+    height: 190px;
+    overflow: hidden;
+    position: relative;
+}
+
+.thumb li:hover img {
+    -webkit-transform: scale(1.4);
+    -moz-transform: scale(1.4);
+    transform: scale(1.4);
 }

@@ -6,6 +6,7 @@
 
     function ManageVideoController(userFactory, mediaFactory, notificationFactory, $location,paginationFactory) {
         var me = this;
+        this.mediaFactory = mediaFactory;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
                 notificationFactory.addAlert('You need to be connected, return to <a class="alert-link" href="/">Home</a>', 'danger', 3000);

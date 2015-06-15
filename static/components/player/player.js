@@ -12,14 +12,6 @@
 
     function PlayerController($sce, $routeParams, mediaFactory, $location) {
         var me = this;
-        //this.config = {
-        //    sources: [
-        //        {src: $sce.trustAsResourceUrl("/rest/media/"+$routeParams.id+"/read"), type:"video/mp4"}
-        //    ],
-        //    theme: "bower_components/videogular-themes-default/videogular.css",
-        //    plugins: {
-        //    }
-        //};
         this.videoUrl = $sce.trustAsResourceUrl("/rest/media/" + $routeParams.id + "/read");
         this.mediaFactory = mediaFactory;
 

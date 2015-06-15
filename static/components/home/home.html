@@ -1,32 +1,69 @@
 <div class="container-fluid">
     <h2>Most Viewed</h2>
+
     <div class="row">
         <div ng-repeat="media in (home.medias | startFrom: 0 | limitTo: 12)">
-            <div class="col-md-2">
-                <div class="thumbnail">
-                    <a ng-href="/player/{{media.id}}"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
-                    <div class="caption">
-                        <h4>{{media.title}}</h4>
-                        <p>by {{media.user.name.nickname}}</p>
-                        <p><span ng-if="media.views == null">0</span><span ng-if="media.views > 0">{{media.views}}</span> views</p>
-                    </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="thumb thumbnail">
+                    <li>
+                        <a ng-href="/player/{{media.id}}">
+                            <figure>
+                                <img ng-src="/rest/media/{{media.id}}/thumbnail"
+                                     width="350" height="180" alt=""/>
+                                <figcaption class="text-center">
+                                    <h3>
+                                        <span>{{media.title}}</span>
+                                    </h3>
+                                </figcaption>
+                                <div class="caption">
+                                    <a ng-href="/player/{{media.id}}">
+                                        <h3>by {{media.user.name.nickname}}</h3>
+
+                                        <p>
+                                            <span ng-if="media.views == null">0</span><span ng-if="media.views > 0">{{media.views}}</span>
+                                            views
+                                        </p>
+                                    </a>
+                                </div>
+                            </figure>
+                        </a>
+                    </li>
                 </div>
             </div>
         </div>
     </div>
     <h2>Most Shared</h2>
+
     <div class="row">
         <div ng-repeat="media in (home.mediasShares | startFrom: 0 | limitTo: 12)">
-            <div class="col-md-2">
-                <div class="thumbnail">
-                    <a ng-href="/player/{{media.id}}/"><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></a>
-                    <div class="caption">
-                        <h4>{{media.title}}</h4>
-                        <p>by {{media.user.name.nickname}}</p>
-                        <p><span ng-if="media.shares == null">0</span><span ng-if="media.shares > 0">{{media.shares}}</span> shares</p>
-                    </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="thumb thumbnail">
+                    <li>
+                        <a ng-href="/player/{{media.id}}">
+                            <figure>
+                                <img ng-src="/rest/media/{{media.id}}/thumbnail"
+                                     width="350" height="180" alt=""/>
+                                <figcaption class="text-center">
+                                    <h3>
+                                        <span>{{media.title}}</span>
+                                    </h3>
+                                </figcaption>
+                                <div class="caption">
+                                    <a ng-href="/player/{{media.id}}">
+                                        <h3>by {{media.user.name.nickname}}</h3>
+
+                                        <p>
+                                            <span ng-if="media.shares == null">0</span><span ng-if="media.shares > 0">{{media.shares}}</span>
+                                            shares
+                                        </p>
+                                    </a>
+                                </div>
+                            </figure>
+                        </a>
+                    </li>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>

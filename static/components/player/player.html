@@ -1,44 +1,20 @@
-<!--<videogular vg-theme="player.config.theme">-->
-<!--<vg-media vg-src="player.config.sources"-->
-<!--vg-tracks="player.config.tracks">-->
-<!--</vg-media>-->
+<div class="row">
+    <div class="col-md-10">
+        <h3>{{player.media.title}}</h3>
 
-<!--<vg-controls>-->
-<!--<vg-play-pause-button></vg-play-pause-button>-->
-<!--<vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>-->
-<!--<vg-scrub-bar>-->
-<!--<vg-scrub-bar-current-time></vg-scrub-bar-current-time>-->
-<!--</vg-scrub-bar>-->
-<!--<vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>-->
-<!--<vg-volume>-->
-<!--<vg-mute-button></vg-mute-button>-->
-<!--<vg-volume-bar></vg-volume-bar>-->
-<!--</vg-volume>-->
-<!--<vg-fullscreen-button></vg-fullscreen-button>-->
-<!--</vg-controls>-->
-
-<!--<vg-overlay-play></vg-overlay-play>-->
-<!--<vg-poster vg-url='player.config.plugins.poster'></vg-poster>-->
-<!--</videogular>-->
-<div class="container">
-    <div class="row">
-        <div class="embed-responsive embed-responsive-16by9">
+        <div class="container-video embed-responsive embed-responsive-16by9">
             <video ng-src="{{player.videoUrl}}" controls></video>
         </div>
-        <div class="col-md-8 row">
-            <div class="col-md-5">
-                <h3>{{player.media.title}}</h3>
-                <span>by {{player.media.user.name.nickname}}</span>
-            </div>
-            <div class="col-md-offset-5 col-md-2">
-                <h4>{{player.media.views}} views</h4>
-            </div>
+    </div>
+    <div class="col-md-2">
+        <div class="media-informations">
+            <hr />
+            <h4>by {{player.media.user.name.nickname}} | {{player.media.views}} views</h4>
+            <hr />
+            <button class="btn btn-share" ng-click="share=true">Share</button>
+            <input onclick="this.select();" name="share_url" class="input-share" ng-show="share"
+                   ng-click="player.mediaFactory.mediaShare(player.media.id)"
+                   value="{{player.link}}">
         </div>
-        <!--<div class="col-md-6">-->
-            <!--<button class="btn btn-primary" ng-click="share=true">Share</button>-->
-            <!--<input name="share_url" class="btn-share" ng-show="share"-->
-                   <!--ng-click="player.mediaFactory.mediaShare(player.media.id)"-->
-                   <!--value="{{player.link}}">-->
-        <!--</div>-->
     </div>
 </div>
