@@ -2,14 +2,13 @@
     <div class="row">
         <div class="col-md-12">
             <h3>Yours Media</h3>
-            <table class="table table-bordered">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Title</th>
                     <th>Summary</th>
                     <th>Share</th>
                     <th>Views</th>
-                    <th>Shares</th>
                     <th>Thumbnail</th>
                     <th>Scope</th>
                     <th>Actions</th>
@@ -22,22 +21,26 @@
                 | orderBy: '-createdAt'">
                     <td>{{media.title}}</td>
                     <td>{{media.summary}}</td>
-                    <td><a ng-href="/player/{{media.id}}">{{manageVideo.baseUrl}}{{media.id}}</a></td>
                     <td>
                         <span ng-if="media.views == null">0</span><span ng-if="media.views">{{media.views}}</span>
                     </td>
                     <td>
                         <span ng-if="media.shares == null">0</span><span ng-if="media.views">{{media.shares}}</span>
                     </td>
-                    <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt=""/></td>
+                    <td><img ng-src="/rest/media/{{media.id}}/thumbnail" alt="Thumbnail" width="90px"/></td>
                     <td>{{media.scope}}</td>
                     <td>
                         <button class="btn btn-primary" ng-click="manageVideo.update(media)">
-                            Update
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
                         </button>
                         <button class="btn btn-danger" ng-click="manageVideo.delete(media.id)">
-                            Delete
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
                         </button>
+                        <a ng-href="/player/{{media.id}}">
+                            <button class="btn btn-default" ng-click="manageVideo.delete(media.id)">
+                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> View
+                            </button>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
