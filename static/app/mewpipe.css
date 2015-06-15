@@ -8,6 +8,7 @@ body {
     color: #6B757D;
     font-size: 15px;
 }
+
 html {
     border-bottom: 7px solid #EE3E3E;
 }
@@ -189,6 +190,7 @@ fieldset, .space-gray-banner {
 
 .input-share {
     margin-top: 15px;
+    margin-bottom: 15px;
     background-color: white;
 }
 
@@ -196,8 +198,40 @@ fieldset, .space-gray-banner {
     border-color: #245269;
 }
 
+/* Buttons */
+
 .btn {
     font-size: 12px;
+}
+
+.btn-striped {
+    font-size: 0.9em;
+    margin-top: 8px;
+}
+
+
+.btn-striped.btn-default,
+.btn-striped.btn-primary,
+.btn-striped.btn-danger {
+    background-color: inherit;
+    border: none;
+}
+
+.btn-striped:focus {
+    outline: none;
+    border: none;
+}
+
+.btn-striped.btn-default {
+    color: #333;
+}
+
+.btn-striped.btn-primary {
+    color: #3378B8;
+}
+
+.btn-striped.btn-danger {
+    color: #EE3E3E;
 }
 
 .btn.btn-share {
@@ -207,20 +241,25 @@ fieldset, .space-gray-banner {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
 }
+
 .btn:hover {
     transition: all .3s linear;
 }
+
 .btn.btn-danger:hover {
     box-shadow: 0 0 10px #EE3E3E inset;
     color: #FFF;
 }
+
 .btn.btn-primary:hover {
     box-shadow: 0 0 10px #286090 inset;
     color: #FFF;
 }
+
 .btn.btn-default:hover {
     color: #FFF;
 }
+
 .btn.btn-default,
 .btn.btn-primary,
 .btn.btn-danger {
@@ -231,6 +270,8 @@ fieldset, .space-gray-banner {
     font-weight: bold;
     margin: 1px;
 }
+
+/* Forms */
 
 .form-control {
     background: #30383B;
@@ -252,6 +293,7 @@ fieldset, .space-gray-banner {
 .has-error .form-control:focus {
     box-shadow: 0 2px 0 #CE8483;
 }
+
 /* Tables */
 
 .table.table-striped > tbody > tr:nth-of-type(2n+1) {
@@ -383,6 +425,7 @@ fieldset, .space-gray-banner {
     overflow: hidden;
     position: relative;
 }
+
 .thumb figure > a {
     display: block;
     width: 100%;
