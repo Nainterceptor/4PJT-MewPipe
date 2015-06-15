@@ -27,7 +27,7 @@
                 <li><a ng-show="main.user.isAdmin" ng-link="adminPanel">Admin Panel</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a ng-href="/upload">Upload</a></li>
+                <li><a ng-if="main.user.accessToken" ng-href="/upload">Upload</a><a ng-if="!main.user.accessToken" ng-href="/login/">Upload</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
 </nav>
