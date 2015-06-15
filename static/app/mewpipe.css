@@ -229,6 +229,14 @@ hr {
     margin-left: -10%;
 }
 
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    background: rgba(0, 0, 0, 0.001);
+}
+
+.nav-tabs.nav-justified > .active > a, .nav-tabs.nav-justified > .active > a:focus, .nav-tabs.nav-justified > .active > a:hover {
+    border-bottom: none;
+}
+
 /* Thumbnails */
 
 .thumb.thumbnail .caption {

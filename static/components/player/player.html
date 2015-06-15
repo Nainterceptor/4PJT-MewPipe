@@ -11,8 +11,8 @@
             <hr />
             <h4>by {{player.media.user.name.nickname}} | {{player.media.views}} views</h4>
             <hr />
-            <button class="btn btn-share" ng-click="share=true">Share</button>
-            <input onclick="this.select();" name="share_url" class="input-share" ng-show="share"
+            <button class="btn btn-default" ng-click="share=true"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</button>
+            <input onclick="this.select();" name="share_url" class="input-share form-control" ng-show="share"
                    ng-click="player.mediaFactory.mediaShare(player.media.id)"
                    value="{{player.link}}">
             <div class="description">
