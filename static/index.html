@@ -39,21 +39,18 @@
 </div>
 <div class="container-fluid">
     <div class="row main">
-        <div class="col-md-2">
+        <aside class="col-md-2">
             <ul class="nav nav-pills nav-stacked">
                 <li><a ng-link="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
-                <br/>
-                <li><a ng-if="!main.user.accessToken" ng-href="/login/"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Sign</a></li>
+                <li class="margin-before"><a ng-if="!main.user.accessToken" ng-href="/login/"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Sign</a></li>
                 <li><a ng-show="main.user.accessToken" ng-href="/account/"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My account</a></li>
                 <li><a ng-show="main.user.accessToken" ng-href="/manage-video/"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> My videos</a></li>
                 <li><a ng-show="main.user.accessToken" ng-href="/upload/"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload</a></li>
-                <br/>
-                <li><a ng-show="main.user.isAdmin" ng-link="adminPanel"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Administration</a></li>
-                <br/>
-                <li><a class="pointer" ng-show="main.user.accessToken" ng-click="main.logOut()"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Log Out</a></li>
+                <li class="margin-before"><a ng-show="main.user.isAdmin" ng-link="adminPanel"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Administration</a></li>
+                <li class="margin-before"><a class="pointer" ng-show="main.user.accessToken" ng-click="main.logOut()"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Log Out</a></li>
 
             </ul>
-        </div>
+        </aside>
         <div class="col-md-9 border"><div ng-viewport></div></div>
         <div class="col-md-1"></div>
     </div>

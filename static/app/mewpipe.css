@@ -47,8 +47,12 @@ hr {
     color: #fff;
 }
 
-.main {
+.main aside {
     padding-top: 60px;
+}
+
+.main aside .margin-before {
+    margin-top: 15px;
 }
 
 .header div {
@@ -231,38 +235,39 @@ hr {
     bottom: 0;
     left: 0;
     width: 100%;
-    -webkit-transition: all 300ms;
-    -moz-transition: all 300ms;
     transition: all 300ms;
-    -webkit-transition-delay: 100ms;
-    -moz-transition-delay: 100ms;
     transition-delay: 100ms;
 }
 
-.thumb.thumbnail .caption a {
+.thumb.thumbnail .caption p {
     color: #2b669a;
+    font-size: 10px;
+    text-align: right;
+    margin: 0;
 }
 
 .thumbnail {
-    background-color: rgba(0, 0, 0, 0);
-    width: 350px;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
-    -moz-border-radius: 0;
-    -webkit-border-radius: 0;
+    background-color: transparent;
+    width: 100%;
     border-radius: 0;
     padding: 0;
     margin-bottom: 0;
     border: none;
-    margin-top: 20px;
+}
+
+.thumb.thumbnail .caption h4 {
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .thumb.thumbnail .caption h3 {
     color: #ffffff;
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 
-.thumb.thumbnail li:hover .caption {
-    -moz-transform: translateY(120px);
-    -webkit-transform: translateY(120px);
+.thumb.thumbnail > div:hover .caption {
     transform: translateY(120px);
 }
 
@@ -277,11 +282,7 @@ hr {
     position: absolute;
     right: 0;
     top: 0;
-    -webkit-transition: all 300ms;
-    -moz-transition: all 300ms;
     transition: all 300ms;
-    -webkit-transition-delay: 100ms;
-    -moz-transition-delay: 100ms;
     transition-delay: 100ms;
     z-index: 100;
 }
@@ -296,48 +297,53 @@ hr {
     font-size: 1.3em;
     position: relative;
     top: -40px;
-    width: 340px;
-    -webkit-transition: all 300ms ease-out;
-    -moz-transition: all 300ms ease-out;
+    width: 100%;
     transition: all 300ms ease-out;
     vertical-align: middle;
 }
 
-.thumb li:hover figcaption h3 {
-    -moz-transform: translateY(40px);
-    -webkit-transform: translateY(40px);
+.thumb > div:hover figcaption h3 {
     transform: translateY(40px);
 }
 
-.thumb li.color {
+.thumb > div.color {
     border: 5px solid rgb(20, 52, 73);
     display: inline-block;
 }
 
-.thumb li {
+.thumb > div {
     display: inline-block;
+    width: 100%;
 }
 
-.thumb li:hover figcaption {
+.thumb > div:hover figcaption {
     opacity: 1;
 }
 
-.thumb img {
+.thumb .picture {
     display: block;
-    -webkit-transition: all 300ms;
-    -moz-transition: all 300ms;
     transition: all 300ms;
     max-width: 100%;
 }
 
 .thumb figure {
     height: 190px;
+    width: 100%;
     overflow: hidden;
     position: relative;
 }
+.thumb figure > a {
+    display: block;
+    width: 100%;
+}
 
-.thumb li:hover img {
-    -webkit-transform: scale(1.4);
-    -moz-transform: scale(1.4);
+.thumb > div:hover .picture {
     transform: scale(1.4);
+}
+
+.thumb .picture {
+    background: transparent no-repeat 50% 50%;
+    background-size: cover;
+    height: 190px;
+    width: 100%;
 }
