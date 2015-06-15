@@ -68,3 +68,10 @@ And with his [kind courtesy](https://twitter.com/aureliensalomon/status/60973022
 * Run the app on the fly with ./run.sh
 * Run test suite with ./test.sh
 
+## Documentation
+
+* [Setup](Documentation/Install.md)
+* [Database structure and optimization](Documentation/Database.md)
+* [Ergonomics and ease to use](Documentation/Ergonomics.md)
+* [Suggested Video algorithm explanation](Documentation/Suggested_algorithm.md)
+* [Design Pattern](Documentation/Design_pattern.md)
