@@ -3,19 +3,26 @@
     Click or Drag to change the binary
 </div>
 <div ng-show="updateVideo.uploading" class="progress">
-    <div class="progress-bar progress-bar-striped active"
+    <div class="progress-bar progress-bar-striped"
          role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
          ng-style="{width: updateVideo.prog+'%'}">
         {{updateVideo.prog}}% Complete
     </div>
 </div>
-<div ng-show="updateVideo.playerUrl" class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Share your video</h3>
+<div class="col-md-offset-9 col-md-3 text-right">
+    <div ng-show="updateVideo.playerUrl">
+        <a ng-href="/player/{{updateVideo.playerUrl}}">
+            <button class="btn btn-default">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> View
+            </button>
+        </a>
     </div>
-    <div class="panel-body">
-        <a ng-href="/player/{{updateVideo.playerUrl}}">{{updateVideo.link}}</a>
-    </div>
+    <button ng-show="updateVideo.playerUrl" class="btn btn-default" ng-click="share=true"><span
+            class="glyphicon glyphicon-share" aria-hidden="true"></span> Share
+    </button>
+    <input onclick="this.select();" name="share_url" class="input-share form-control" ng-show="share"
+           ng-click="updateVideo.mediaFactory.mediaShare(updateVideo.id)"
+           value="{{updateVideo.link}}">
 </div>
 <video style="display: none" type="video/mp4" id="video" ng-if="updateVideo.videoUrl"
        ng-src="{{updateVideo.videoUrl}}"></video>
