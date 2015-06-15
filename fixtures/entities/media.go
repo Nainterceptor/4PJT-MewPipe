@@ -73,6 +73,7 @@ func InsertSomeMedia() {
 	}
 	addVideoBin(mediaArray[1])
 	fmt.Println("Media added")
+	fmt.Println("Warning : Our sample is packaged to be light (~100ko for 00:14 duration), and contain videos without audio.")
 }
 
 func randInt(min int, max int) int {
