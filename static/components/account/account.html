@@ -1,61 +1,60 @@
-<div class="row">
-    <form class="col-md-offset-3 col-md-6" ng-submit="account.update()" name="form1" novalidate>
-        <h2>My account</h2>
+<div class="pushTo45px"></div>
+<h2>My account</h2>
+<fieldset>
+    <form class="" ng-submit="account.update()" name="form1" novalidate>
+        <div class="form-group"
+             ng-class="{'has-error' : form1.email.$touched && form1.email.$invalid, 'has-success' : form1.email.$touched && form1.email.$valid}">
+            <label for="inputEmail1">Email</label>
+            <input type="email" name="email" class="form-control" id="inputEmail1" ng-model="account.user.email"
+                   placeholder="Email" required>
 
-        <div class="form-mewpipe form-account">
-            <div class="form-group"
-                 ng-class="{'has-error' : form1.email.$touched && form1.email.$invalid, 'has-success' : form1.email.$touched && form1.email.$valid}">
-                <label for="inputEmail1">Email</label>
-                <input type="email" name="email" class="form-control" id="inputEmail1" ng-model="account.user.email"
-                       placeholder="Email" required>
-
-                <div ng-show="form1.email.$touched">
-                    <span ng-show="form1.email.$error.email" class="help-block">Enter a valid email</span>
-                </div>
+            <div ng-show="form1.email.$touched">
+                <span ng-show="form1.email.$error.email" class="help-block">Enter a valid email</span>
             </div>
-            <div class="form-group"
-                 ng-class="{'has-error' : form1.nickname.$touched && form1.nickname.$invalid, 'has-success' : form1.nickname.$touched && form1.nickname.$valid}">
-                <label for="inputnickname1">Nickname</label>
-                <input type="text" name="Nickname" class="form-control" id="inputnickname1"
-                       ng-model="account.user.name.nickname"
-                       placeholder="nickname">
-            </div>
-            <div class="form-group"
-                 ng-class="{'has-error' : form1.firstname.$touched && form1.firstname.$invalid, 'has-success' : form1.firstname.$touched && form1.firstname.$valid}">
-                <label for="inputfirstname1">Firstname</label>
-                <input type="text" name="firstname" class="form-control" id="inputfirstname1"
-                       ng-model="account.user.name.firstname"
-                       placeholder="Firstname">
-            </div>
-            <div class="form-group"
-                 ng-class="{'has-error' : form1.lastname.$touched && form1.lastname.$invalid, 'has-success' : form1.lastname.$touched && form1.lastname.$valid}">
-                <label for="inputlastname1">Lastname</label>
-                <input type="text" name="lastname" class="form-control" id="inputlastname1"
-                       ng-model="account.user.name.lastname"
-                       placeholder="nickname">
-            </div>
-            <div class="form-group"
-                 ng-class="{'has-error' : form1.password.$touched && form1.password.$invalid, 'has-success' : form1.password.$touched && form1.password.$valid}">
-                <label for="inputPassword1">Password</label>
-                <input name="password" type="password" class="form-control" id="inputPassword1"
-                       ng-model="account.user.password"
-                       placeholder="Password">
-            </div>
-            <div class="form-group" ng-class="{'has-error' : (form1.confirmPassword.$touched && form1.confirmPassword.$invalid) ||
-                    (form1.confirmPassword.$touched && account.user.confirmPassword != account.user.password)
-                    , 'has-success' : form1.password.$touched && form1.password.$valid && signUp.confirmPassword == signUp.password}">
-                <label for="inputPassword2">Confirm password</label>
-                <input name="confirmPassword" type="password" class="form-control" id="inputPassword2"
-                       ng-model="account.user.confirmPassword" placeholder="Confirm password">
-
-                <div ng-show="form1.confirmPassword.$touched">
-                <span ng-show="signUp.confirmPassword != signUp.password"
-                      class="help-block">Passwords don't match</span>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary"
-                    ng-disabled="form1.$invalid || account.user.confirmPassword != account.user.password">Update
-            </button>
         </div>
+        <div class="form-group"
+             ng-class="{'has-error' : form1.nickname.$touched && form1.nickname.$invalid, 'has-success' : form1.nickname.$touched && form1.nickname.$valid}">
+            <label for="inputnickname1">Nickname</label>
+            <input type="text" name="Nickname" class="form-control" id="inputnickname1"
+                   ng-model="account.user.name.nickname"
+                   placeholder="nickname">
+        </div>
+        <div class="form-group"
+             ng-class="{'has-error' : form1.firstname.$touched && form1.firstname.$invalid, 'has-success' : form1.firstname.$touched && form1.firstname.$valid}">
+            <label for="inputfirstname1">Firstname</label>
+            <input type="text" name="firstname" class="form-control" id="inputfirstname1"
+                   ng-model="account.user.name.firstname"
+                   placeholder="Firstname">
+        </div>
+        <div class="form-group"
+             ng-class="{'has-error' : form1.lastname.$touched && form1.lastname.$invalid, 'has-success' : form1.lastname.$touched && form1.lastname.$valid}">
+            <label for="inputlastname1">Lastname</label>
+            <input type="text" name="lastname" class="form-control" id="inputlastname1"
+                   ng-model="account.user.name.lastname"
+                   placeholder="nickname">
+        </div>
+        <div class="form-group"
+             ng-class="{'has-error' : form1.password.$touched && form1.password.$invalid, 'has-success' : form1.password.$touched && form1.password.$valid}">
+            <label for="inputPassword1">Password</label>
+            <input name="password" type="password" class="form-control" id="inputPassword1"
+                   ng-model="account.user.password"
+                   placeholder="Password">
+        </div>
+        <div class="form-group" ng-class="{'has-error' : (form1.confirmPassword.$touched && form1.confirmPassword.$invalid) ||
+                (form1.confirmPassword.$touched && account.user.confirmPassword != account.user.password)
+                , 'has-success' : form1.password.$touched && form1.password.$valid && signUp.confirmPassword == signUp.password}">
+            <label for="inputPassword2">Confirm password</label>
+            <input name="confirmPassword" type="password" class="form-control" id="inputPassword2"
+                   ng-model="account.user.confirmPassword" placeholder="Confirm password">
+
+            <div ng-show="form1.confirmPassword.$touched">
+            <span ng-show="signUp.confirmPassword != signUp.password"
+                  class="help-block">Passwords don't match</span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary"
+                ng-disabled="form1.$invalid || account.user.confirmPassword != account.user.password">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Update
+        </button>
     </form>
-</div>
+</fieldset>

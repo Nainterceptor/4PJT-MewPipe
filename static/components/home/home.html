@@ -1,62 +1,63 @@
-    <h2>Most Viewed</h2>
+<div class="pushTo45px"></div>
+<h2>Most Viewed</h2>
 
-    <div class="row">
-        <div ng-repeat="media in (home.medias | startFrom: 0 | limitTo: 12)">
-            <div class="col-xs-6 col-sm-4 col-md-3">
-                <div class="thumb thumbnail">
-                    <div>
-                        <a ng-href="/player/{{media.id}}">
-                            <figure>
-                                <div class="picture" style="background-image: url(/rest/media/{{media.id}}/thumbnail);"></div>
-                                <figcaption class="text-center">
-                                    <h3>
-                                        <span>{{media.title}}</span>
-                                    </h3>
-                                </figcaption>
-                                <div class="caption">
+<div class="row">
+    <div ng-repeat="media in (home.medias | startFrom: 0 | limitTo: 12)">
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="thumb thumbnail">
+                <div>
+                    <a ng-href="/player/{{media.id}}">
+                        <figure>
+                            <div class="picture" style="background-image: url(/rest/media/{{media.id}}/thumbnail);"></div>
+                            <figcaption class="text-center">
+                                <h3>
+                                    <span>{{media.title}}</span>
+                                </h3>
+                            </figcaption>
+                            <div class="caption">
+                                <h3>{{media.title}}</h3>
+                                <h4>by {{media.user.name.nickname}}</h4>
+
+                                <p>
+                                    <span ng-if="media.views == null">0</span><span ng-if="media.views > 0">{{media.views}}</span>
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                </p>
+                            </div>
+                        </figure>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<h2>Most Shared</h2>
+
+<div class="row">
+    <div ng-repeat="media in (home.mediasShares | startFrom: 0 | limitTo: 12)">
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="thumb thumbnail">
+                <div>
+                    <a ng-href="/player/{{media.id}}">
+                        <figure>
+                            <div class="picture" style="background-image: url(/rest/media/{{media.id}}/thumbnail);"></div>
+                            <figcaption class="text-center">
+                                <h3>
+                                    <span>{{media.title}}</span>
+                                </h3>
+                            </figcaption>
+                            <div class="caption">
                                     <h3>{{media.title}}</h3>
                                     <h4>by {{media.user.name.nickname}}</h4>
 
                                     <p>
-                                        <span ng-if="media.views == null">0</span><span ng-if="media.views > 0">{{media.views}}</span>
-                                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                        <span ng-if="media.shares == null">0</span><span ng-if="media.shares > 0">{{media.shares}}</span>
+                                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                                     </p>
-                                </div>
-                            </figure>
-                        </a>
-                    </div>
+                            </div>
+                        </figure>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <h2>Most Shared</h2>
-
-    <div class="row">
-        <div ng-repeat="media in (home.mediasShares | startFrom: 0 | limitTo: 12)">
-            <div class="col-xs-6 col-sm-4 col-md-3">
-                <div class="thumb thumbnail">
-                    <div>
-                        <a ng-href="/player/{{media.id}}">
-                            <figure>
-                                <div class="picture" style="background-image: url(/rest/media/{{media.id}}/thumbnail);"></div>
-                                <figcaption class="text-center">
-                                    <h3>
-                                        <span>{{media.title}}</span>
-                                    </h3>
-                                </figcaption>
-                                <div class="caption">
-                                        <h3>{{media.title}}</h3>
-                                        <h4>by {{media.user.name.nickname}}</h4>
-
-                                        <p>
-                                            <span ng-if="media.shares == null">0</span><span ng-if="media.shares > 0">{{media.shares}}</span>
-                                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                                        </p>
-                                </div>
-                            </figure>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
