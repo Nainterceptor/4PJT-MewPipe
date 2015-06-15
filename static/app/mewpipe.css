@@ -25,10 +25,9 @@ hr {
 }
 
 fieldset {
-    margin: 10px;
+    margin: 0 -15px;
     padding: 10px;
     background-color: #2B3134;
-    border-radius: 6px;
 }
 
 /* Container */
@@ -303,6 +302,7 @@ fieldset {
     font-size: 12px;
     margin-top: 5px;
     margin-bottom: 5px;
+    color: #ffffff;
 }
 
 .thumb.thumbnail .caption h3 {
@@ -335,7 +335,7 @@ fieldset {
     font-size: 2em;
 }
 
-.thumb figcaption h3 {
+.main .thumb figcaption h3 {
     color: #ffffff;
     display: table-cell;
     font-size: 1.3em;
@@ -344,6 +344,7 @@ fieldset {
     width: 100%;
     transition: all 300ms ease-out;
     vertical-align: middle;
+    box-shadow: 0 0 3px #000;
 }
 
 .thumb > div:hover figcaption h3 {
