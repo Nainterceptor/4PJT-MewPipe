@@ -11,6 +11,7 @@ import (
 func ClearUsers() {
 	configs.MongoDB.C("users").DropCollection()
 	fmt.Println("All users deleted")
+	fmt.Println("Admin user is admin@admin.com with 'Admin' password.")
 }
 
 func getFooUser() *entities.User {
