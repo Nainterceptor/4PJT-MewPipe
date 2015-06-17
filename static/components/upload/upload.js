@@ -38,7 +38,6 @@
     }
 
     function UploadController(userFactory, notificationFactory, mediaFactory, $timeout, $location) {
-        console.log($scope);
         var me = this;
         this.canActivate = function () {
             if (!userFactory.accessToken) {
