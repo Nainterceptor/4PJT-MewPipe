@@ -37,13 +37,17 @@
 	<body>
 
 		<div class="reveal">
-
-			<div id="logo">
-
+			<div id="logo"></div>
+			<div id="author-card" aria-disabled="true">
+				<img src="img/148282.jpg" alt="Photo" id="author-photo" />
+				<p rel="author">
+					<span id="author-name">Arnaud-Pierre BOYER</span>
+					<span id="author-title">CEO</span>
+				</p>
 			</div>
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section>
+				<section data-author="148282">
 					<section>
 						<h1>MewPipe</h1>
 						<p>Yet another video sharing platform</p>
@@ -57,7 +61,7 @@
 						</ul>
 					</section>
 				</section>
-				<section>
+				<section data-author="148282">
 					<section>
 						<h2>Our company</h2>
 						<p><img src="img/logo.svg" alt="Satisware" class="vanilla" /></p>
@@ -71,7 +75,7 @@
 					</section>
 				</section>
 				<section>
-					<section>
+					<section data-author="148282">
 						<h2>Our Team</h2>
 						<ul>
 							<li>Arnaud-Pierre BOYER, CEO</li>
@@ -146,7 +150,7 @@
 						</ul>
 					</section>
 				</section>
-				<section>
+				<section data-author="170768">
 					<section>
 						<h2>A profitable product</h2>
 						<ul>
@@ -190,7 +194,7 @@
 						</ul>
 					</section>
 				</section>
-				<section>
+				<section data-author="169174">
 					<section>
 						<h2>Our technologies</h2>
 						<ul>
@@ -233,7 +237,7 @@
 						<p class="fragment">Inject in your Database some dummy data for your tests</p>
 					</section>
 				</section>
-				<section>
+				<section data-author="202429">
 					<section data-background="https://d13yacurqjgara.cloudfront.net/users/30252/screenshots/1338727/attachments/189488/Youtube_redesign_HD.png">
 						<blockquote class="white" style="background: rgba(0, 0, 0, 0.50);">
 							<h3>Frontend</h3>
@@ -261,7 +265,7 @@
 						<p class="fragment">Modules and third party modules</p>
 					</section>
 				</section>
-				<section>
+				<section data-author="202429">
 					<h2>Demonstration</h2>
 					<p>Let us show you MewPipe in action</p>
 				</section>
@@ -296,6 +300,7 @@
 		</div>
 		<script src="reveal.js/lib/js/head.min.js"></script>
 		<script src="reveal.js/js/reveal.js"></script>
+		<script src="js/mewpipe.js"></script>
 		<script type="text/javascript">
 			// Full list of configuration options available here:
 			// https://github.com/hakimel/reveal.js#configuration

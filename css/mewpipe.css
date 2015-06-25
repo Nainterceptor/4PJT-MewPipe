@@ -34,3 +34,46 @@ blockquote.black *,
 blockquote.black h3 {
     color: #000;
 }
+#author-card {
+    width: 160px;
+    height: 80px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    z-index: 1000;
+}
+#author-card img {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    max-height: 80px;
+    max-width: 80px;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    background: none;
+}
+
+#author-card [rel="author"]:before {
+    content: "Speaker : ";
+    font-weight: bold;
+}
+
+#author-card [rel="author"] {
+    font-size: 12px;
+    line-height: 14px;
+    display: block;
+    width: 80px;
+    position: absolute;
+    left: 85px;
+    margin: 0;
+}
+#author-card #author-title {
+    font-size: 10px;
+    display: block;
+}
+[aria-disabled="true"] {
+    display: none;
+}
