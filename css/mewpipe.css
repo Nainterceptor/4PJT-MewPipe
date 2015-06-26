@@ -77,3 +77,7 @@ blockquote.black h3 {
 [aria-disabled="true"] {
     display: none;
 }
+
+.reveal table td.text-right {
+    text-align: right;
+}
