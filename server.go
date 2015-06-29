@@ -2,9 +2,10 @@ package main
 
 import (
 	"net/http"
-	"supinfo/mewpipe/configs"
-	"supinfo/mewpipe/rest/media"
-	"supinfo/mewpipe/rest/users"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
+	"github.com/Nainterceptor/4PJT-MewPipe/rest/media"
+	"github.com/Nainterceptor/4PJT-MewPipe/rest/users"
 
 	"github.com/emicklei/go-restful"
 )

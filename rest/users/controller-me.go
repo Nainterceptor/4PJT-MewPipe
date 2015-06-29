@@ -2,7 +2,8 @@ package users
 
 import (
 	"net/http"
-	"supinfo/mewpipe/entities"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/entities"
 
 	"github.com/emicklei/go-restful"
 )

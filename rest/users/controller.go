@@ -4,12 +4,13 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"supinfo/mewpipe/entities"
 	"time"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/entities"
 
 	"strconv"
 
-	"supinfo/mewpipe/configs"
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
 
 	"github.com/emicklei/go-restful"
 	"github.com/markbates/goth"

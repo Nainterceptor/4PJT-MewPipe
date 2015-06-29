@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"supinfo/mewpipe/fixtures/entities"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/fixtures/entities"
 )
 
 func main() {

@@ -3,7 +3,8 @@ package entities
 import (
 	"io/ioutil"
 	"os"
-	"supinfo/mewpipe/configs"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
 
 	"time"
 

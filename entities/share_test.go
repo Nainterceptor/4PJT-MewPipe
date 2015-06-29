@@ -2,7 +2,8 @@ package entities
 
 import (
 	"io/ioutil"
-	"supinfo/mewpipe/configs"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
 
 	. "github.com/smartystreets/goconvey/convey"
 

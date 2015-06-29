@@ -6,9 +6,10 @@ import (
 	"mime/multipart"
 	"net/textproto"
 	"os"
-	"supinfo/mewpipe/configs"
-	"supinfo/mewpipe/entities"
 	"time"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
+	"github.com/Nainterceptor/4PJT-MewPipe/entities"
 
 	"gopkg.in/mgo.v2/bson"
 )

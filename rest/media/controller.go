@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
-	"supinfo/mewpipe/entities"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/entities"
 
 	"github.com/emicklei/go-restful"
 	"gopkg.in/mgo.v2/bson"

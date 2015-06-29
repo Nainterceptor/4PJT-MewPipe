@@ -2,8 +2,9 @@ package entities
 
 import (
 	"io/ioutil"
-	"supinfo/mewpipe/configs"
 	"testing"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
 
 	"encoding/base64"
 

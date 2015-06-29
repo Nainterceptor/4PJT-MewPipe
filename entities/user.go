@@ -3,8 +3,9 @@ package entities
 import (
 	"encoding/base64"
 	"errors"
-	"supinfo/mewpipe/configs"
 	"time"
+
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
 
 	"github.com/asaskevich/govalidator"
 	"golang.org/x/crypto/bcrypt"

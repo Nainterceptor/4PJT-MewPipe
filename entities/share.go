@@ -1,7 +1,7 @@
 package entities
 
 import (
-	"supinfo/mewpipe/configs"
+	"github.com/Nainterceptor/4PJT-MewPipe/configs"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
