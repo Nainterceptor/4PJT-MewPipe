@@ -4,7 +4,7 @@ Mewpipe
 Mewpipe is the end-of-the-year project of the Master of Science of Supinfo 2015. 
 MewPipe is a website that will allows users to host, share and play online videos.
 
-Your can find our presentation on "gh-pages":https://nainterceptor.github.io/4PJT-MewPipe
+Your can find our presentation on [gh-pages](https://nainterceptor.github.io/4PJT-MewPipe)
 Warning : This scenario and roles are pure fiction, and are not real.
 
 There are scenarios that must be handled for answering completely to the client needs:
