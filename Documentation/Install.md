@@ -24,15 +24,11 @@ On a fresh debian 8.1 install with sudo :
     $ source /etc/profile
     $ source ~/.profile
     $ rm go1.4.2.linux-amd64.tar.gz
-    $ mkdir -p src/supinfo
-    $ cd src/supinfo 
-    $ git clone git@spider4all.com:4PJT-MewPipe mewpipe #Available on Github after the presentation @ Supinfo
-    $ mv 4PJT-MewPipe src/supinfo/mewpipe
-    $ cd mewpipe/
-    $ go get
+    $ go get github.com/Nainterceptor/4PJT-MewPipe
+    $ cd ${GOPATH}/Nainterceptor/4PJT-MewPipe
     $ cp configs/local.ini.sample configs/local.ini
     #Override vars from configs/base.ini in configs/local.ini like mongo connection string, database or http binding
-    $ ~/src/supinfo/mewpipe/run.sh
+    $ ${GOPATH}/Nainterceptor/4PJT-MewPipe/run.sh
 
 ## Deploy to prod
 
